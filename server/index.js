@@ -17,12 +17,16 @@ module.exports = () => {
         server.set('viewDir', config.viewDir);
 
         // Middleware to parse json
+        server.use(bodyParser.urlencoded({
+            extended: true
+        }));
         server.use(bodyParser.json());
 
         // Initialize view engine
         server.engine('.hbs', expressHandlebars({
-            defaultLayout: 'default',
-            layoutsDir: config.viewDir + '/layouts',
+            defaultLayout: 'index',
+            layoutsDir: config.layoutsDir,
+            partialsDir: config.partialsDir,
             extname: '.hbs'
         }));
         server.set('views', server.get('viewDir'));
