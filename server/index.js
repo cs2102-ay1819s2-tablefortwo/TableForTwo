@@ -38,9 +38,9 @@ module.exports = () => {
         let port = server.get('port');
 
         server.listen(port, () => {
-            console.log('Express server listening on - http://' + hostname + ':' + port')
+            console.log('Express server listening on - http://' + hostname + ':' + port);
         });
     };
 
-    return { create: create, start: start };
+    return { server: server, create: create, start: start };
 };
