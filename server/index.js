@@ -21,6 +21,7 @@ module.exports = () => {
             extended: true
         }));
         server.use(bodyParser.json());
+        server.use(express.static(require('path').join(__dirname, "../public")))
 
         // Initialize view engine
         server.engine('.hbs', expressHandlebars({

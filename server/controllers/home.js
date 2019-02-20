@@ -1,9 +1,8 @@
 'use strict';
 const db = require('../../server/database');
-const path = require('path');
 
 let index = (req, res) => {
-    res.render('index', { layout: 'index', title: 'Home' });
+    res.render('home', { layout: 'index', title: 'Home' });
 };
 
 let data = (req, res) => {
@@ -22,11 +21,6 @@ let data = (req, res) => {
     res.redirect('/home/data');
 };
 
-
-function selectAllRecords() {
-    
-}
-
 let dataView = (req, res) => {
     let selectQuery = 'select * from student_info;';
     db.db.query(selectQuery, (err, data) => {
@@ -35,7 +29,7 @@ let dataView = (req, res) => {
         } else {
             console.log('Row count of data: ' + JSON.stringify(data.rows[0]));
             
-            res.render('index', { layout: 'dataView', data: data.rows });
+            res.render('dataView', { layout: 'index', data: data.rows });
         }
     });
 };
