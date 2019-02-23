@@ -1,5 +1,5 @@
 'use strict';
-const db = require('../../server/database');
+const db = require('../../server/helpers/database');
 
 let index = (req, res) => {
     res.render('home', { layout: 'index', title: 'Home' });
@@ -14,12 +14,18 @@ let data = (req, res) => {
     };
 
     // Forumlate query
-    let insertQuery = db.generateInsertQuery(newRecord);
+    let insertQuery = generateInsertQuery(newRecord);
     // Insert into db
     db.insertIntoDatabase(insertQuery);
 
     res.redirect('/home/data');
 };
+
+function generateInsertQuery(record) {
+    let sql_query = 'INSERT INTO student_info VALUES';
+    sql_query += '(\'' + record.matric + '\', \'' + record.name + '\', \'' + record.faculty + '\');';
+    return sql_query;
+}
 
 let dataView = (req, res) => {
     let selectQuery = 'select * from student_info;';

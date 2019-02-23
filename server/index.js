@@ -3,6 +3,8 @@
 const express = require('express');
 const expressHandlebars = require('express-handlebars');
 const bodyParser = require('body-parser');
+const passport = require('passport');
+const session = require('express-session');
 
 module.exports = () => {
     let server = express();
@@ -17,11 +19,15 @@ module.exports = () => {
         server.set('viewDir', config.viewDir);
 
         // Middleware to parse json
+        server.use(express.static(require('path').join(__dirname, "../public")))
         server.use(bodyParser.urlencoded({
             extended: true
         }));
         server.use(bodyParser.json());
-        server.use(express.static(require('path').join(__dirname, "../public")))
+        server.use(require('../config/session'));
+        server.use(passport.initialize());
+        server.use(passport.session())
+        passport = require('../config/passport')(passport);
 
         // Initialize view engine
         server.engine('.hbs', expressHandlebars({
