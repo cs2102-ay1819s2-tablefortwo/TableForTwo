@@ -2,6 +2,9 @@
 const passport = require('passport');
 
 let index = (req, res) => {
+    if (req.isAuthenticated()) {
+        return res.redirect('../home');
+    }
     res.render('signup', { layout: 'index', title: 'signup', message: res.locals.message });
 };
 
