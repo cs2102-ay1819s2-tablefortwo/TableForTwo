@@ -1,5 +1,5 @@
 const db = require('../../server/helpers/database').db;
-const user = require('../../server/models/user');
+const sqlQuery = require('../../sqlQueries/users');
 
 function check(event) {
     // Get Values
@@ -15,12 +15,16 @@ function check(event) {
         return false;
     } 
 
-    let usersMatchingUsername = user.findByUsername(username);
-
-    if (usersMatchingUsername.length >= 1) {
-        alert("Username taken");
-        event.preventDefault();
-        event.stopPropagation();
-        return false;
-    }
+    db.query(sqlQuery.findByUsername, [username])
+        .then(res => {
+            if (res.rowCount > 0) { // username already exists in db
+                alert("Username taken");
+                event.preventDefault();
+                event.stopPropagation();
+                return false;
+            }
+        })
+        .catch(err => {
+            console.error(err);
+        });
 }

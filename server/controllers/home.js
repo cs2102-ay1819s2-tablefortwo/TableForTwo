@@ -1,6 +1,5 @@
 'use strict';
 const db = require('../../server/helpers/database').db;
-const userSqlQuery = require('../../sqlQueries/users');
 
 let index = (req, res) => {
     if (req.isAuthenticated()) {
@@ -8,11 +7,11 @@ let index = (req, res) => {
             id: req.session.passport.user,
             isloggedin: req.isAuthenticated()
         };
-        console.log(JSON.stringify(user.id));
+
         let userDetails = user.id[0];
         return res.render('home', { layout: 'index', title: 'Home', user: userDetails });
     }
-    res.render('home', { layout: 'index', title: 'Home' });
+    res.redirect('../login');
 };
 
 let data = (req, res) => {
@@ -34,7 +33,7 @@ let data = (req, res) => {
 
 let dataView = (req, res) => {
     let selectQuery = 'select * from student_info;';
-    db.db.query(selectQuery, (err, data) => {
+    db.query(selectQuery, (err, data) => {
         if (err) {
             console.error(err);
         } else {
