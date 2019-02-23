@@ -6,6 +6,7 @@
  * 
  * */
 const loginRoute = require('./login'),
+      signupRoute = require('./signup'),
       homeRoute = require('./home'),
       errorRoute = require('./error');
 
@@ -17,6 +18,7 @@ let init = (server) => {
 
     // Base route
     server.use('/login', loginRoute);
+    server.use('/signup', signupRoute);
     server.use('/home', homeRoute);
     server.use('/error', errorRoute);
 

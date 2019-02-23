@@ -8,6 +8,7 @@ let index = (req, res) => {
             id: req.session.passport.user,
             isloggedin: req.isAuthenticated()
         };
+        console.log(JSON.stringify(user.id))
         return res.render('home', { layout: 'index', title: 'Home', user: user });
     }
     res.render('home', { layout: 'index', title: 'Home' });
