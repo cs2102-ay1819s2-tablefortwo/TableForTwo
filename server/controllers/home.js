@@ -8,26 +8,28 @@ let index = (req, res) => {
             id: req.session.passport.user,
             isloggedin: req.isAuthenticated()
         };
-        console.log(JSON.stringify(user.id))
-        return res.render('home', { layout: 'index', title: 'Home', user: user });
+        console.log(JSON.stringify(user.id));
+        let userDetails = user.id[0];
+        return res.render('home', { layout: 'index', title: 'Home', user: userDetails });
     }
     res.render('home', { layout: 'index', title: 'Home' });
 };
 
 let data = (req, res) => {
-    // Validation already performed
+    // insert data into sample table
     let newRecord = {
         matric: req.body.matric,
         name: req.body.name,
         faculty: req.body.faculty
     };
 
-    // Forumlate query
-    //let insertQuery = db.query(userSqlQuery.signupUser, []);
-    // Insert into db
-    //db.insertIntoDatabase(insertQuery);
-
-    res.redirect('/home/data');
+    db.query("INSERT INTO student_info(matric, name, faculty) VALUES($1, $2, $3)",
+        [newRecord.matric, newRecord.name, newRecord.faculty])
+        .then(res.redirect('/home/data'))
+        .catch(err => {
+            console.error(err);
+            next(err);
+        });
 };
 
 let dataView = (req, res) => {
@@ -37,7 +39,6 @@ let dataView = (req, res) => {
             console.error(err);
         } else {
             console.log('Row count of data: ' + JSON.stringify(data.rows[0]));
-            
             res.render('dataView', { layout: 'index', data: data.rows });
         }
     });
