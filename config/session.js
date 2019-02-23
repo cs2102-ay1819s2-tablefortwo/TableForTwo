@@ -1,15 +1,14 @@
 const expSession = require('express-session');
 
-let session = expSession.session({
-    genid: (req) => {
-        console.log('Generating unique session ID');
-        console.log(req.sessionID);
-        return uuid(); // use UUIDs for session IDs
-    },
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUnitialized: false,
-    cookie: { expires: 600000 }
-});
+let configSession = (server) => {
+    server.use(expSession({
+        key: 'user_id',    // name of cookie
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false,
+        cookie: { expires: 600000 }
+    }));
+    return server;
+};
 
-module.exports = session;
+module.exports = configSession;

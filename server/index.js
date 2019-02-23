@@ -1,10 +1,9 @@
 'use strict';
-
+require('dotenv').config()
 const express = require('express');
 const expressHandlebars = require('express-handlebars');
 const bodyParser = require('body-parser');
 const passport = require('passport');
-const session = require('express-session');
 
 module.exports = () => {
     let server = express();
@@ -18,16 +17,20 @@ module.exports = () => {
         server.set('hostname', config.hostname);
         server.set('viewDir', config.viewDir);
 
+
+        require('../config/passport')(passport); // pass passport for configuration
         // Middleware to parse json
-        server.use(express.static(require('path').join(__dirname, "../public")))
         server.use(bodyParser.urlencoded({
             extended: true
         }));
         server.use(bodyParser.json());
-        server.use(require('../config/session'));
+        server.use(require('cookie-parser')(process.env.DATABASE_URL));
+        server.use(express.static(require('path').join(__dirname, "../public")))
+        server = require('../config/session')(server);
+        server.use(require('connect-flash')());
         server.use(passport.initialize());
-        server.use(passport.session())
-        passport = require('../config/passport')(passport);
+        server.use(passport.session());
+       
 
         // Initialize view engine
         server.engine('.hbs', expressHandlebars({

@@ -5,7 +5,8 @@
  * individual routers.
  * 
  * */
-const homeRoute = require('./home'),
+const loginRoute = require('./login'),
+      homeRoute = require('./home'),
       errorRoute = require('./error');
 
 let init = (server) => {
@@ -15,14 +16,20 @@ let init = (server) => {
     });
 
     // Base route
+    server.use('/login', loginRoute);
+    server.use('/home', homeRoute);
+    server.use('/error', errorRoute);
+
     server.get('/', (req, res, next) => {
+        if (!req.isAuthenticated()) {
+            return res.redirect('/login');
+        }
         res.redirect('/home');
     });
-    server.use('/home', homeRoute);
-
+    
     // No matching routes
     server.get((req, res, err, next) => res.redirect('/error'));
-    server.use('/error', errorRoute);
+    
 };
 
 module.exports = { init: init };

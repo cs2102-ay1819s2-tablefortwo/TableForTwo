@@ -3,8 +3,11 @@ const encrypt = require('../server/helpers/encryption');
 const userSqlQueries = require('../sqlQueries/users');
 const LocalStrategy = require('passport-local').Strategy;
 
-let loginStrategy = new LocalStrategy(
-    function (username, password, done) {
+let loginStrategy = new LocalStrategy({
+    passReqToCallback : true // allows us to pass back the entire request to the callback
+    },
+    function (req, username, password, done) {
+        console.log('running login strategy on ' + req.body.name);
         let queryUser = username;
         db.query(userSqlQueries.authUser, [queryUser])
             .then(user => {
@@ -15,6 +18,7 @@ let loginStrategy = new LocalStrategy(
                 }
 
                 // successfully retrieved user from db
+                console.log('retrieved user ' + user);
                 let hashedPassword = user.rows.password;
                 // check if clear text password matches with hash
                 let isValidPassword = encrypt.validatePassword(password, hashedPassword);
@@ -27,14 +31,18 @@ let loginStrategy = new LocalStrategy(
     }
 );
 
-let signupStrategy = new LocalStrategy(
-    (name, username, password, done) => {
+let signupStrategy = new LocalStrategy({
+    passReqToCallback : true // allows us to pass back the entire request to the callback
+    },
+    (req, username, password, done) => {
+        console.log('running signup strategy');
         db.query(userSqlQueries.authUser, [username])
             .then(user => {
                 // no user created for this username
                 if (user.rowCount == 0) {
                     let hashedPassword = encrypt.generateHash(password);
 
+                    console.log('adding new signup ' + username);
                     // add new user to db 
                     db.query(userSqlQueries.signupUser, [name, username, hashedPassword])
                         .catch(err => {
@@ -71,6 +79,6 @@ let deserializeUser = (passport) => {
 module.exports = function (passport) {
     serializeUser(passport);
     deserializeUser(passport);
-    passport.use('local-login-strategy', loginStrategy);
-    passport.use('local-signup-strategy', signupStrategy);
+    passport.use('local-login', loginStrategy);
+    passport.use('local-signup', signupStrategy);
 };

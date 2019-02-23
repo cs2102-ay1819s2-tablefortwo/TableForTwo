@@ -1,7 +1,15 @@
 'use strict';
-const db = require('../../server/helpers/database');
+const db = require('../../server/helpers/database').db;
+const userSqlQuery = require('../../sqlQueries/users');
 
 let index = (req, res) => {
+    if (req.isAuthenticated()) {
+        let user = {
+            id: req.session.passport.user,
+            isloggedin: req.isAuthenticated()
+        };
+        return res.render('home', { layout: 'index', title: 'Home', user: user });
+    }
     res.render('home', { layout: 'index', title: 'Home' });
 };
 
@@ -14,18 +22,12 @@ let data = (req, res) => {
     };
 
     // Forumlate query
-    let insertQuery = generateInsertQuery(newRecord);
+    //let insertQuery = db.query(userSqlQuery.signupUser, []);
     // Insert into db
-    db.insertIntoDatabase(insertQuery);
+    //db.insertIntoDatabase(insertQuery);
 
     res.redirect('/home/data');
 };
-
-function generateInsertQuery(record) {
-    let sql_query = 'INSERT INTO student_info VALUES';
-    sql_query += '(\'' + record.matric + '\', \'' + record.name + '\', \'' + record.faculty + '\');';
-    return sql_query;
-}
 
 let dataView = (req, res) => {
     let selectQuery = 'select * from student_info;';
