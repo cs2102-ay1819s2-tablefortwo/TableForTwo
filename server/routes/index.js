@@ -11,21 +11,21 @@ const loginRoute = require('./login'),
       errorRoute = require('./error');
 
 let init = (server) => {
-    server.get('*', (req, res, next) => {
-        console.log('Request made to ' + req.originalUrl);
-        next();
-    });
-
     // Base route
     server.use('/login', loginRoute);
     server.use('/signup', signupRoute);
     server.use('/home', homeRoute);
     server.use('/error', errorRoute);
 
-    server.get('/', (req, res, next) => {
+    server.get('*', (req, res, next) => {
+        console.log('Request made to ' + req.originalUrl);
         if (!req.isAuthenticated()) {
             return res.redirect('/login');
         }
+        next();
+    });
+
+    server.get('/', (req, res, next) => {
         res.redirect('/home');
     });
     

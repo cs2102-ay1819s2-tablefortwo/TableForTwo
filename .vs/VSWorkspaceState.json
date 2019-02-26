@@ -2,9 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\server",
-    "\\tests",
-    "\\tests\\unit"
+    "\\server\\controllers",
+    "\\server\\routes"
   ],
-  "SelectedNode": "\\server\\index.js",
+  "SelectedNode": "\\server\\controllers\\signup.js",
   "PreviewInSolutionExplorer": false
 }
