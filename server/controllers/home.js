@@ -1,32 +1,43 @@
 'use strict';
-const db = require('../../server/helpers/database').db;
+const passport = require('passport');
 
 let index = (req, res) => {
     if (req.isAuthenticated()) {
-        let user = {
+        const user = {
             id: req.session.passport.user,
             isloggedin: req.isAuthenticated()
         };
-
         let userDetails = user.id[0];
         return res.render('home', { layout: 'index', title: 'Home', user: userDetails, isLoggedIn: user.isloggedin });
+    } else {
+        return res.render('home', { layout: 'index', title: 'Home', isLoggedIn: req.isAuthenticated() });
     }
 };
 
-let data = (req, res) => {
-    let newRecord = {
-        matric: req.body.matric,
-        name: req.body.name,
-        faculty: req.body.faculty
-    };
-
-    db.query("INSERT INTO student_info(matric, name, faculty) VALUES($1, $2, $3)",
-        [newRecord.matric, newRecord.name, newRecord.faculty])
-        .then(res.redirect('/home/data'))
-        .catch(err => {
+let handleLoginValidation = (req, res, next) => {
+    console.log('Handling login validation' + req.body.name);
+    passport.authenticate('local-login', (err, user, info) => {
+        if (err) {
             console.error(err);
-            next(err);
+            return next(err);
+        }
+        if (!user) {
+            req.flash('failure', 'invalid login');
+            res.locals.message = 'invalid login';
+            res.redirect('./');
+        }
+
+        req.login(user, loginErr => {
+            if (loginErr) {
+                next(loginErr);
+            }
+
+            res.locals.message = 'successful login';
+            res.cookie('user_name', user.nane);
+            res.cookie('user_id', user.id);
+            return res.redirect('../home');
         });
+    })(req, res, next);
 };
 
-module.exports = { index: index, data: data };
+module.exports = { index: index, handleLoginValidation: handleLoginValidation };
