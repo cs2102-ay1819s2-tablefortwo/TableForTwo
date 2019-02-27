@@ -87,7 +87,7 @@ let search = (req, res) => {
 };
 
 let viewRestaurants = (req, res) => {
-    let dictionary = {};
+    let dictionary = [];
     console.log('Retrieving all restaurants');
     db.query(restaurantsQuery.allRestaurantsAndBranches)
         .then(val => {
@@ -95,9 +95,8 @@ let viewRestaurants = (req, res) => {
             let rows = val.rows;
 
             for (let i = 0; i < val.rowCount; i++) {
-                let rid = rows[i].restaurant_id;
+                let rid = rows[i].restaurant_id - 1;
                 let branch = { bid: rows[i].branches_id, bname: rows[i].bname, bphone: rows[i].bphone, baddress: rows[i].baddress, barea: rows[i].barea };
-                console.log(dictionary[rid] + " " + rid)
                 if (dictionary[rid] == undefined) {
                     let branches = [];
                     branches.push(branch);
@@ -109,32 +108,9 @@ let viewRestaurants = (req, res) => {
                     dictionary[rid].branches = branches;
                 }
             }
-            console.log(JSON.stringify(dictionary))
-            res.send(dictionary);
+            console.log(JSON.stringify(dictionary));
+            res.render('restaurants', { layout: 'index', title: 'All Restaurants', restaurants: dictionary });
         });
-    //(async function getRest() {
-    //    await db.query(restaurantsQuery.allRestaurants)
-    //        .then(restaurants => {
-    //            (async function loop() {
-    //                for (let i = 0; i < restaurants.rowCount; i++) {
-    //                    await db.query(restaurantsQuery.getAssocBranches, [restaurants.rows[i].id])
-    //                        .then(br => {
-    //                            let r = restaurants.rows[i];
-    //                            dictionary[r.rname] = r;
-    //                            console.log('Restaurant: ' + JSON.stringify(r));
-
-    //                            let key = r.rname;
-    //                            dictionary[key].branches = br.rows;
-    //                        });
-    //                }
-    //            })();
-    //        });
-    //})().then(x => {
-    //    console.log('Rendering restaurants view: ' + Object.keys(x).length);
-    //    console.log(JSON.stringify(x));
-    //    res.render('restaurants', { layout: 'index', title: 'All Restaurants', restaurants: x });
-    //});
 };
-
 
 module.exports = { index: index, handleLoginValidation: handleLoginValidation, search: search, viewRestaurants: viewRestaurants };
