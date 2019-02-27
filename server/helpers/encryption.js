@@ -5,7 +5,7 @@ let generateHash = function (password) {
 };
 
 let validatePassword = (password, hashedPw) => {
-    if (password == null || hashedPw == null) {
+    if (password == null || hashedPw == null || password == undefined || hashedPw == undefined) {
         return console.log('password: ' + password + ' or hashedPw : ' + hashedPw + 'cannot be null'); 
     }
     return bcrypt.compareSync(password, hashedPw);

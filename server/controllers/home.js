@@ -9,16 +9,11 @@ let index = (req, res) => {
         };
 
         let userDetails = user.id[0];
-        return res.render('home', { layout: 'index', title: 'Home', user: userDetails });
+        return res.render('home', { layout: 'index', title: 'Home', user: userDetails, isLoggedIn: user.isloggedin });
     }
-    //return res.redirect('../login');
 };
 
 let data = (req, res) => {
-    //if (!req.isAuthenticated()) {
-    //    return res.redirect('../login'); 
-    //}
-    // insert data into sample table
     let newRecord = {
         matric: req.body.matric,
         name: req.body.name,
