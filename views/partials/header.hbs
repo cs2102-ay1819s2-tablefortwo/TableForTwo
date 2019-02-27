@@ -34,9 +34,5 @@
 
 <script src="javascripts/login.js"></script>
 <script>
-    (function () {
-        window.addEventListener('ready', function () {
-            document.getElementById('login_form').addEventListener('submit', check, false);
-        }, false);
-    })();
+    $("#login_form").submit(check);
 </script>
