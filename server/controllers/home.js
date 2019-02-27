@@ -44,7 +44,7 @@ let data = (req, res) => {
         db.query(searchQuery.findByLocation, [location])
             .then(val => {
                 if (val) {
-                    res.send(val.rows);
+                    res.send(val.rows); 
                 }
             })
             .catch(err => {
