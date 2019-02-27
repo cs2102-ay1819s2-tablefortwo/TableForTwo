@@ -8,9 +8,9 @@ let index = (req, res) => {
             isloggedin: req.isAuthenticated()
         };
         let userDetails = user.id[0];
-        return res.render('home', { layout: 'index', title: 'Home', user: userDetails });
+        return res.render('home', { layout: 'index', title: 'Home', user: userDetails, isLoggedIn: user.isloggedin });
     } else {
-        return res.render('home', { layout: 'index', title: 'Home' });
+        return res.render('home', { layout: 'index', title: 'Home', isLoggedIn: req.isAuthenticated() });
     }
 };
 

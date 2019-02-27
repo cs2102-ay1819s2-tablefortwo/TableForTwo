@@ -5,12 +5,15 @@
  * individual routers.
  * 
  * */
-const signupRoute = require('./signup'),
+
+const logoutRoute = require('./logout'),
+      signupRoute = require('./signup'),
       homeRoute = require('./home'),
       errorRoute = require('./error');
 
 let init = (server) => {
     // Base route
+    server.use('/logout', logoutRoute);
     server.use('/signup', signupRoute);
     server.use('/home', homeRoute);
     server.use('/error', errorRoute);
