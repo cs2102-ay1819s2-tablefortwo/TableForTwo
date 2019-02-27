@@ -17,7 +17,7 @@
                 <h1 class="mb-5">Feeling hungry? We got you covered!</h1>
             </div>
             <div class="col-xl-8 mx-auto">
-                <form action="", method="post">
+                <form action="/search", method="post">
                     <div class="form-row">
                         <div class="col-md-6">
                             <input type="text", name="foodName", class="form-control form-control-lg" placeholder="Your cravings...">
@@ -67,3 +67,15 @@
         <h3>Trending</h3>
     </div>
 </div>
+
+<script src="javascripts/login.js"></script>
+<script>
+    (function () {
+        window.addEventListener('load', function () {
+            var forms = [document.getElementById('login_form')];
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', check, false);
+            });
+        }, false);
+    })();
+</script>
