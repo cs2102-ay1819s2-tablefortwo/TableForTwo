@@ -1,7 +1,11 @@
 <!-- Navigation -->
 <nav class="navbar navbar-light bg-light sticky-top">
     <a class="navbar-brand" href="#">Table For Two</a>
+    {{#if !isLoggedIn }}
     <a class="btn btn-primary" href="#">Sign In</a>
+    {{else}}
+    <a class="btn btn-primary" href='../logout'>Log Out</a>
+    {{/if}}
 </nav>
 
 <!-- Masthead -->
@@ -13,7 +17,7 @@
                 <h1 class="mb-5">Feeling hungry? We got you covered!</h1>
             </div>
             <div class="col-xl-8 mx-auto">
-                <form>
+                <form action="", method="post">
                     <div class="form-row">
                         <div class="col-md-6">
                             <input type="text" class="form-control form-control-lg" placeholder="Your cravings...">
