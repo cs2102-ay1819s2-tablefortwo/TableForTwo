@@ -87,18 +87,27 @@ let search = (req, res) => {
 };
 
 let viewRestaurants = (req, res) => {
-    // retrieve all restaurants 
-    db.query(restaurantsQuery.allRestaurantsAndBranches)
-        .then(val => {
-            if (val && val.rowCount > 0) {
-                let rnb = val.rows;
-                res.render('restaurants', { layout: 'index', title: 'All Restaurants', restaurants: rnb });
+    let dictionary = {};
+    db.query(restaurantsQuery.allRestaurants)
+        .then(restaurants => {
+            for (let i = 0; i < restaurants.rowCount; i++) {
+                let r = restaurants.rows[i];
+
+                db.query(restaurantsQuery.getAssocBranches, [r.id])
+                    .then(br => {
+                        r.branches = br;
+                        dictionary[r.rname] = r;
+                    })
+                    .catch(next(err))
             }
+
+            res.render('restaurants', { layout: 'index', title: 'All Restaurants', restaurants: dictionary });
         })
         .catch(err => {
             console.error(err);
             next(err);
         });
-};
+    return dictionary;
+}
 
-module.exports = { index: index, handleLoginValidation: handleLoginValidation, search: search };
+module.exports = { index: index, handleLoginValidation: handleLoginValidation, search: search, viewRestaurants: viewRestaurants };

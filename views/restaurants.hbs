@@ -1,0 +1,19 @@
+{{#each restaurant }}
+<div class="card" style="display:inline-block;width: 24rem;">
+    <div class="card-body">
+        <h5 class="card-title">{{ this.rname }}</h5>
+        <div class="card-text">{{ this.raddress }}</div>
+        <div class="card-text">{{ this.rphone }}</div>
+
+        {{#each this.branches }}
+        <div class="card" style="display:inline-block;width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">{{ bname }}</h5>
+                <div class="card-text">{{ baddress }}</div>
+                <div class="card-text">{{ bphone }}</div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</div>
+{{/each}}
