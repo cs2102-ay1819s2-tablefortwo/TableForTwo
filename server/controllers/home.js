@@ -88,26 +88,53 @@ let search = (req, res) => {
 
 let viewRestaurants = (req, res) => {
     let dictionary = {};
-    db.query(restaurantsQuery.allRestaurants)
-        .then(restaurants => {
-            for (let i = 0; i < restaurants.rowCount; i++) {
-                let r = restaurants.rows[i];
+    console.log('Retrieving all restaurants');
+    db.query(restaurantsQuery.allRestaurantsAndBranches)
+        .then(val => {
+            if (!val || val.rowCount == 0) return;
+            let rows = val.rows;
 
-                db.query(restaurantsQuery.getAssocBranches, [r.id])
-                    .then(br => {
-                        r.branches = br;
-                        dictionary[r.rname] = r;
-                    })
-                    .catch(next(err))
+            for (let i = 0; i < val.rowCount; i++) {
+                let rid = rows[i].restaurant_id;
+                let branch = { bid: rows[i].branches_id, bname: rows[i].bname, bphone: rows[i].bphone, baddress: rows[i].baddress, barea: rows[i].barea };
+                console.log(dictionary[rid] + " " + rid)
+                if (dictionary[rid] == undefined) {
+                    let branches = [];
+                    branches.push(branch);
+                    dictionary[rid] = { rid: rows[i].restaurant_id, rname: rows[i].rname, rphone: rows[i].rphone, raddress: rows[i].raddress, branches: branches };
+
+                } else {
+                    let branches = dictionary[rid].branches;
+                    branches.push(branch);
+                    dictionary[rid].branches = branches;
+                }
             }
-
-            res.render('restaurants', { layout: 'index', title: 'All Restaurants', restaurants: dictionary });
-        })
-        .catch(err => {
-            console.error(err);
-            next(err);
+            console.log(JSON.stringify(dictionary))
+            res.send(dictionary);
         });
-    return dictionary;
-}
+    //(async function getRest() {
+    //    await db.query(restaurantsQuery.allRestaurants)
+    //        .then(restaurants => {
+    //            (async function loop() {
+    //                for (let i = 0; i < restaurants.rowCount; i++) {
+    //                    await db.query(restaurantsQuery.getAssocBranches, [restaurants.rows[i].id])
+    //                        .then(br => {
+    //                            let r = restaurants.rows[i];
+    //                            dictionary[r.rname] = r;
+    //                            console.log('Restaurant: ' + JSON.stringify(r));
+
+    //                            let key = r.rname;
+    //                            dictionary[key].branches = br.rows;
+    //                        });
+    //                }
+    //            })();
+    //        });
+    //})().then(x => {
+    //    console.log('Rendering restaurants view: ' + Object.keys(x).length);
+    //    console.log(JSON.stringify(x));
+    //    res.render('restaurants', { layout: 'index', title: 'All Restaurants', restaurants: x });
+    //});
+};
+
 
 module.exports = { index: index, handleLoginValidation: handleLoginValidation, search: search, viewRestaurants: viewRestaurants };

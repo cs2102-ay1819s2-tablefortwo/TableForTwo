@@ -17,7 +17,7 @@
                 <h1 class="mb-5">Feeling hungry? We got you covered!</h1>
             </div>
             <div class="col-xl-8 mx-auto">
-                <form action="/search", method="post">
+                <form action="home/search" , method="post">
                     <div class="form-row">
                         <div class="col-md-6">
                             <input type="text" name="foodName" class="form-control form-control-lg" placeholder="Your cravings...">
@@ -29,8 +29,8 @@
                             <button type="submit" class="btn btn-block btn-lg btn-primary">Search!</button>
                         </div>
                     </div>
+                    <button type="submit" formaction="home/restaurants" formmethod="get" name="viewAllRestaurants">View All Restaurants</button>
                 </form>
-                <a href="/restaurants" class="anchor-button" name="viewAllRestaurants">View All Restaurants</a>
             </div>
         </div>
     </div>
