@@ -1,5 +1,5 @@
 <h1>CS2102: {{ title }}</h1>
-<form id="html_form" action="" role="form" method="post">
+<form id="signup_form" action="" role="form" method="post">
     <div class="form-group">
         <label for="name">Name</label>
         <input type="text" class="form-control" id="signUpName" name="name" placeholder="Enter your name">
@@ -18,11 +18,8 @@
 <script src="javascripts/signup.js"></script>
 <script>
     (function () {
-        window.addEventListener('load', function () {
-            var forms = [document.getElementById('html_form')];
-            var validation = Array.prototype.filter.call(forms, function (form) {
-                form.addEventListener('submit', check, false);
-            });
+        window.addEventListener('ready', function () {
+            document.getElementById('signup_form').addEventListener('submit', check, false);
         }, false);
     })();
 </script>

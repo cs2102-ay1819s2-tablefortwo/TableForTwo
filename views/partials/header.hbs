@@ -35,11 +35,8 @@
 <script src="javascripts/login.js"></script>
 <script>
     (function () {
-        window.addEventListener('load', function () {
-            var forms = [document.getElementById('login_form')];
-            var validation = Array.prototype.filter.call(forms, function (form) {
-                form.addEventListener('submit', check, false);
-            });
+        window.addEventListener('ready', function () {
+            document.getElementById('login_form').addEventListener('submit', check, false);
         }, false);
     })();
 </script>
