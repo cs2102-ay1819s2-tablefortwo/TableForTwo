@@ -1,6 +1,7 @@
 'use strict';
 const db = require('../../server/helpers/database').db;
 const searchQuery = require('../../sqlQueries/searchFoodItems');
+const restaurantsQuery = require('../../sqlQueries/restaurants');
 const passport = require('passport');
 
 let index = (req, res) => {
@@ -20,6 +21,7 @@ let search = (req, res) => {
     let foodName = req.body.foodName;
     let location = req.body.location;
 
+    // performs a logical AND to find all restaurants selling foodName and at location
     if (foodName != undefined && location != undefined) {
         db.query(searchQuery.findByNameAndLocation, [foodName, location])
             .then(val => {
@@ -31,7 +33,8 @@ let search = (req, res) => {
                 console.error(err);
                 next(err);
             });
-    } else if (foodName != undefined) {
+    } else if (foodName != undefined) { // only foodName specified
+        // search by foodName only
         db.query(searchQuery.findByName, [foodName])
             .then(val => {
                 if (val) {
@@ -42,7 +45,8 @@ let search = (req, res) => {
                 console.error(err);
                 next(err);
             });
-    } else if (location != undefined) {
+    } else if (location != undefined) { 
+        // search by location only
         db.query(searchQuery.findByLocation, [location])
             .then(val => {
                 if (val) {
@@ -80,6 +84,21 @@ let search = (req, res) => {
             return res.redirect('../home');
         });
     })(req, res, next);
+};
+
+let viewRestaurants = (req, res) => {
+    // retrieve all restaurants 
+    db.query(restaurantsQuery.allRestaurantsAndBranches)
+        .then(val => {
+            if (val && val.rowCount > 0) {
+                let rnb = val.rows;
+                res.render('restaurants', { layout: 'index', title: 'All Restaurants', restaurants: rnb });
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            next(err);
+        });
 };
 
 module.exports = { index: index, handleLoginValidation: handleLoginValidation, search: search };

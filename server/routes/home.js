@@ -7,5 +7,6 @@ let router = express.Router();
 router.get('/', homeController.index);
 router.post('/', homeController.handleLoginValidation);
 router.post('/search', homeController.search);
+router.get('/restaurants', homeController.viewRestaurants);
 
 module.exports = router;
