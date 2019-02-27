@@ -18,8 +18,9 @@ let loginStrategy = new LocalStrategy({
                 }
 
                 // successfully retrieved user from db
-                console.log('retrieved user ' + user);
-                let hashedPassword = user.rows.password;
+        
+                console.log('retrieved user ' + JSON.stringify(user.rows[0]));
+                let hashedPassword = user.rows[0].password;
                 // check if clear text password matches with hash
                 let isValidPassword = encrypt.validatePassword(password, hashedPassword);
                 if (isValidPassword) {
