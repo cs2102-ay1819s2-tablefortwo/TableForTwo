@@ -29,7 +29,7 @@ let handleLoginValidation = (req, res, next) => {
             res.locals.message = 'successful login';
             res.cookie('user_name', user.nane);
             res.cookie('user_id', user.id);
-            return res.json(true);
+            return res.redirect('../home');
         });
     })(req, res, next);
 };
