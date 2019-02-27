@@ -34,20 +34,4 @@ let data = (req, res) => {
         });
 };
 
-let dataView = (req, res) => {
-    //if (!req.isAuthenticated()) {
-    //    return res.redirect('../login');
-    //}
-
-    let selectQuery = 'select * from student_info;';
-    db.query(selectQuery, (err, data) => {
-        if (err) {
-            console.error(err);
-        } else {
-            console.log('Row count of data: ' + JSON.stringify(data.rows[0]));
-            res.render('dataView', { layout: 'index', data: data.rows });
-        }
-    });
-};
-
-module.exports = { index: index, data: data, dataView: dataView };
+module.exports = { index: index, data: data };

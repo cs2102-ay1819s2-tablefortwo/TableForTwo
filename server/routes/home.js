@@ -6,6 +6,5 @@ let router = express.Router();
 
 router.get('/', homeController.index);
 router.post('/', homeController.data);
-router.get('/data', homeController.dataView);
 
 module.exports = router;

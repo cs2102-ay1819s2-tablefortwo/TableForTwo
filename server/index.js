@@ -25,7 +25,7 @@ module.exports = () => {
         }));
         server.use(bodyParser.json());
         server.use(require('cookie-parser')(process.env.DATABASE_URL));
-        server.use(express.static(require('path').join(__dirname, "../public")))
+        server.use(express.static(require('path').join(__dirname, "../public")));
         server = require('../config/session')(server);
         server.use(require('connect-flash')());
         server.use(passport.initialize());
