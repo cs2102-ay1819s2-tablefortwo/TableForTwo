@@ -3,7 +3,11 @@ const db = require('../../server/helpers/database').db;
 const branchQueries = require('../../sqlQueries/restaurants');
 
 let getBranch = (req, res) => {
+    console.log('Displaying details for branch');
+    console.log(JSON.stringify(req.body));
+
     let bid = req.body.bid;
+    let bname = req.body.bname;
     let baddress = req.body.baddress;
     let bphone = req.body.bphone;
 
@@ -17,7 +21,7 @@ let getBranch = (req, res) => {
                 foodItems.push(food);
             }
 
-            res.render('branch', { bid: bid, baddress: baddress, bphone: bphone, sells: foodItems });
+            res.render('branch', { bname: bname, baddress: baddress, bphone: bphone, sells: foodItems });
 
         })
         .catch(err => {

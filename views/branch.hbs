@@ -9,14 +9,24 @@
     </div>
 
     <div id=collapse class="collapse show" data-parent=".card" aria-labelledby="menuitems">
-        < class="list-group">
+        <div class="list-group">
             {{#each sells }}
-        <div class="card-header">
-            <h5 class="card-title">{{ @name }}{{ this.name }}</h5>
-        </div>
+            <div class="card-header">
+                <h5 class="card-title">{{ @name }}{{ this.name }}</h5>
+            </div>
             <div class="card-body">
                 <div class=card-text>{{ @price }}{{ this.price }}</div>
             </div>
             {{/each}}
         </div>
     </div>
+</div>
+
+
+<script>
+    (function () {
+        window.addEventListener('load', function () {
+            $('.collapse').collapse();
+        }, false);
+    })();
+</script>
