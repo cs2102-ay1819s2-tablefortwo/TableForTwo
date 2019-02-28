@@ -14,11 +14,14 @@
             <div class="list-group">
                 {{ @branches }}{{#each this.branches }}
                 <div class="card-body" id=b{{@bid}}{{this.bid}}>
-                    <a href="#" class="list-group-item list-group-item-action" data-id={{@bid}}{{this.bid}}>
-                        <h5 class="card-title">{{ @bname }}{{ this.bname }}</h5>
-                        <div class="card-text">{{ @baddress }}{{ this.baddress }}</div>
-                        <div class="card-text">{{ @bphone }}{{ this.bphone }}</div>
-                    </a>
+                    <form action="/branch" method="GET">
+                        <input type="hidden" name="bid" value={{@bid}}{{this.bid}} />
+                        <button type="submit" class="list-group-item list-group-item-action">
+                            <h5 class="card-title">{{ @bname }}{{ this.bname }}</h5>
+                            <div class="card-text">{{ @baddress }}{{ this.baddress }}</div>
+                            <div class="card-text">{{ @bphone }}{{ this.bphone }}</div>
+                        </button>
+                    </form>
                 </div>
                 {{/each}}
             </div>
@@ -32,12 +35,7 @@
 <script>
     (function () {
         window.addEventListener('load', function () {
-            $('.collapse').collapse();
-            $(".card-body").click(function () {
-                alert('a');
-                check()
-            });
-         
+            $('.collapse').collapse();         
         }, false);
     })();
 </script>
