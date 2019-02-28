@@ -87,8 +87,8 @@ let search = (req, res) => {
     })(req, res, next);
 };
 
-let viewRestaurants = restaurantController(req, res);
+let viewRestaurants = (req, res) => restaurantController(req, res);
 
-let getBranch = branchController.getBranch(req, res);
+let getBranch = (req, res) => branchController(req, res);
 
 module.exports = { index: index, handleLoginValidation: handleLoginValidation, search: search, viewRestaurants: viewRestaurants, getBranch: getBranch };

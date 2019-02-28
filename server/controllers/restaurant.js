@@ -12,7 +12,7 @@ let viewRestaurants = (req, res) => {
 
             for (let i = 0; i < val.rowCount; i++) {
                 let rid = rows[i].restaurant_id - 1;
-                let branch = { bid: rows[i].branches_id, bname: rows[i].bname, bphone: rows[i].bphone, baddress: rows[i].baddress, barea: rows[i].barea };
+                let branch = { bid: rows[i].branch_id, bname: rows[i].bname, bphone: rows[i].bphone, baddress: rows[i].baddress, barea: rows[i].barea };
                 if (dictionary[rid] == undefined) {
                     let branches = [];
                     branches.push(branch);

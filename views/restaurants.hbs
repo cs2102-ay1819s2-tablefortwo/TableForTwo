@@ -14,8 +14,10 @@
             <div class="list-group">
                 {{ @branches }}{{#each this.branches }}
                 <div class="card-body" id=b{{@bid}}{{this.bid}}>
-                    <form action="/branch" method="GET">
-                        <input type="hidden" name="bid" value={{@bid}}{{this.bid}} />
+                    <form action="branch" method="post">
+                        <input type="hidden" name="bid" value={{@bid}}{{this.bid}}>
+                        <input type="hidden" name="bid" value={{@baddress}}{{this.baddress}}>
+                        <input type="hidden" name="bid" value={{@bphone}}{{this.bphone}}>
                         <button type="submit" class="list-group-item list-group-item-action">
                             <h5 class="card-title">{{ @bname }}{{ this.bname }}</h5>
                             <div class="card-text">{{ @baddress }}{{ this.baddress }}</div>
@@ -31,11 +33,10 @@
     {{/each}}
 </div>
 
-<script src="javascripts/restaurantView.js"></script>
 <script>
     (function () {
         window.addEventListener('load', function () {
-            $('.collapse').collapse();         
+            $('.collapse').collapse();              
         }, false);
     })();
 </script>
