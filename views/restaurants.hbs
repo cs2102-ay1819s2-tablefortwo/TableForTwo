@@ -14,7 +14,7 @@
             <div class="list-group">
                 {{ @branches }}{{#each this.branches }}
                 <div class="card-body" id=b{{@bid}}{{this.bid}}>
-                    <a href="#" class="list-group-item list-group-item-action branch" data-id={{@bid}}{{this.bid}}>
+                    <a href="#" class="list-group-item list-group-item-action" data-id={{@bid}}{{this.bid}}>
                         <h5 class="card-title">{{ @bname }}{{ this.bname }}</h5>
                         <div class="card-text">{{ @baddress }}{{ this.baddress }}</div>
                         <div class="card-text">{{ @bphone }}{{ this.bphone }}</div>
@@ -33,9 +33,11 @@
     (function () {
         window.addEventListener('load', function () {
             $('.collapse').collapse();
-            $('.branch').click(
-                passDataToBranchController(bid);
-            };
+            $(".card-body").click(function () {
+                alert('a');
+                check()
+            });
+         
         }, false);
     })();
 </script>
