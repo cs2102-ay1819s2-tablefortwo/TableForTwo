@@ -69,8 +69,6 @@ let search = (req, res) => {
             return next(err);
         }
         if (!user) {
-            req.flash('failure', 'invalid login');
-            res.locals.message = 'invalid login';
             res.redirect('./');
         }
 
@@ -78,10 +76,6 @@ let search = (req, res) => {
             if (loginErr) {
                 next(loginErr);
             }
-
-            res.locals.message = 'successful login';
-            res.cookie('user_name', user.nane);
-            res.cookie('user_id', user.id);
             return res.redirect('../home');
         });
     })(req, res, next);
