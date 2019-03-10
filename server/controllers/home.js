@@ -1,17 +1,21 @@
 'use strict';
 const passport = require('passport');
+const db = require('../../server/helpers/database').db;
+const sqlQuery = require('../../sqlQueries/promotions');
+
 
 let index = (req, res) => {
-    if (req.isAuthenticated()) {
-        const user = {
-            id: req.session.passport.user,
-            isloggedin: req.isAuthenticated()
-        };
-        let userDetails = user.id[0];
-        return res.render('home', { layout: 'index', title: 'Home', user: userDetails, isLoggedIn: user.isloggedin });
-    } else {
-        return res.render('home', { layout: 'index', title: 'Home', isLoggedIn: req.isAuthenticated() });
-    }
+    const user = {
+        ...req.session.user ? req.session.user[0] : {},
+        isLoggedIn: req.isAuthenticated()
+    };
+    Promise.all([db.query(sqlQuery.allPromotions)])
+        .then(response => {
+            const promotions = parsePromotions(response[0]);
+            return res.render('home', { layout: 'index', title: 'Home', user: user, promotions: promotions });
+        }).catch(error => {
+            console.log(error);
+    });
 };
 
 let handleLoginValidation = (req, res, next) => {
@@ -38,6 +42,15 @@ let handleLoginValidation = (req, res, next) => {
             return res.redirect('../home');
         });
     })(req, res, next);
+};
+
+let parsePromotions = (promoResponse) => {
+    let promotions = [];
+    for (let i = 0; i < promoResponse.rowCount; i++) {
+        let row = promoResponse.rows[i];
+        promotions.push(row);
+    }
+    return promotions;
 };
 
 module.exports = { index: index, handleLoginValidation: handleLoginValidation };
