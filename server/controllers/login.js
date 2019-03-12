@@ -5,19 +5,19 @@ let index = (req, res) => {
     if (req.isAuthenticated()) {
         return res.redirect('../home');
     }
-    res.render('signup', { layout: 'index', title: 'signup', message: res.locals.message, isLoggedIn: false });
+    res.render('login', { layout: 'index', title: 'login', message: res.locals.message });
 };
 
-let handleSignup = (req, res, next) => {
-    console.log('Handling signup ' + req.body.name);
-    passport.authenticate('local-signup', (err, user, info) => {
+let handleLoginValidation = (req, res, next) => {
+    console.log('Handling login validation' + req.body.name);
+    passport.authenticate('local-login', (err, user, info) => {
         if (err) {
             console.error(err);
             return next(err);
         }
         if (!user) {
-            req.flash('failure', 'invalid signup');
-            res.locals.message = 'invalid signup';
+            req.flash('failure', 'invalid login');
+            res.locals.message = 'invalid login';
             res.redirect('./');
         }
 
@@ -34,4 +34,4 @@ let handleSignup = (req, res, next) => {
     })(req, res, next);
 };
 
-module.exports = { index: index, handleSignup: handleSignup };
+module.exports = { index: index, handleLoginValidation: handleLoginValidation };

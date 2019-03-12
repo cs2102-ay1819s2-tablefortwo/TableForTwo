@@ -1,0 +1,9 @@
+<!-- Navigation -->
+<nav class="navbar navbar-light bg-light sticky-top">
+    <a class="navbar-brand" href="#">Table For Two</a>
+    {{#unless isLoggedIn}}
+    <a class="btn btn-primary" href="#">Sign In</a>
+    {{else}}
+    <a class="btn btn-primary" href='../logout'>Log Out</a>
+    {{/unless}}
+</nav>
