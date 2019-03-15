@@ -1,5 +1,3 @@
-{{> navigationHeader }}
-
 <div class="card">
     <div class="card-header">
         <h5 class="card-title">{{ bname }}</h5>
@@ -24,9 +22,5 @@
 
 
 <script>
-    (function () {
-        window.addEventListener('load', function () {
-            $('.collapse').collapse();
-        }, false);
-    })();
+    $(document).ready(() => $('.collapse').collapse('hide'));
 </script>

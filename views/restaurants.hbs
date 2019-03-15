@@ -1,5 +1,3 @@
-{{> navigationHeader }}
-
 <div id="accordion" style="padding-left:5em; padding-right: 5em; padding-top: 2em; padding-bottom: 3em">
     {{#each restaurants }}
     <div class="card">
@@ -35,9 +33,5 @@
 </div>
 
 <script>
-    (function () {
-        window.addEventListener('load', function () {
-            $('.collapse').collapse();              
-        }, false);
-    })();
+    $(document).ready(() => $('.collapse').collapse('hide'));
 </script>
