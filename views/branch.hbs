@@ -1,0 +1,26 @@
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title">{{ bname }}</h5>
+        <div class="card-text">Address: {{ baddress }}</div>
+        <div class="card-text">Phone Number: {{ bphone }}</div>
+        <button class="btn btn-link" data-toggle="collapse" data-target=#collapse aria-expanded="true" aria-controls=collapse>View Menu</button>
+    </div>
+
+    <div id=collapse class="collapse show" data-parent=".card" aria-labelledby="menuitems">
+        <div class="list-group">
+            {{#each sells }}
+            <div class="card-header">
+                <h5 class="card-title">{{ @name }}{{ this.name }}</h5>
+            </div>
+            <div class="card-body">
+                <div class=card-text>{{ @price }}{{ this.price }}</div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(() => $('.collapse').collapse('hide'));
+</script>

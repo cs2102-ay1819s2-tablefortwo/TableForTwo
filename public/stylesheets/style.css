@@ -65,7 +65,23 @@ header.masthead h1 {
 }
 
 .homepage-card {
-  display:inline-block !important;
-  width: 18rem;
-  margin-right: 5px;
+    display: inline-block !important;
+    width: 18rem;
+    margin-right: 5px;
+}
+
+.anchor-button {
+    text-decoration: none;
+    font: menu;
+    display: inline-block;
+    padding: 2px 8px;
+    background: ButtonFace;
+    color: ButtonText;
+    border-style: solid;
+    border-width: 2px;
+    border-color: ButtonHighlight ButtonShadow ButtonShadow ButtonHighlight;
+}
+
+.anchor-button:active {
+    border-color: ButtonShadow ButtonHighlight ButtonHighlight ButtonShadow;
 }

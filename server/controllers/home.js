@@ -1,4 +1,8 @@
 'use strict';
+const db = require('../../server/helpers/database').db;
+const searchQuery = require('../../sqlQueries/searchFoodItems');
+const restaurantController = require('../controllers/restaurant');
+const branchController = require('../controllers/branch');
 const passport = require('passport');
 const db = require('../../server/helpers/database').db;
 const sqlQuery = require('../../sqlQueries/promotions');
@@ -18,7 +22,50 @@ let index = (req, res) => {
     });
 };
 
-let handleLoginValidation = (req, res, next) => {
+let search = (req, res) => {
+    let foodName = req.body.foodName;
+    let location = req.body.location;
+
+    // performs a logical AND to find all restaurants selling foodName and at location
+    if (foodName != undefined && location != undefined) {
+        db.query(searchQuery.findByNameAndLocation, [foodName, location])
+            .then(val => {
+                if (val) {
+                    res.send(val.rows);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                next(err);
+            });
+    } else if (foodName != undefined) { // only foodName specified
+        // search by foodName only
+        db.query(searchQuery.findByName, [foodName])
+            .then(val => {
+                if (val) {
+                    res.send(val.rows);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                next(err);
+            });
+    } else if (location != undefined) { 
+        // search by location only
+        db.query(searchQuery.findByLocation, [location])
+            .then(val => {
+                if (val) {
+                    res.send(val.rows);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                next(err);
+            });
+    }
+};
+
+    let handleLoginValidation = (req, res, next) => {
     console.log('Handling login validation' + req.body.name);
     passport.authenticate('local-login', (err, user, info) => {
         if (err) {
@@ -26,8 +73,6 @@ let handleLoginValidation = (req, res, next) => {
             return next(err);
         }
         if (!user) {
-            req.flash('failure', 'invalid login');
-            res.locals.message = 'invalid login';
             res.redirect('./');
         }
 
@@ -35,15 +80,13 @@ let handleLoginValidation = (req, res, next) => {
             if (loginErr) {
                 next(loginErr);
             }
-
-            res.locals.message = 'successful login';
-            res.cookie('user_name', user.nane);
-            res.cookie('user_id', user.id);
             return res.redirect('../home');
         });
     })(req, res, next);
 };
 
+let viewRestaurants = (req, res) => restaurantController(req, res);
+let getBranch = (req, res) => branchController(req, res);
 let parsePromotions = (promoResponse) => {
     let promotions = [];
     for (let i = 0; i < promoResponse.rowCount; i++) {
@@ -53,4 +96,4 @@ let parsePromotions = (promoResponse) => {
     return promotions;
 };
 
-module.exports = { index: index, handleLoginValidation: handleLoginValidation };
+module.exports = { index: index, handleLoginValidation: handleLoginValidation, search: search, viewRestaurants: viewRestaurants, getBranch: getBranch };
