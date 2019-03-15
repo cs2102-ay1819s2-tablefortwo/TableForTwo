@@ -22,7 +22,7 @@ let create = (req, res) => {
         isLoggedIn: req.isAuthenticated()
     };
 
-    if (user.isLoggedIn) {// TODO: add require admin condition
+    if (!user.isLoggedIn) {// TODO: add require admin condition
         req.flash('error', 'You are not allowed to do this');
         res.redirect('../home');
         return;
