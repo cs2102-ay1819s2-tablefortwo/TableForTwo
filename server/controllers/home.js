@@ -1,5 +1,4 @@
 'use strict';
-const db = require('../../server/helpers/database').db;
 const searchQuery = require('../../sqlQueries/searchFoodItems');
 const restaurantController = require('../controllers/restaurant');
 const branchController = require('../controllers/branch');
