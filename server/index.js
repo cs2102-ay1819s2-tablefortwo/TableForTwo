@@ -30,6 +30,12 @@ module.exports = () => {
         server.use(require('connect-flash')());
         server.use(passport.initialize());
         server.use(passport.session());
+
+        server.use(function(req, res, next){
+            res.locals.success = req.flash('success');
+            res.locals.errors = req.flash('error');
+            next();
+        });
        
 
         // Initialize view engine

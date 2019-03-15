@@ -47,6 +47,29 @@ header.masthead h1 {
   height: 15rem;
 }
 
+.panel-relative{
+  position: relative;
+}
+.btn-right{
+  position: absolute;
+  right: 15px;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.horizontal-scroll {
+  overflow: auto;
+  white-space: nowrap;
+}
+
+.homepage-card {
+    display: inline-block !important;
+    width: 18rem;
+    margin-right: 5px;
+}
+
 .anchor-button {
     text-decoration: none;
     font: menu;
