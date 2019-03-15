@@ -31,12 +31,13 @@ module.exports = () => {
         server.use(passport.initialize());
         server.use(passport.session());
 
+        // default data loaded to into each page.
         server.use(function(req, res, next){
             res.locals.success = req.flash('success');
             res.locals.errors = req.flash('error');
+            res.locals.isLoggedIn = req.isAuthenticated();
             next();
         });
-       
 
         // Initialize view engine
         server.engine('.hbs', expressHandlebars({

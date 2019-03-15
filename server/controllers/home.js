@@ -8,14 +8,10 @@ const sqlQuery = require('../../sqlQueries/promotions');
 
 
 let index = (req, res) => {
-    const user = {
-        ...req.session.user ? req.session.user[0] : {},
-        isLoggedIn: req.isAuthenticated()
-    };
     Promise.all([db.query(sqlQuery.allPromotions)])
         .then(response => {
             const promotions = parsePromotions(response[0]);
-            return res.render('home', { layout: 'index', title: 'Home', user: user, promotions: promotions });
+            return res.render('home', { layout: 'index', title: 'Home', promotions: promotions });
         }).catch(error => {
             console.log(error);
     });

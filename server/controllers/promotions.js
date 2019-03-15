@@ -3,13 +3,9 @@ const db = require('../../server/helpers/database').db;
 const sqlQuery = require('../../sqlQueries/promotions');
 
 let newPromo = (req, res) => {
-    const user = {
-        ...req.session.user ? req.session.user[0] : {},
-        isLoggedIn: req.isAuthenticated()
-    };
     const form = req.flash('form')[0];
-    if (user.isLoggedIn) {// TODO: Add require admin condition
-        return res.render('new_promotion', {layout: 'index', title: 'New Promotion', user: user, form: form});
+    if (req.isAuthenticated()) {// TODO: Add require admin condition
+        return res.render('new_promotion', {layout: 'index', title: 'New Promotion', form: form});
     } else {
         req.flash('error', 'Unauthorized access.');
         return res.redirect('../home');
@@ -17,12 +13,7 @@ let newPromo = (req, res) => {
 };
 
 let create = (req, res) => {
-    const user = {
-        ...req.session.user ? req.session.user[0] : {},
-        isLoggedIn: req.isAuthenticated()
-    };
-
-    if (!user.isLoggedIn) {// TODO: add require admin condition
+    if (!req.isAuthenticated()) {// TODO: add require admin condition
         req.flash('error', 'You are not allowed to do this');
         res.redirect('../home');
         return;
