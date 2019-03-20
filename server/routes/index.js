@@ -10,7 +10,8 @@ const logoutRoute = require('./logout'),
       signupRoute = require('./signup'),
       homeRoute = require('./home'),
       promotionsRoute = require('./promotions'),
-      errorRoute = require('./error');
+      errorRoute = require('./error'),
+      pizzahutRoute = require('./pizzahut');
 
 let init = (server) => {
     // Base route
@@ -19,6 +20,9 @@ let init = (server) => {
     server.use('/home', homeRoute);
     server.use('/promotions', promotionsRoute);
     server.use('/error', errorRoute);
+
+    // Restaurant routing
+    server.use('/pizzahut', pizzahutRoute);
 
     server.get('/', (req, res, next) => {
         res.redirect('/home');
