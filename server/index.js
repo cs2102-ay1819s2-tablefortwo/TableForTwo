@@ -1,9 +1,10 @@
 'use strict';
-require('dotenv').config()
+require('dotenv').config();
 const express = require('express');
 const expressHandlebars = require('express-handlebars');
 const bodyParser = require('body-parser');
 const passport = require('passport');
+const moment = require('moment');
 
 module.exports = () => {
     let server = express();
@@ -41,6 +42,17 @@ module.exports = () => {
 
         // Initialize view engine
         server.engine('.hbs', expressHandlebars({
+            helpers: {
+                toDateTime: function(date) {
+                  return moment(date).format('lll');
+                  },
+                toDate: function(date) {
+                    return moment(date).format('LL');
+                },
+                toTime: function(date) {
+                    return moment(date).format('LT')
+                }
+            },
             defaultLayout: 'index',
             layoutsDir: config.layoutsDir,
             partialsDir: config.partialsDir,
