@@ -43,14 +43,14 @@ module.exports = () => {
         // Initialize view engine
         server.engine('.hbs', expressHandlebars({
             helpers: {
-                toDateTime: function(date) {
-                  return moment(date).format('lll');
+                toDateTime: function(datetime) {
+                  return moment(datetime).format('lll');
                   },
                 toDate: function(date) {
                     return moment(date).format('LL');
                 },
-                toTime: function(date) {
-                    return moment(date).format('LT')
+                toTime: function(time) {
+                    return moment(time, ["h:mm A", "H:mm"]).format('LT')
                 }
             },
             defaultLayout: 'index',
