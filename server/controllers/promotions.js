@@ -2,9 +2,19 @@
 const db = require('../../server/helpers/database').db;
 const sqlQuery = require('../../sqlQueries/promotions');
 
+let show = (req, res) => {
+    db.query(sqlQuery.getPromotion, [req.params['promoId']]).then((data) => {
+        const promotion = data.rows[0];
+        return res.render('promotion', {layout: 'index', title: `Promotions | ${promotion.name}`, promotion: promotion});
+    }).catch(error => {
+        res.flash('error', `Server error: ${error}`);
+        res.redirect('../home');
+    })
+};
+
 let newPromo = (req, res) => {
     const form = req.flash('form')[0];
-    if (req.isAuthenticated()) {// TODO: Add require admin condition
+    if (req.isAuthenticated()) { // TODO: Add require admin condition
         return res.render('new_promotion', {layout: 'index', title: 'New Promotion', form: form});
     } else {
         req.flash('error', 'Unauthorized access.');
@@ -35,4 +45,4 @@ let create = (req, res) => {
     });
 };
 
-module.exports = { create: create, new: newPromo };
+module.exports = { show: show, create: create, new: newPromo };
