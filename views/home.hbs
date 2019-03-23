@@ -10,16 +10,16 @@
                 <form action="" method="post">
                     <div class="form-row">
                         <div class="col-md-6">
-                            <input type="text" class="form-control form-control-lg" placeholder="Your cravings...">
+                            <input type="text" name="foodname" class="form-control form-control-lg" placeholder="Your cravings...">
                         </div>
                         <div class="col-md-4">
-                            <input type="text" class="form-control form-control-lg" placeholder="Location">
+                            <input type="text" name="location" class="form-control form-control-lg" placeholder="Location">
                         </div>
                         <div class="col-md-2">
                             <button type="submit" formaction="home/search" class="btn btn-block btn-lg btn-primary">Search!</button>
                         </div>
                     </div>
-                    <button type="submit" formaction="home/restaurants" formmethod="post" name="viewAllRestaurants">View All Restaurants</button>
+                    <button type="submit" formaction="restaurant" formmethod="post" name="viewAllRestaurants">View All Restaurants</button>
                 </form>
             </div>
         </div>

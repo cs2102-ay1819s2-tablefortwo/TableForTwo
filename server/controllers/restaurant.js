@@ -1,5 +1,6 @@
 'use strict';
 const db = require('../../server/helpers/database').db;
+const branchController = require('../controllers/branch');
 const restaurantsQuery = require('../../sqlQueries/restaurants');
 
 let viewRestaurants = (req, res) => {
@@ -29,4 +30,7 @@ let viewRestaurants = (req, res) => {
         });
 };
 
-module.exports = viewRestaurants;
+let getBranch = (req, res) => branchController(req, res);
+
+
+module.exports = { viewRestaurants: viewRestaurants, getBranch: getBranch };

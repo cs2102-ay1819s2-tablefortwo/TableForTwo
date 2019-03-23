@@ -9,6 +9,7 @@
 const logoutRoute = require('./logout'),
       signupRoute = require('./signup'),
       homeRoute = require('./home'),
+      restaurantRoute = require('./restaurant'),
       errorRoute = require('./error');
 
 let init = (server) => {
@@ -16,6 +17,7 @@ let init = (server) => {
     server.use('/logout', logoutRoute);
     server.use('/signup', signupRoute);
     server.use('/home', homeRoute);
+    server.use('/restaurant', restaurantRoute);
     server.use('/error', errorRoute);
 
     server.get('/', (req, res, next) => {
