@@ -94,7 +94,7 @@ Create table Sells (
 
 create table Timeslot (
   branch_id   integer,
-  timeslot    timestamp,
+  timeslot    time,
   slotsLeft   integer not null,
 
   primary key (branch_id, timeslot),
@@ -102,14 +102,14 @@ create table Timeslot (
   check (slotsLeft >= 0)
 );
 
-create or replace function checkAvailability(rSlot timestamp, b_id integer)
+create or replace function checkAvailability(rSlot time, b_id integer)
 returns integer as $$
 declare total integer;
 begin
-	select count(*) into total from Timeslot
+	select slotsLeft into total
+	from Timeslot
 	where Timeslot.timeslot = rSlot
-  and Timeslot.branch_id = b_id
-  and Timeslot.slotsLeft > 0;
+  and Timeslot.branch_id = b_id;
 	return total;
 end;
 $$ language PLpgSQL;
@@ -119,7 +119,7 @@ create table Reservations (
   customer_id       integer not null,
   branch_id integer not null,
   pax       integer not null,
-  reservedSlot  timestamp,
+  reservedSlot  time,
   
   foreign key(customer_id) references Customers(id),
   foreign key(branch_id) references Branches(id),
