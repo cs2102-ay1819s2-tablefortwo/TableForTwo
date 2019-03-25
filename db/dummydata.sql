@@ -133,18 +133,18 @@ insert into SELLS (mid, bid, price) values (3, 8, '$5.63');
 insert into SELLS (mid, bid, price) values (11, 5, '$16.94');
 insert into SELLS (mid, bid, price) values (5, 4, '$9.10');
 
-insert into TIMESLOT (branch_id, timeslot, slotsLeft) values (1, '10:00:00', 15);
-insert into TIMESLOT (branch_id, timeslot, slotsLeft) values (2, '12:00:00', 10);
-insert into TIMESLOT (branch_id, timeslot, slotsLeft) values (2, '14:00:00', 10);
-insert into TIMESLOT (branch_id, timeslot, slotsLeft) values (3, '12:00:00', 10);
-insert into TIMESLOT (branch_id, timeslot, slotsLeft) values (3, '10:00:00', 10);
-insert into TIMESLOT (branch_id, timeslot, slotsLeft) values (4, '13:00:00', 7);
-insert into TIMESLOT (branch_id, timeslot, slotsLeft) values (4, '18:00:00', 7);
-insert into TIMESLOT (branch_id, timeslot, slotsLeft) values (4, '20:00:00', 7);
-insert into TIMESLOT (branch_id, timeslot, slotsLeft) values (6, '10:00:00', 12);
-insert into TIMESLOT (branch_id, timeslot, slotsLeft) values (7, '10:00:00', 4);
-insert into TIMESLOT (branch_id, timeslot, slotsLeft) values (8, '13:00:00', 1);
-insert into TIMESLOT (branch_id, timeslot, slotsLeft) values (9, '12:00:00', 1);
+insert into TIMESLOT (branch_id, timeslot, numSlots) values (1, '10:00:00', 15);
+insert into TIMESLOT (branch_id, timeslot, numSlots) values (2, '12:00:00', 10);
+insert into TIMESLOT (branch_id, timeslot, numSlots) values (2, '14:00:00', 10);
+insert into TIMESLOT (branch_id, timeslot, numSlots) values (3, '12:00:00', 10);
+insert into TIMESLOT (branch_id, timeslot, numSlots) values (3, '10:00:00', 10);
+insert into TIMESLOT (branch_id, timeslot, numSlots) values (4, '13:00:00', 7);
+insert into TIMESLOT (branch_id, timeslot, numSlots) values (4, '18:00:00', 7);
+insert into TIMESLOT (branch_id, timeslot, numSlots) values (4, '20:00:00', 7);
+insert into TIMESLOT (branch_id, timeslot, numSlots) values (6, '10:00:00', 12);
+insert into TIMESLOT (branch_id, timeslot, numSlots) values (7, '10:00:00', 4);
+insert into TIMESLOT (branch_id, timeslot, numSlots) values (8, '13:00:00', 1);
+insert into TIMESLOT (branch_id, timeslot, numSlots) values (9, '12:00:00', 1);
 
 
 alter sequence reservations_id_seq restart with 1;
@@ -153,7 +153,7 @@ insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot) values (3, 
 insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot) values (4, 4, 3, '13:00:00');
 insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot) values (5, 4, 5, '18:00:00');
 insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot) values (6, 6, 3, '10:00:00');
-insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot) values (7, 8, 3, '13:00:00');
+insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot) values (7, 8, 1, '13:00:00');
 
 
 alter sequence ratings_id_seq restart with 1;
@@ -168,7 +168,6 @@ insert into POINTS (reservation_id, customer_id, point) values (2, 3, 1);
 insert into POINTS (reservation_id, customer_id, point) values (3, 4, 1);
 insert into POINTS (reservation_id, customer_id, point) values (4, 5, 1);
 insert into POINTS (reservation_id, customer_id, point) values (5, 6, 1);
-
 
 alter sequence promotions_id_seq restart with 1;
 insert into PROMOTIONS (id, branch_id, name, description, start_date, end_date, start_timeslot, end_timeslot) values

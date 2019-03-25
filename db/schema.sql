@@ -95,22 +95,30 @@ Create table Sells (
 create table Timeslot (
   branch_id   integer,
   timeslot    time,
-  slotsLeft   integer not null,
+  numSlots    integer not null,
 
   primary key (branch_id, timeslot),
   foreign key (branch_id) references Branches(id) on delete cascade,
-  check (slotsLeft >= 0)
+  check (numSlots > 0)
 );
 
 create or replace function checkAvailability(rSlot time, b_id integer)
 returns integer as $$
-declare total integer;
+declare
+  totalReserved integer;
+  slots integer;
 begin
-	select slotsLeft into total
+	select coalesce(sum(pax), 0) into totalReserved
+	from Reservations
+	where reservedSlot = rSlot
+  and branch_id = b_id;
+
+	select numSlots into slots
 	from Timeslot
-	where Timeslot.timeslot = rSlot
-  and Timeslot.branch_id = b_id;
-	return total;
+	where branch_id = b_id
+	and Timeslot.timeslot = rSlot;
+	raise notice 'slots %, total reserved %', slots, totalReserved;
+	return slots - totalReserved;
 end;
 $$ language PLpgSQL;
 
@@ -123,6 +131,7 @@ create table Reservations (
   
   foreign key(customer_id) references Customers(id),
   foreign key(branch_id) references Branches(id),
+  foreign key(branch_id, reservedSlot) references Timeslot(branch_id, timeslot),
   check (checkAvailability(reservedSlot, branch_id) >= pax)
 );
 
