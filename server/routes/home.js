@@ -7,7 +7,7 @@ let router = express.Router();
 router.get('/', homeController.index);
 router.post('/search', homeController.search);
 router.post('/restaurants', homeController.viewRestaurants);
-router.post('/branch', homeController.getBranch);
+router.all('/branch', homeController.getBranch);
 router.post('/login', homeController.handleLoginValidation);
 
 module.exports = router;

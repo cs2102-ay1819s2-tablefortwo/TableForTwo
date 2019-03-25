@@ -1,11 +1,38 @@
-<div class="card">
-    <div class="card-header">
-        <h5 class="card-title">{{ bname }}</h5>
-        <div class="card-text">Address: {{ baddress }}</div>
-        <div class="card-text">Phone Number: {{ bphone }}</div>
-        <button class="btn btn-link" data-toggle="collapse" data-target=#collapse aria-expanded="true" aria-controls=collapse>View Menu</button>
+<div class="container">
+    <img class="img-fluid" src={{rimage}} alt={{rimage}}>
+</div>
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">{{ bname }}</h5>
+            <div class="card-text">Address: {{ baddress }}</div>
+            <div class="card-text">Phone Number: {{ bphone }}</div>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Time</th>
+                    <th scope="col">Slots</th>
+                    <th scope="col">Book</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each timeslots}}
+                <tr>
+                    <td>{{this.timing}}</td>
+                    <td>{{this.slots}}</td>
+                    <td><button id="bookButton" type="button" class="btn btn-info"
+                            onclick="book(this.timing)">Select</button></td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
     </div>
+</div>
 
+<div class="container">
+    <button class="btn btn-link" data-toggle="collapse" data-target=#collapse aria-expanded="true"
+        aria-controls=collapse>View Menu</button>
     <div id=collapse class="collapse show" data-parent=".card" aria-labelledby="menuitems">
         <div class="list-group">
             {{#each sells }}
@@ -23,4 +50,7 @@
 
 <script>
     $(document).ready(() => $('.collapse').collapse('hide'));
+    function book(timeslot) {
+        document.getElementById("bookButton").style.color = "red";
+    }
 </script>

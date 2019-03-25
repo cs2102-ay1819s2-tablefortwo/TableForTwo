@@ -134,6 +134,9 @@ insert into SELLS (mid, bid, price) values (11, 5, '$16.94');
 insert into SELLS (mid, bid, price) values (5, 4, '$9.10');
 
 insert into TIMESLOT (branch_id, timeslot, numSlots) values (1, '10:00:00', 15);
+insert into TIMESLOT (branch_id, timeslot, numSlots) values (1, '12:00:00', 15);
+insert into TIMESLOT (branch_id, timeslot, numSlots) values (1, '14:00:00', 15);
+insert into TIMESLOT (branch_id, timeslot, numSlots) values (1, '16:00:00', 15);
 insert into TIMESLOT (branch_id, timeslot, numSlots) values (2, '12:00:00', 10);
 insert into TIMESLOT (branch_id, timeslot, numSlots) values (2, '14:00:00', 10);
 insert into TIMESLOT (branch_id, timeslot, numSlots) values (3, '12:00:00', 10);
@@ -145,6 +148,7 @@ insert into TIMESLOT (branch_id, timeslot, numSlots) values (6, '10:00:00', 12);
 insert into TIMESLOT (branch_id, timeslot, numSlots) values (7, '10:00:00', 4);
 insert into TIMESLOT (branch_id, timeslot, numSlots) values (8, '13:00:00', 1);
 insert into TIMESLOT (branch_id, timeslot, numSlots) values (9, '12:00:00', 1);
+insert into TIMESLOT (branch_id, timeslot, numSlots) values (10, '12:00:00', 1);
 
 
 alter sequence reservations_id_seq restart with 1;
