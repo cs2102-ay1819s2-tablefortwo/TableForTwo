@@ -13,15 +13,27 @@ let getBranch = (req, res) => {
     let bphone = req.body.bphone;
     let rimage = encodeURI('../images/' + rname + '.jpg');
     let timeslots = [];
+    let reservationsObj = {};
+
+    db.query(branchQueries.getReservations, [bid])
+        .then(val => {
+            for (let i = 0; i < val.rowCount; i++) {
+                let row = val.rows[i];
+                reservationsObj[row.reservedslot] = row.paxbooked;
+            }
+            console.log(reservationsObj);
+        })
+        .catch(err => {
+            console.error(err);
+        });
 
     db.query(branchQueries.getTimeslots, [bid])
         .then(val => {
             for (let i = 0; i < val.rowCount; i++) {
                 let row = val.rows[i];
-                let reservedSeats = countReservations(row.branch_id, row.timeslot);
-                //console.log("resrrved: " + reservedSeats);
-                const slotsLeft = row.numslots - reservedSeats;
-                //console.log("slots left: " + slotsLeft);
+
+                const slotsLeft = row.numslots;
+                console.log("slots left: " + slotsLeft);
                 let timeSlot = { timing: row.timeslot, slots: slotsLeft, br_id: row.branch_id };
                 timeslots.push(timeSlot);
             }
@@ -66,20 +78,5 @@ let reserveTimeslot = (req, res) => {
             res.redirect('/home');
         });
 };
-
-function countReservations(branch_id, time) {
-    let totalReservations = 0;
-    console.log([branch_id, time]);
-    db.query(branchQueries.countReservations, [branch_id, time])
-        .then(val => {
-            //console.log(val);
-            totalReservations = val.rows[0].result;
-            console.log("zzz " + totalReservations.valueOf());
-        })
-        .catch(err => {
-            console.error(err);
-        });
-    return totalReservations;
-}
 
 module.exports = { getBranch: getBranch, reserveTimeslot: reserveTimeslot };

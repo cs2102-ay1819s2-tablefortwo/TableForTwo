@@ -4,7 +4,7 @@ let sqlQueries = {
     getBranchMenuItems: 'select * from branches right join sells on branches.id = sells.bid right join menuitems on menuitems.id = sells.mid where branches.id = $1;',
     getTimeslots: 'SELECT * FROM Timeslot WHERE branch_id = $1;',
     makeReservation: 'INSERT INTO Reservations (customer_id, branch_id, pax, reservedSlot) VALUES ($1, $2, $3, $4);',
-    countReservations: 'SELECT coalesce(sum(pax), 0) AS result FROM Reservations WHERE branch_id = $1 AND reservedSlot = $2;'
+    getReservations: 'SELECT reservedSlot, coalesce(sum(pax), 0) AS paxBooked FROM Reservations WHERE branch_id = $1 GROUP BY reservedSlot;',
 };
 
 module.exports = sqlQueries;
