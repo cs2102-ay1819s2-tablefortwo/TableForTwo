@@ -27,9 +27,9 @@ let index = (req, res) => {
 
         req.login(user, loginErr => {
             if (loginErr) {
-                next(loginErr);
+                return next(loginErr);
             }
-            return res.redirect('../home');
+            return res.redirect('/');
         });
     })(req, res, next);
 };
