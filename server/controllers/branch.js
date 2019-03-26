@@ -18,7 +18,7 @@ let getBranch = (req, res) => {
         .then(val => {
             for (let i = 0; i < val.rowCount; i++) {
                 let row = val.rows[i];
-                let timeSlot = { timing: row.timeslot, slots: row.numslots, id: row.branch_id };
+                let timeSlot = { timing: row.timeslot, slots: row.numslots, br_id: row.branch_id };
                 timeslots.push(timeSlot);
             }
         })
@@ -41,7 +41,26 @@ let getBranch = (req, res) => {
         .catch(err => {
             console.error(err);
         });
-    
 };
 
-module.exports = getBranch;
+let reserveTimeslot = (req, res) => {
+    console.log('Reserving timeslot');
+    console.log(JSON.stringify(req.body));
+
+    let bookingInfo = [1];   // TODO: customer_id
+    bookingInfo.push(req.body.bid);
+    bookingInfo.push(req.body.pax);
+    bookingInfo.push(req.body.timing);
+    
+    db.query(branchQueries.makeReservation, bookingInfo)
+        .then(() => {
+            console.log("successfully booked ");
+            req.flash('success', `Booking at '${req.body.timing}' has been added!`);
+            res.redirect('/home');
+        }).catch(error => {
+            req.flash('error', `Unable to make reservation at '${req.body.timing}'`);
+            res.redirect('/home');
+        });
+};
+
+module.exports = { getBranch: getBranch, reserveTimeslot: reserveTimeslot };

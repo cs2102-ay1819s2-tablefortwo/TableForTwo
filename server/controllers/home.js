@@ -81,7 +81,7 @@ let search = (req, res) => {
 };
 
 let viewRestaurants = (req, res) => restaurantController(req, res);
-let getBranch = (req, res) => branchController(req, res);
+let getBranch = (req, res) => branchController.getBranch(req, res);
 let parsePromotions = (promoResponse) => {
     let promotions = [];
     for (let i = 0; i < promoResponse.rowCount; i++) {
@@ -91,4 +91,6 @@ let parsePromotions = (promoResponse) => {
     return promotions;
 };
 
-module.exports = { index: index, handleLoginValidation: handleLoginValidation, search: search, viewRestaurants: viewRestaurants, getBranch: getBranch };
+let reserveTimeslot = (req, res) => branchController.reserveTimeslot(req, res);
+
+module.exports = { index: index, handleLoginValidation: handleLoginValidation, search: search, viewRestaurants: viewRestaurants, getBranch: getBranch, reserveTimeslot: reserveTimeslot };

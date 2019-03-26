@@ -13,7 +13,7 @@
                 <tr>
                     <th scope="col">Time</th>
                     <th scope="col">Slots</th>
-                    <th scope="col">Book</th>
+                    <th scope="col">Diners</th>
                 </tr>
             </thead>
             <tbody>
@@ -21,8 +21,15 @@
                 <tr>
                     <td>{{this.timing}}</td>
                     <td>{{this.slots}}</td>
-                    <td><button id="bookButton" type="button" class="btn btn-info"
-                            onclick="book(this.timing)">Select</button></td>
+                    <td>
+                        <form method="post" action="book">
+                            <input type="number" name="pax" min="1" max="5" value="2">
+                            <input type="hidden" name="bid" value={{br_id}}>
+                            <input type="hidden" name="timing" value={{timing}}>
+                            <button id="bookButton" type="submit" class="btn btn-info"
+                                onclick="book(this.timing)">Book Now!</button>
+                        </form>
+                    </td>
                 </tr>
                 {{/each}}
             </tbody>
