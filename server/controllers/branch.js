@@ -12,47 +12,41 @@ let getBranch = (req, res) => {
     let baddress = req.body.baddress;
     let bphone = req.body.bphone;
     let rimage = encodeURI('../images/' + rname + '.jpg');
-    let timeslots = [];
-    let reservationsObj = {};
 
-    db.query(branchQueries.getReservations, [bid])
-        .then(val => {
-            for (let i = 0; i < val.rowCount; i++) {
-                let row = val.rows[i];
+    Promise.all([db.query(branchQueries.getReservations, [bid]),
+            db.query(branchQueries.getTimeslots, [bid]),
+            db.query(branchQueries.getBranchMenuItems, [bid])])
+        .then(response => {
+            let branch_reservations = response[0];
+            // create object for reservations
+            let reservationsObj = {};
+            for (let i = 0; i < branch_reservations.rowCount; i++) {
+                let row = branch_reservations.rows[i];
                 reservationsObj[row.reservedslot] = row.paxbooked;
             }
             console.log(reservationsObj);
-        })
-        .catch(err => {
-            console.error(err);
-        });
 
-    db.query(branchQueries.getTimeslots, [bid])
-        .then(val => {
-            for (let i = 0; i < val.rowCount; i++) {
-                let row = val.rows[i];
-
-                const slotsLeft = row.numslots;
-                console.log("slots left: " + slotsLeft);
-                let timeSlot = { timing: row.timeslot, slots: slotsLeft, br_id: row.branch_id };
-                timeslots.push(timeSlot);
+            let branch_timeslots = response[1];
+            // add time slots table for branch
+            let timeslots = [];
+            for (let i = 0; i < branch_timeslots.rowCount; i++) {
+                let row = branch_timeslots.rows[i];
+                const currentTimeslot = row.timeslot;
+                const paxBooked = reservationsObj[currentTimeslot] == null ? 0 : reservationsObj[currentTimeslot];
+                console.log("slots left: " + paxBooked);
+                let timeslot_data = { timing: currentTimeslot, slots: row.numslots - paxBooked, br_id: row.branch_id };
+                timeslots.push(timeslot_data);
             }
-        })
-        .catch(err => {
-            console.error(err);
-        });
 
-    db.query(branchQueries.getBranchMenuItems, [bid])
-        .then(val => {
+            let branch_menuitems = response[2];
             // add menu items
             let foodItems = [];
-            for (let i = 0; i < val.rowCount; i++) {
-                let row = val.rows[i];
+            for (let i = 0; i < branch_menuitems.rowCount; i++) {
+                let row = branch_menuitems.rows[i];
                 let food = { name: row.name, price: row.price };
                 foodItems.push(food);
             }
             res.render('branch', { rimage: rimage, bname: bname, baddress: baddress, bphone: bphone, timeslots: timeslots, sells: foodItems });
-
         })
         .catch(err => {
             console.error(err);
@@ -67,7 +61,7 @@ let reserveTimeslot = (req, res) => {
     bookingInfo.push(req.body.bid);
     bookingInfo.push(req.body.pax);
     bookingInfo.push(req.body.timing);
-    
+
     db.query(branchQueries.makeReservation, bookingInfo)
         .then(() => {
             console.log("successfully booked ");
