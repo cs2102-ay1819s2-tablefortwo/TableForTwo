@@ -11,6 +11,7 @@
         <table class="table table-striped">
             <thead>
                 <tr>
+                    <th scope="col">Date</th>
                     <th scope="col">Time</th>
                     <th scope="col">Available Seats</th>
                     <th scope="col">Diners</th>
@@ -19,6 +20,7 @@
             <tbody>
                 {{#each timeslots}}
                 <tr>
+                    <td>{{toDate this.date}}</td>
                     <td>{{toTime this.timing}}</td>
                     <td>{{this.slots}}</td>
                     <td>

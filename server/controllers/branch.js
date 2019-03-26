@@ -24,7 +24,6 @@ let getBranch = (req, res) => {
                 let row = branch_reservations.rows[i];
                 reservationsObj[row.reservedslot] = row.paxbooked;
             }
-            console.log(reservationsObj);
 
             let branch_timeslots = response[1];
             // add time slots table for branch
@@ -33,8 +32,7 @@ let getBranch = (req, res) => {
                 let row = branch_timeslots.rows[i];
                 const currentTimeslot = row.timeslot;
                 const paxBooked = reservationsObj[currentTimeslot] == null ? 0 : reservationsObj[currentTimeslot];
-                console.log("slots left: " + paxBooked);
-                let timeslot_data = { timing: currentTimeslot, slots: row.numslots - paxBooked, br_id: row.branch_id };
+                let timeslot_data = { date: row.date, timing: currentTimeslot, slots: row.numslots - paxBooked, br_id: row.branch_id };
                 timeslots.push(timeslot_data);
             }
 
