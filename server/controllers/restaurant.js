@@ -1,6 +1,6 @@
 'use strict';
 const db = require('../../server/helpers/database').db;
-const restaurantsQuery = require('../../sqlQueries/restaurants');
+const restaurantsQuery = require('../../sqlQueries/restaurantsQueries');
 
 let viewRestaurants = (req, res) => {
     let dictionary = [];
