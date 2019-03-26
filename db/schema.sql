@@ -93,37 +93,46 @@ Create table Sells (
 );
 
 create table Timeslot (
-  timing  time primary key,
-  slotsLeft  integer not null
-  
-  check (slotsLeft >= 0)
+  branch_id   integer,
+  timeslot    time,
+  numSlots    integer not null,
+
+  primary key (branch_id, timeslot),
+  foreign key (branch_id) references Branches(id) on delete cascade,
+  check (numSlots > 0)
 );
 
-create or replace function checkAvailability(timeslot time)
+create or replace function checkAvailability(rSlot time, b_id integer)
 returns integer as $$
-declare total integer;
+declare
+  totalReserved integer;
+  slots integer;
 begin
-	select count(*) into total from Timeslot
-	where Timeslot.timing = timing and timeslot.slotsLeft > 0;
-	return total;
+	select coalesce(sum(pax), 0) into totalReserved
+	from Reservations
+	where reservedSlot = rSlot
+  and branch_id = b_id;
+
+	select numSlots into slots
+	from Timeslot
+	where branch_id = b_id
+	and Timeslot.timeslot = rSlot;
+	raise notice 'slots %, total reserved %', slots, totalReserved;
+	return slots - totalReserved;
 end;
 $$ language PLpgSQL;
+
 create table Reservations (
   id        serial primary key,
   customer_id       integer not null,
+  branch_id integer not null,
   pax       integer not null,
-  timing  time not null,
+  reservedSlot  time,
   
   foreign key(customer_id) references Customers(id),
-  foreign key(timing) references Timeslot(timing),
-  check (checkAvailability(timing) >= pax)
-);
-
-create table Manages (
-  branch_id	integer not null,
-  Reservation_id integer primary key,
-  foreign key (branch_id) references Branches,
-  foreign key (reservation_id) references Reservations
+  foreign key(branch_id) references Branches(id),
+  foreign key(branch_id, reservedSlot) references Timeslot(branch_id, timeslot),
+  check (checkAvailability(reservedSlot, branch_id) >= pax)
 );
 
 create table Ratings(
@@ -138,12 +147,11 @@ create table Ratings(
   check(rating <= 5 and rating >= 0)
 );
 
-create table PointAllocations (
-  id             serial primary key,
+create table Points (
   reservation_id integer unique not null,
   customer_id    integer not null,
   point          integer not null,
-
+  
   foreign key(reservation_id) references Reservations(id),
   foreign key(customer_id) references Users(id)
 );
