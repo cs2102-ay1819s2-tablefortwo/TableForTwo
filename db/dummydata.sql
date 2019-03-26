@@ -19,6 +19,7 @@ insert into USERS (name, username, password, role) values ('Guendolen Dellit', '
 insert into USERS (name, username, password, role) values ('Nicola Rings', 'nringsh', 'lDG0H2D', 'CUSTOMER');
 insert into USERS (name, username, password, role) values ('Cassey Daniaud', 'cdaniaudi', '9RUQzgzpr', 'CUSTOMER');
 insert into USERS (name, username, password, role) values ('Maryl Seacroft', 'mseacroftj', 'ZAOXs2ieuZT', 'CUSTOMER');
+insert into USERS (name, username, password, role) values ('admin', 'admin', '$2a$04$JMUMXMaA1BdijQT7b0OPP.bD8fyrwjaRvEZIprm.F4dZJC6srO.0y', 'ADMIN'); -- password is pw
 
 
 insert into CUSTOMERS (id) values (1);
@@ -52,64 +53,39 @@ insert into RESTAURANTS (rName, rPhone, rAddress) values ('Subway', '2159655239'
 
 
 alter sequence branches_id_seq restart with 1;
-insert into BRANCHES (bName, bPhone, bAddress, openingHour) values ('Pizza Hut @ Clementi', '6063075864', '80 Loeprich Lane', '10:00 AM');
-insert into BRANCHES (bName, bPhone, bAddress, openingHour) values ('KFC @ Kent Ridge', '5197751577', '5 Oxford Terrace', '12:00 PM');
-insert into BRANCHES (bName, bPhone, bAddress, openingHour) values ('Gongcha @ uTown', '6931442672', '9 Hollow Ridge Trail', '11:00 AM');
-insert into BRANCHES (bName, bPhone, bAddress, openingHour) values ('Ameens @ Jurong', '3003793180', '24 Goodland Street', '12:30 PM');
-insert into BRANCHES (bName, bPhone, bAddress, openingHour) values ('Subway @ YIH', '8326702434', '7 Commercial Circle', '11:00 PM');
-insert into BRANCHES (bName, bPhone, bAddress, openingHour) values ('Pizza Hut @ Tampines', '2687690580', '06 Northfield Parkway', '8:00 PM');
-insert into BRANCHES (bName, bPhone, bAddress, openingHour) values ('KFC @ NUH', '6644211151', '8279 West Junction', '6:30 AM');
-insert into BRANCHES (bName, bPhone, bAddress, openingHour) values ('Gongcha @ City Hall', '4729430682', '333 Myrtle Lane', '6:00 AM');
-insert into BRANCHES (bName, bPhone, bAddress, openingHour) values ('Ameens @ Woodlands', '8518661312', '25 Hansons Junction', '8:15 AM');
-insert into BRANCHES (bName, bPhone, bAddress, openingHour) values ('Subway @ Seng Kang', '7666749085', '93798 Gale Junction', '10:00 AM');
+insert into BRANCHES (bName, restaurant_id, bPhone, bAddress, openingHour) values ('Pizza Hut @ Clementi', 1, '6063075864', '80 Loeprich Lane', '10:00 AM');
+insert into BRANCHES (bName, restaurant_id, bPhone, bAddress, openingHour) values ('KFC @ Kent Ridge', 2, '5197751577', '5 Oxford Terrace', '12:00 PM');
+insert into BRANCHES (bName, restaurant_id, bPhone, bAddress, openingHour) values ('Gongcha @ uTown', 3, '6931442672', '9 Hollow Ridge Trail', '11:00 AM');
+insert into BRANCHES (bName, restaurant_id, bPhone, bAddress, openingHour) values ('Ameens @ Jurong', 4, '3003793180', '24 Goodland Street', '12:30 PM');
+insert into BRANCHES (bName, restaurant_id, bPhone, bAddress, openingHour) values ('Subway @ YIH', 5, '8326702434', '7 Commercial Circle', '11:00 PM');
+insert into BRANCHES (bName, restaurant_id, bPhone, bAddress, openingHour) values ('Pizza Hut @ Tampines', 1, '2687690580', '06 Northfield Parkway', '8:00 PM');
+insert into BRANCHES (bName, restaurant_id, bPhone, bAddress, openingHour) values ('KFC @ NUH', 2, '6644211151', '8279 West Junction', '6:30 AM');
+insert into BRANCHES (bName, restaurant_id, bPhone, bAddress, openingHour) values ('Gongcha @ City Hall', 3, '4729430682', '333 Myrtle Lane', '6:00 AM');
+insert into BRANCHES (bName, restaurant_id, bPhone, bAddress, openingHour) values ('Ameens @ Woodlands', 4, '8518661312', '25 Hansons Junction', '8:15 AM');
+insert into BRANCHES (bName, restaurant_id, bPhone, bAddress, openingHour) values ('Subway @ Seng Kang', 5, '7666749085', '93798 Gale Junction', '10:00 AM');
 
 alter sequence menuitems_id_seq restart with 1;
-insert into MENUITEMS (name, type, cuisine, allergens) values ('Chicken Rice', 'food', 'eastern', '');
-insert into MENUITEMS (name, type, cuisine, allergens) values ('Milk Tea', 'drinks', '', 'contains milk');
-insert into MENUITEMS (name, type, cuisine, allergens) values ('Milk Coffee', 'drinks', '', 'contains milk');
-insert into MENUITEMS (name, type, cuisine, allergens) values ('Plain Prata', 'food', 'indian', '');
-insert into MENUITEMS (name, type, cuisine, allergens) values ('Egg Prata', 'food', 'indian', 'contains egg');
-insert into MENUITEMS (name, type, cuisine, allergens) values ('Pasta', 'food', 'western', '');
-insert into MENUITEMS (name, type, cuisine, allergens) values ('Coke', 'drinks', '', '');
-insert into MENUITEMS (name, type, cuisine, allergens) values ('Sweet and Sour Pork', 'food', 'eastern', '');
-insert into MENUITEMS (name, type, cuisine, allergens) values ('Teriyaki Chicken', 'food', 'japanese', '');
-insert into MENUITEMS (name, type, cuisine, allergens) values ('Nasi Lemak', 'food', 'malay', 'contains nut');
-insert into MENUITEMS (name, type, cuisine, allergens) values ('Ice Milo', 'drinks', '', '');
-insert into MENUITEMS (name, type, cuisine, allergens) values ('Froyo Ice-cream', 'dessert', '', '');
-insert into MENUITEMS (name, type, cuisine, allergens) values ('Hawaiian Pizza', 'food', 'western', '');
-insert into MENUITEMS (name, type, cuisine, allergens) values ('Lava Cake', 'dessert', '', '');
-insert into MENUITEMS (name, type, cuisine, allergens) values ('9pc Chicken Wings', 'food', 'western', '');
-insert into MENUITEMS (name, type, cuisine, allergens) values ('Takoyaki', 'food', 'japanese', '');
-insert into MENUITEMS (name, type, cuisine, allergens) values ('Bingsu', 'dessert', 'korean', '');
-insert into MENUITEMS (name, type, cuisine, allergens) values ('Cheese Fries', 'food', 'western', 'contains dairy products');
-insert into MENUITEMS (name, type, cuisine, allergens) values ('Cupcake', 'dessert', 'western', '');
-insert into MENUITEMS (name, type, cuisine, allergens) values ('Beer', 'drinks', '', '');
+insert into MENUITEMS (restaurant_id, name, type, cuisine, allergens) values (4, 'Chicken Rice', 'food', 'eastern', '');
+insert into MENUITEMS (restaurant_id, name, type, cuisine, allergens) values (4 , 'Milk Tea', 'drinks', '', 'contains milk');
+insert into MENUITEMS (restaurant_id, name, type, cuisine, allergens) values (4 , 'Milk Coffee', 'drinks', '', 'contains milk');
+insert into MENUITEMS (restaurant_id, name, type, cuisine, allergens) values (4, 'Plain Prata', 'food', 'indian', '');
+insert into MENUITEMS (restaurant_id, name, type, cuisine, allergens) values (4, 'Egg Prata', 'food', 'indian', 'contains egg');
+insert into MENUITEMS (restaurant_id, name, type, cuisine, allergens) values (1, 'Pasta', 'food', 'western', '');
+insert into MENUITEMS (restaurant_id, name, type, cuisine, allergens) values (2 , 'Coke', 'drinks', '', '');
+insert into MENUITEMS (restaurant_id, name, type, cuisine, allergens) values (4, 'Sweet and Sour Pork', 'food', 'eastern', '');
+insert into MENUITEMS (restaurant_id, name, type, cuisine, allergens) values (1, 'Teriyaki Chicken', 'food', 'japanese', '');
+insert into MENUITEMS (restaurant_id, name, type, cuisine, allergens) values (5, 'Nasi Lemak', 'food', 'malay', 'contains nut');
+insert into MENUITEMS (restaurant_id, name, type, cuisine, allergens) values (5, 'Ice Milo', 'drinks', '', '');
+insert into MENUITEMS (restaurant_id, name, type, cuisine, allergens) values (2, 'Froyo Ice-cream', 'dessert', '', '');
+insert into MENUITEMS (restaurant_id, name, type, cuisine, allergens) values (1, 'Hawaiian Pizza', 'food', 'western', '');
+insert into MENUITEMS (restaurant_id, name, type, cuisine, allergens) values (5, 'Lava Cake', 'dessert', '', '');
+insert into MENUITEMS (restaurant_id, name, type, cuisine, allergens) values (2, '9pc Chicken Wings', 'food', 'western', '');
+insert into MENUITEMS (restaurant_id, name, type, cuisine, allergens) values (5, 'Takoyaki', 'food', 'japanese', '');
+insert into MENUITEMS (restaurant_id, name, type, cuisine, allergens) values (3, 'Bingsu', 'dessert', 'korean', '');
+insert into MENUITEMS (restaurant_id, name, type, cuisine, allergens) values (2, 'Cheese Fries', 'food', 'western', 'contains dairy products');
+insert into MENUITEMS (restaurant_id, name, type, cuisine, allergens) values (5, 'Cupcake', 'dessert', 'western', '');
+insert into MENUITEMS (restaurant_id, name, type, cuisine, allergens) values (1, 'Beer', 'drinks', '', '');
 
-
-
-insert into OWNS (branch_id, restaurant_id) values (1, 1);
-insert into OWNS (branch_id, restaurant_id) values (2, 2);
-insert into OWNS (branch_id, restaurant_id) values (3, 3);
-insert into OWNS (branch_id, restaurant_id) values (4, 4);
-insert into OWNS (branch_id, restaurant_id) values (5, 5);
-insert into OWNS (branch_id, restaurant_id) values (6, 1);
-insert into OWNS (branch_id, restaurant_id) values (7, 2);
-insert into OWNS (branch_id, restaurant_id) values (8, 3);
-insert into OWNS (branch_id, restaurant_id) values (9, 4);
-insert into OWNS (branch_id, restaurant_id) values (10, 5);
-
-
-alter sequence creates_id_seq restart with 1;
-insert into CREATES (menu_item_id, restaurant_id) values (6, 1);
-insert into CREATES (menu_item_id, restaurant_id) values (7, 1);
-insert into CREATES (menu_item_id, restaurant_id) values (7, 2);
-insert into CREATES (menu_item_id, restaurant_id) values (15, 2);
-insert into CREATES (menu_item_id, restaurant_id) values (2, 3);
-insert into CREATES (menu_item_id, restaurant_id) values (3, 3);
-insert into CREATES (menu_item_id, restaurant_id) values (4, 4);
-insert into CREATES (menu_item_id, restaurant_id) values (5, 4);
-insert into CREATES (menu_item_id, restaurant_id) values (7, 5);
-insert into CREATES (menu_item_id, restaurant_id) values (11, 5);
 
 insert into FAVOURITES (customer_id, food_id) values (2, 11);
 insert into FAVOURITES (customer_id, food_id) values (2, 7);
@@ -121,17 +97,33 @@ insert into FAVOURITES (customer_id, food_id) values (17, 14);
 insert into FAVOURITES (customer_id, food_id) values (19, 1);
 
 
-alter sequence sells_id_seq restart with 1;
-insert into SELLS (mid, bid, price) values (6, 1, '$3.00');
-insert into SELLS (mid, bid, price) values (7, 1, '$0.70');
-insert into SELLS (mid, bid, price) values (7, 2, '$2.70');
-insert into SELLS (mid, bid, price) values (7, 6, '$18.37');
-insert into SELLS (mid, bid, price) values (7, 7, '$1.60');
-insert into SELLS (mid, bid, price) values (4, 9, '$5.23');
-insert into SELLS (mid, bid, price) values (11, 5, '$16.09');
-insert into SELLS (mid, bid, price) values (3, 8, '$5.63');
-insert into SELLS (mid, bid, price) values (11, 5, '$16.94');
-insert into SELLS (mid, bid, price) values (5, 4, '$9.10');
+insert into SELLS (bid, mid, price) values (1, 6, '$6.00');
+insert into SELLS (bid, mid, price) values (1, 9, '$5.00');
+insert into SELLS (bid, mid, price) values (1, 13, '$9.00');
+insert into SELLS (bid, mid, price) values (2, 7, '$1.00');
+insert into SELLS (bid, mid, price) values (2, 12, '$4.00');
+insert into SELLS (bid, mid, price) values (2, 15, '$10.00');
+insert into SELLS (bid, mid, price) values (3, 17, '$4.00');
+insert into SELLS (bid, mid, price) values (4, 1, '$4.00');
+insert into SELLS (bid, mid, price) values (4, 2, '$0.50');
+insert into SELLS (bid, mid, price) values (4, 3, '$0.50');
+insert into SELLS (bid, mid, price) values (4, 4, '$1.00');
+insert into SELLS (bid, mid, price) values (5, 10, '$4.00');
+insert into SELLS (bid, mid, price) values (5, 11, '$1.00');
+insert into SELLS (bid, mid, price) values (6, 6, '$6.00');
+insert into SELLS (bid, mid, price) values (6, 9, '$5.00');
+insert into SELLS (bid, mid, price) values (6, 13, '$9.00');
+insert into SELLS (bid, mid, price) values (7, 7, '$1.00');
+insert into SELLS (bid, mid, price) values (7, 12, '$4.00');
+insert into SELLS (bid, mid, price) values (7, 15, '$10.00');
+insert into SELLS (bid, mid, price) values (8, 17, '$4.00');
+insert into SELLS (bid, mid, price) values (9, 1, '$4.00');
+insert into SELLS (bid, mid, price) values (9, 2, '$0.50');
+insert into SELLS (bid, mid, price) values (9, 3, '$0.50');
+insert into SELLS (bid, mid, price) values (9, 4, '$1.00');
+insert into SELLS (bid, mid, price) values (10, 10, '$4.00');
+insert into SELLS (bid, mid, price) values (10, 11, '$1.00');
+
 
 insert into TIMESLOT (branch_id, timeslot, numSlots) values (1, '10:00:00', 15);
 insert into TIMESLOT (branch_id, timeslot, numSlots) values (1, '12:00:00', 15);
@@ -174,6 +166,8 @@ insert into POINTS (reservation_id, customer_id, point) values (4, 5, 1);
 insert into POINTS (reservation_id, customer_id, point) values (5, 6, 1);
 
 alter sequence promotions_id_seq restart with 1;
-insert into PROMOTIONS (id, branch_id, name, description, start_date, end_date, start_timeslot, end_timeslot) values
-(1, 1, 'Pizza WHAT?!', 'Save up to $50.00 off any second pizza purchased! Valid till 31 March 2019.', '2019-02-01', '2019-03-31', '00:00:00', '	24:00:00'),
-(2, 3, '1 for you, 1 for me', '1-for-1 for all stores', '2010-01-01', '2020-12-31', '12:00:00', '14:00:00');
+insert into PROMOTIONS (name, description, promo_code, start_date, end_date, start_timeslot, end_timeslot) values
+	('Pizza WHAT?!', 'Save up to $50.00 off any second pizza purchased! Valid till 31 March 2019.', 'P001', '2019-02-01', '2019-03-31', '00:00:00', '	24:00:00'),
+	('1 for you, 1 for me', '1-for-1 for all stores', '1FOR1', '2010-01-01', '2020-12-31', '12:00:00', '14:00:00');
+	
+insert into OFFERS (branch_id, promo_id) values ('1', '1'), ('3', '2');

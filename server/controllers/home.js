@@ -8,7 +8,7 @@ const sqlQuery = require('../../sqlQueries/promotions');
 
 
 let index = (req, res) => {
-    Promise.all([db.query(sqlQuery.allPromotions)])
+    Promise.all([db.query(sqlQuery.visiblePromotions)])
         .then(response => {
             const promotions = parsePromotions(response[0]);
             return res.render('home', { layout: 'index', title: 'Home', promotions: promotions });

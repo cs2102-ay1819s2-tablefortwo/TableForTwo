@@ -20,34 +20,25 @@ create table Restaurants(
 
 create table Branches(
   id       serial primary key,
+  restaurant_id	integer not null,
+  
   bName     varchar(100),
   bPhone    bigint,
   bAddress  varchar(100), --eg: 1A Kent Ridge Road 
   bArea     varchar(100), --eg: South
-  openingHour time not null
+  openingHour time not null,
+  
+  foreign key(restaurant_id) references Restaurants(id) on delete cascade
 );
 
 create table MenuItems (
   id        serial primary key,
+  restaurant_id integer not null,
+  
   name      varchar(100) not null,
   type      varchar(30),  -- eg: food, drinks
   cuisine   varchar(30),  -- eg: western, eastern, japanese
-  allergens text
-);
-
-
-create table Owns (
-  branch_id integer primary key,
-  restaurant_id integer not null,
-
-  foreign key(restaurant_id) references Restaurants(id) on delete cascade,
-  foreign key(branch_id) references Branches(id) on delete cascade
-);
-
-create table Creates (
-  id serial primary key,
-  menu_item_id integer references MenuItems(id),
-  restaurant_id integer not null,
+  allergens text,
   
   foreign key(restaurant_id) references Restaurants(id) on delete cascade
 );
@@ -64,14 +55,15 @@ create table Favourites(
 
 create or replace function checkRestaurantSellThisFood(mid integer, bid integer)
 returns boolean as $$
+declare restaurant_id_involved integer;
 begin
-	
+	select id into restaurant_id_involved from restaurants where id = (select restaurant_id from branches where id = bid);
 	if exists (
-          Select 1
-          from Owns o natural join Creates c
-          Where o.branch_id = bid
-          And c.menu_item_id = mid
-      ) then return true;
+		select 1
+		from Restaurants r inner join MenuItems m on r.id = m.restaurant_id
+		where r.id = restaurant_id_involved
+		and m.id = mid
+	) then return true;
 
       Else 
          Return false;
@@ -81,11 +73,11 @@ $$ language PLpgSQL;
 
 
 Create table Sells (
-  id serial primary key,
   mid integer not null, 
   bid integer not null,
   price money not null,
   
+  primary key(mid, bid),
   foreign key(mid) references MenuItems(id) on delete cascade,
   foreign key(bid) references Branches(id) on delete cascade,
 
@@ -158,7 +150,6 @@ create table Points (
 
 create table Promotions (
   id              serial primary key,
-  branch_id       integer,
   name 			  varchar(100),
   description     text,
   promo_code	  varchar(50) unique,
@@ -169,7 +160,14 @@ create table Promotions (
   start_timeslot  time,
   end_timeslot    time,
   
-  foreign key (branch_id) references Branches,
   check(end_date > start_date and end_date > current_timestamp),
   check(start_timeslot < end_timeslot)
 );
+
+create table Offers (
+	branch_id 	integer not null,
+	promo_id	integer not null,
+	
+	foreign key (branch_id) references Branches,
+	foreign key (promo_id) references Promotions
+)
