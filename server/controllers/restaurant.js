@@ -3,6 +3,7 @@ const db = require('../../server/helpers/database').db;
 const branchController = require('../controllers/branch');
 const restaurantsQuery = require('../../sqlQueries/restaurants');
 
+
 let viewRestaurants = (req, res) => {
     let dictionary = [];
     console.log('Retrieving all restaurants');
@@ -31,6 +32,5 @@ let viewRestaurants = (req, res) => {
 };
 
 let getBranch = (req, res) => branchController(req, res);
-
 
 module.exports = { viewRestaurants: viewRestaurants, getBranch: getBranch };

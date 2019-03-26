@@ -5,7 +5,7 @@ let index = (req, res) => {
     if (req.isAuthenticated()) {
         return res.redirect('../home');
     }
-    res.render('signup', { layout: 'index', title: 'signup', message: res.locals.message, isLoggedIn: false });
+    res.render('signup', { layout: 'index', title: 'signup', message: res.locals.message });
 };
 
 let handleSignup = (req, res, next) => {

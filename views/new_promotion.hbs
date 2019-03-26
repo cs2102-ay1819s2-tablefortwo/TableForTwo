@@ -1,0 +1,78 @@
+<div class='container mt-4'>
+    <div class='mb-5'>
+        <div class='text-center panel-relative'>
+            <h1>New Promotion</h1>
+        </div>
+
+        <form class="px-4 py-3" id="new_promotion_form" action="new" role="form" method="post">
+            <div class="form-row mb-3">
+                <div class="form-group col-md-12">
+                    <div>
+                        <label for="applicableBranches"> Branches with this promotion: {{form.applicableBranches}} </label>
+                    </div>
+                    <select class="selectpicker form-control" id="applicableBranches" name="applicableBranches"
+                            multiple data-live-search="true" title="Applicable branches...  " data-width="fit">
+                        {{#each branches}}
+                            <option {{#if_contains this.id ../form.applicableBranches}} selected {{/if_contains}} value="{{this.id}}" data-content="<span class='chip' style='color: #212529 !important'>{{this.bname}}</span>">
+                                {{this.bname}}
+                            </option>
+                        {{/each}}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6 error">
+                    <label for="promoName">Name</label>
+                    <input type="text" class="form-control" id="promoName" name="name" placeholder="Enter your a catchy promotional name" value={{form.name}}>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="promoCode">Promo Code</label>
+                    <input type="text" class="form-control" id="promoCode" name="promoCode" placeholder="A unique promo code"
+                           value={{form.promoCode}}>
+                </div>
+            </div>
+            <div class="form-row form-group">
+                <label for="promoDescription">Description</label>
+                <textarea rows="3" class="form-control" id="promoDescription" name="description"
+                          placeholder="Enter the description of the promotion">{{form.description}}</textarea>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="startTime">Start time</label>
+                    <input type="time" class="form-control" id="startTime" name="startTime" placeholder="From" value={{form.startTime}}>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="endTime">End time</label>
+                    <input type="time" class="form-control" id="endTime" name="endTime" placeholder="To" value={{form.endTime}}>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="startDate">Start of Promotion</label>
+                    <input type="datetime-local" class="form-control" id="startDate" name="startDate" placeholder="From" value={{form.startDate}}>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="endDate">End of Promotion</label>
+                    <input type="datetime-local" class="form-control" id="endDate" name="endDate" placeholder="To" value={{form.endDate}}>
+                </div>
+            </div>
+
+            <div class="mb-2 form-row">
+                <div class="form-group custom-control custom-checkbox mr-sm-2">
+                    <input type="checkbox" class="custom-control-input" id="promoVisibility" name="promoVisibility"
+                        {{#unless form}} checked {{/unless}}
+                        {{#if form}}
+                            {{#if form.promoVisibility}} checked {{/if}}
+                        {{/if}}>
+                    <label class="custom-control-label" for="promoVisibility">Visible to public</label>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+
+<script src="../javascripts/new_promotions.js"></script>
