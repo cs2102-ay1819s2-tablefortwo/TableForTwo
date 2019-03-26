@@ -24,7 +24,8 @@ let loginStrategy = new LocalStrategy({
                 // check if clear text password matches with hash
                 let isValidPassword = encrypt.validatePassword(password, hashedPassword);
                 if (isValidPassword) {
-                    return done(null, user.rows);
+                    console.log(user.rows[0]);
+                    return done(null, user.rows[0]);
                 } else {
                     return done(null, false, { message: 'Invalid password' });
                 }
@@ -46,12 +47,12 @@ let signupStrategy = new LocalStrategy({
                     console.log('adding new signup ' + username);
                     // add new user to db 
                     db.query(userSqlQueries.signupUser, [req.body.name, username, hashedPassword])
-                        .then(done(null, user, { message: 'successful signup' }))
+                        .then(done(null, user.rows[0], { message: 'successful signup' }))
                         .catch(err => {
                             console.error(err);
                         });
                 } else {
-                    return done(null, user.rows, { message: 'Username already exists!' });
+                    return done(null, user.rows[0], { message: 'Username already exists!' });
                 }
             })
             .catch(err => console.error(err));
@@ -73,7 +74,7 @@ let deserializeUser = (passport) => {
                 if (!res) {
                     return done('No match found', null);
                 }
-                done(null, res.rows);
+                done(null, res.rows[0]);
             });
     });
 };

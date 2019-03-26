@@ -23,6 +23,9 @@ $(function() {
 
     form.validate({
         rules: {
+            applicableBranches: {
+                required: true
+            },
             name: {
                 required: true
             },
@@ -48,9 +51,11 @@ $(function() {
                 required: true,
                 endDateConstraint: true,
             },
-
         },
         messages: {
+            applicableBranches: {
+              required: 'Must have at least 1 branch using the promotions.'
+            },
             name: {
                 required: 'Promotion name cannot be empty.'
             },

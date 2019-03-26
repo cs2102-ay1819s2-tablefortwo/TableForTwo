@@ -31,7 +31,9 @@
     <div class='mb-5'>
         <div>
             <h3 class="inline-block">Promotions</h3>
-            <a class="btn btn-success inline-block btn-sm mb-2 ml-2" href="promotions/new" role="button">New Promotion</a>
+            {{#if_eq user.role "ADMIN"}}
+                <a class="btn btn-success inline-block btn-sm mb-2 ml-2" href="promotions/new" role="button">New Promotion</a>
+            {{/if_eq}}
         </div>
 
         <div class="horizontal-scroll">

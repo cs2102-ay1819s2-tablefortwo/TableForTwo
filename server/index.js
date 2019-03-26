@@ -37,6 +37,7 @@ module.exports = () => {
             res.locals.success = req.flash('success');
             res.locals.errors = req.flash('error');
             res.locals.isLoggedIn = req.isAuthenticated();
+            res.locals.user = req.user ? req.user : undefined;
             next();
         });
 
@@ -51,6 +52,22 @@ module.exports = () => {
                 },
                 toTime: function(time) {
                     return moment(time, ["h:mm A", "H:mm"]).format('LT')
+                },
+                if_eq: function(a, b, opts) {
+                    if (a === b) {
+                        return opts.fn(this)
+                    } else {
+                        return opts.inverse(this);
+                    }
+                },
+                if_contains: function(el, array, opts) {
+                    if (!array) {
+                        return opts.inverse(this);
+                    } else if (array.includes(el)) {
+                        return opts.fn(this);
+                    } else {
+                        return opts.inverse(this);
+                    }
                 }
             },
             defaultLayout: 'index',

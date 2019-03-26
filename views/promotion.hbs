@@ -1,6 +1,9 @@
 <div style="padding: 20px">
     <div class="text-center">
-        <h3> Promotion: {{promotion.name}} </h3>
+        <h3 style="display: inline"> Promotion: {{promotion.name}} </h3>
+        <a href="/promotions/{{promotion.id}}/edit" class="btn btn-primary btn-sm mb-3">
+            Edit
+        </a>
     </div>
 
     <div class="card mt-5">
@@ -16,14 +19,44 @@
             </div>
 
             <div class="row mt-3">
-                <div class="col-md-6"> <span class="inline-block"> <h5> Start date: </h5> </span> {{promotion.start_date}} </div>
-                <div class="col-md-6"> <span class="inline-block"> <h5> End date: </h5> </span> {{promotion.end_date}} </div>
+                <div class="col-md-6"> <span class="inline-block"> <h5> Start date: </h5> </span> {{toDateTime promotion.start_date}} </div>
+                <div class="col-md-6"> <span class="inline-block"> <h5> End date: </h5> </span> {{toDateTime promotion.end_date}} </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-6"> <span class="inline-block"> <h5> Usable period of the day: </h5> </span>
+                    {{toTime promotion.start_timeslot}} - {{toTime promotion.end_timeslot}}
+                </div>
             </div>
 
             <div class="row mt-3">
                 <h5 class="card-title col-md-12">Description:</h5>
                 <p class="card-text col-md-12">{{promotion.description}}</p>
             </div>
+        </div>
+    </div>
+
+    <div class="card mt-5">
+        <div class="card-header">
+            Restaurants that uses this promotion
+        </div>
+        <div class="card-body">
+            {{#each branchesByRestaurant}}
+                <h5 class="card-title">{{this.0.rname}}</h5>
+                {{#each this}}
+                    <div class="homepage-card mb-3">
+                        <div class="card" style="width: 18rem;">
+                            <img src="../images/promo1.jpeg" class="card-img-top" alt="{{this.bname}} image">
+                            <div class="card-body">
+                                <h5 class="card-title">{{this.bname}}</h5>
+                                <div class="card-text">Address: {{this.baddress}}</div>
+                                <div class="card-text">Contact no: {{this.bphone}}</div>
+                                <a href="#" class="btn btn-primary mt-2">View</a>
+                            </div>
+                        </div>
+                    </div>
+                {{/each}}
+            {{/each}}
         </div>
     </div>
 </div>
