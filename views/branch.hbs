@@ -19,7 +19,7 @@
             <tbody>
                 {{#each timeslots}}
                 <tr>
-                    <td>{{this.timing}}</td>
+                    <td>{{toTime this.timing}}</td>
                     <td>{{this.slots}}</td>
                     <td>
                         <form method="post" action="book">
