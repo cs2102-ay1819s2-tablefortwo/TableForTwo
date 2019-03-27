@@ -141,9 +141,9 @@ let update = (req, res) => {
             client.query(promoQueries.updatePromotion, [form['id'], form['name'], form['description'], form['promoCode'],
                 !!form['promoVisibility'], form['startDate'], form['endDate'], form['startTime'], form['endTime']], (err) => {
                 if (shouldAbort(err)) return;
-                client.query(promoQueries.insertOffers, [promoId, getUpdatedOffers(promoId, applicableBranches)], (err) => {
+                client.query(promoQueries.insertOffersFromPromoUpdate, [promoId, getUpdatedOffers(promoId, applicableBranches)], (err) => {
                     if (shouldAbort(err)) return;
-                    client.query(promoQueries.deleteOffers, [promoId, getUpdatedOffers(promoId, applicableBranches)], (err) => {
+                    client.query(promoQueries.deleteOffersFromPromoUpdate, [promoId, getUpdatedOffers(promoId, applicableBranches)], (err) => {
                         if (shouldAbort(err)) return;
                         client.query('COMMIT;', [], (err) => {
                             if (shouldAbort(err)) return;
@@ -156,6 +156,44 @@ let update = (req, res) => {
             })
         })
     })
+};
+
+let deletePromo = (req, res) => {
+    const promoId = req.params['promoId'];
+    db.connect((err, client, done) => {
+        const shouldAbort = (trans_err) => {
+            if (trans_err) {
+                console.error('Error in transaction', trans_err.stack);
+                client.query('ROLLBACK', (err) => {
+                    if (err) {
+                        console.error('Error rolling back client', err.stack);
+                    }
+                    console.log('redirect?');
+                    // release the client back to the pool
+                    req.flash('error', `Server error: ${trans_err.message}`);
+                    res.redirect(`/promotions/${promoId}`);
+                    done();
+                })
+            }
+            return !!trans_err
+        };
+        client.query('BEGIN;', [], (err) => {
+            if (shouldAbort(err)) return;
+            client.query(promoQueries.deletePromotionOffers, [promoId], (err) => {
+                if (shouldAbort(err)) return;
+                client.query(promoQueries.deletePromotion, [promoId], (err) => {
+                    if (shouldAbort(err)) return;
+                    client.query('COMMIT;', [], (err) => {
+                        if (shouldAbort(err)) return;
+                        console.log('here');
+                        req.flash('success', 'Promotion has been deleted.');
+                        res.redirect(`/home`);
+                        done();
+                    })
+                })
+            })
+        });
+    });
 };
 
 
@@ -184,4 +222,4 @@ function sortBranchesAccordingToRestaurant(branches) {
     return Object.values(result);
 }
 
-module.exports = { show: show, create: create, new: newPromo, edit: edit, update: update};
+module.exports = { show: show, create: create, new: newPromo, edit: edit, update: update, delete: deletePromo};

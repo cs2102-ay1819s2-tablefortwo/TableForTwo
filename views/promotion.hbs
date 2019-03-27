@@ -5,6 +5,10 @@
             <a href="/promotions/{{promotion.id}}/edit" class="btn btn-primary btn-sm mb-3">
                 Edit
             </a>
+
+        <form class="inline-block" style="float: right" action="promotions/{{promotion.id}}/delete" method="post">
+            <input type="submit" class="btn btn-danger btn-sm mb-3" value="Delete"/>
+        </form>
         {{/if_eq}}
     </div>
 
@@ -63,4 +67,4 @@
     </div>
 </div>
 
-<script src="../javascripts/promotion.js"></script>
+<script src="javascripts/promo_form.js"></script>

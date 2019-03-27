@@ -18,7 +18,6 @@ let index = (req, res) => {
 
     Promise.all([promotionsApiCall])
         .then(response => {
-            console.log('hello');
             const promotions = parsePromotions(response[0]);
             return res.render('home', { layout: 'index', title: 'Home', promotions: promotions });
         }).catch(error => {

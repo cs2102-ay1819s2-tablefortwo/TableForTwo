@@ -12,7 +12,7 @@
             <div class="list-group">
                 {{ @branches }}{{#each this.branches }}
                 <div class="card-body" id=b{{@bid}}{{this.bid}}>
-                    <form action="branch" method="post">
+                    <form action="home/branch" method="post">
                         <input type="hidden" name="rname" value="{{../rname}}">
                         <input type="hidden" name="bid" value={{@bid}}{{this.bid}}>
                         <input type="hidden" name="bname" value="{{@bname}}{{this.bname}}">
