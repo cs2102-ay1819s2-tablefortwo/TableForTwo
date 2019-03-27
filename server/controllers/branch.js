@@ -22,7 +22,8 @@ let getBranch = (req, res) => {
             let reservationsObj = {};
             for (let i = 0; i < branch_reservations.rowCount; i++) {
                 let row = branch_reservations.rows[i];
-                reservationsObj[row.reservedslot] = row.paxbooked;
+                // TODO: DATE
+                reservationsObj[row.reserveddate+row.reservedslot] = row.paxbooked;
             }
 
             let branch_timeslots = response[1];
@@ -31,8 +32,10 @@ let getBranch = (req, res) => {
             for (let i = 0; i < branch_timeslots.rowCount; i++) {
                 let row = branch_timeslots.rows[i];
                 const currentTimeslot = row.timeslot;
-                const paxBooked = reservationsObj[currentTimeslot] == null ? 0 : reservationsObj[currentTimeslot];
-                let timeslot_data = { date: row.date, timing: currentTimeslot, slots: row.numslots - paxBooked, br_id: row.branch_id };
+                const currentDateslot = row.dateslot;
+                console.log(currentDateslot);
+                const paxBooked = reservationsObj[currentDateslot+currentTimeslot] == null ? 0 : reservationsObj[currentDateslot+currentTimeslot];
+                let timeslot_data = { dateslot: currentDateslot, timing: currentTimeslot, slots: row.numslots - paxBooked, br_id: row.branch_id };
                 timeslots.push(timeslot_data);
             }
 
@@ -59,14 +62,15 @@ let reserveTimeslot = (req, res) => {
     bookingInfo.push(req.body.bid);
     bookingInfo.push(req.body.pax);
     bookingInfo.push(req.body.timing);
+    bookingInfo.push(req.body.slotdate);
 
     db.query(branchQueries.makeReservation, bookingInfo)
         .then(() => {
             console.log("successfully booked ");
-            req.flash('success', `Booking at '${req.body.timing}' has been added!`);
+            req.flash('success', `Booking on '${req.body.slotdate}' at '${req.body.timing}' has been added!`);
             res.redirect('/home');
         }).catch(error => {
-            req.flash('error', `Unable to make reservation at '${req.body.timing}'`);
+            req.flash('error', `Unable to make reservation on '${req.body.slotdate}' at '${req.body.timing}'`);
             res.redirect('/home');
         });
 };

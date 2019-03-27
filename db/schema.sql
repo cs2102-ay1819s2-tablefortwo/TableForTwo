@@ -86,11 +86,11 @@ Create table Sells (
 
 create table Timeslot (
   branch_id   integer,
-  date        date,
+  dateslot    date,
   timeslot    time,
   numSlots    integer not null,
 
-  primary key (branch_id, date, timeslot),
+  primary key (branch_id, dateslot, timeslot),
   foreign key (branch_id) references Branches(id) on delete cascade,
   check (numSlots > 0)
 );
@@ -110,7 +110,7 @@ begin
 	select numSlots into slots
 	from Timeslot
 	where branch_id = b_id
-	and Timeslot.date = rDate
+	and Timeslot.dateslot = rDate
 	and Timeslot.timeslot = rSlot;
 	raise notice 'slots %, total reserved %', slots, totalReserved;
 	return slots - totalReserved;
@@ -122,12 +122,12 @@ create table Reservations (
   customer_id       integer not null,
   branch_id integer not null,
   pax       integer not null,
-  reservedSlot  time,
-  reservedDate  date,
+  reservedSlot  time not null,
+  reservedDate  date not null,
   
   foreign key(customer_id) references Customers(id),
   foreign key(branch_id) references Branches(id),
-  foreign key(branch_id, reservedSlot, reservedDate) references Timeslot(branch_id, timeslot, date),
+  foreign key(branch_id, reservedSlot, reservedDate) references Timeslot(branch_id, timeslot, dateslot),
   check (checkAvailability(reservedDate, reservedSlot, branch_id) >= pax)
 );
 

@@ -132,11 +132,11 @@ declare
 begin
   foreach currentdate in array dates
   loop
-    insert into TIMESLOT (branch_id, date, timeslot, numSlots) values (b_id, currentdate, '10:00:00', slots);
-    insert into TIMESLOT (branch_id, date, timeslot, numSlots) values (b_id, currentdate, '12:00:00', slots);
-    insert into TIMESLOT (branch_id, date, timeslot, numSlots) values (b_id, currentdate, '14:00:00', slots);
-    insert into TIMESLOT (branch_id, date, timeslot, numSlots) values (b_id, currentdate, '18:00:00', slots);
-    insert into TIMESLOT (branch_id, date, timeslot, numSlots) values (b_id, currentdate, '19:00:00', slots);
+    insert into TIMESLOT (branch_id, dateslot, timeslot, numSlots) values (b_id, currentdate, '10:00:00', slots);
+    insert into TIMESLOT (branch_id, dateslot, timeslot, numSlots) values (b_id, currentdate, '12:00:00', slots);
+    insert into TIMESLOT (branch_id, dateslot, timeslot, numSlots) values (b_id, currentdate, '14:00:00', slots);
+    insert into TIMESLOT (branch_id, dateslot, timeslot, numSlots) values (b_id, currentdate, '18:00:00', slots);
+    insert into TIMESLOT (branch_id, dateslot, timeslot, numSlots) values (b_id, currentdate, '19:00:00', slots);
   end loop;
 end;
 $$ language PLpgSQL;
@@ -154,10 +154,12 @@ select populateTimeslots(10, 25);
 
 alter sequence reservations_id_seq restart with 1;
 insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate) values (2, 1, 3, '10:00:00', '2019-03-20');
+insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate) values (2, 1, 3, '12:00:00', '2019-03-20');
 insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate) values (3, 2, 2, '12:00:00', '2019-03-20');
 insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate) values (5, 4, 5, '18:00:00', '2019-03-20');
 insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate) values (6, 6, 3, '10:00:00', '2019-03-20');
 insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate) values (7, 8, 1, '18:00:00', '2019-03-21');
+insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate) values (7, 1, 1, '18:00:00', '2019-03-21');
 
 
 alter sequence ratings_id_seq restart with 1;
