@@ -1,19 +1,21 @@
 <div class='container mt-4'>
     <div class='mb-5'>
         <div class='text-center panel-relative'>
-            <h1>New Promotion</h1>
+            <h1>Edit Promotion</h1>
         </div>
 
-        <form class="px-4 py-3" id="new_promotion_form" action="new" role="form" method="post">
+        <form class="px-4 py-3" id="new_promotion_form" action="update" role="form" method="post">
+            <input type="hidden" id="id" name="id" value={{form.id}}>
             <div class="form-row mb-3">
                 <div class="form-group col-md-12">
                     <div>
-                        <label for="applicableBranches"> Branches with this promotion: {{form.applicableBranches}} </label>
+                        <label for="applicableBranches"> Branches with this promotion: </label>
                     </div>
                     <select class="selectpicker form-control" id="applicableBranches" name="applicableBranches"
                             multiple data-live-search="true" title="Applicable branches...  " data-width="fit">
                         {{#each branches}}
-                            <option {{#if_contains this.id ../form.applicableBranches}} selected {{/if_contains}} value="{{this.id}}" data-content="<span class='chip' style='color: #212529 !important'>{{this.bname}}</span>">
+                            <option {{#if_contains this.id ../form.applicableBranches}} selected {{/if_contains}}
+                                    value="{{this.id}}" data-content="<span class='chip' style='color: #212529 !important'>{{this.bname}}</span>">
                                 {{this.bname}}
                             </option>
                         {{/each}}

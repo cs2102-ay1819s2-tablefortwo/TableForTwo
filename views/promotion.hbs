@@ -1,9 +1,11 @@
 <div style="padding: 20px">
     <div class="text-center">
         <h3 style="display: inline"> Promotion: {{promotion.name}} </h3>
-        <a href="/promotions/{{promotion.id}}/edit" class="btn btn-primary btn-sm mb-3">
-            Edit
-        </a>
+        {{#if_eq user.role 'ADMIN'}}
+            <a href="/promotions/{{promotion.id}}/edit" class="btn btn-primary btn-sm mb-3">
+                Edit
+            </a>
+        {{/if_eq}}
     </div>
 
     <div class="card mt-5">

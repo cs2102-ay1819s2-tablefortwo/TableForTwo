@@ -166,8 +166,9 @@ insert into POINTS (reservation_id, customer_id, point) values (4, 5, 1);
 insert into POINTS (reservation_id, customer_id, point) values (5, 6, 1);
 
 alter sequence promotions_id_seq restart with 1;
-insert into PROMOTIONS (name, description, promo_code, start_date, end_date, start_timeslot, end_timeslot) values
-	('Pizza WHAT?!', 'Save up to $50.00 off any second pizza purchased! Valid till 31 March 2019.', 'P001', '2019-02-01', '2019-03-31', '00:00:00', '	24:00:00'),
-	('1 for you, 1 for me', '1-for-1 for all stores', '1FOR1', '2010-01-01', '2020-12-31', '12:00:00', '14:00:00');
+insert into PROMOTIONS (name, description, promo_code, start_date, end_date, start_timeslot, end_timeslot, visibility) values
+	('Pizza WHAT?!', 'Save up to $50.00 off any second pizza purchased! Valid till 31 March 2019.', 'P001', '2019-02-01', '2019-03-31', '00:00:00', '24:00:00', true),
+	('1 for you, 1 for me', '1-for-1 for all stores', '1FOR1', '2010-01-01', '2020-12-31', '12:00:00', '14:00:00', true),
+	('Prata Week!', 'Kosong now comes with eggs!', 'PRATAFLIP', '2019-02-01', '2019-03-31', '00:00:00', '24:00:00', false);
 	
-insert into OFFERS (branch_id, promo_id) values ('1', '1'), ('3', '2');
+insert into OFFERS (branch_id, promo_id) values (1, 1), (3, 2), (4, 3), (9, 3);

@@ -24,7 +24,6 @@ let loginStrategy = new LocalStrategy({
                 // check if clear text password matches with hash
                 let isValidPassword = encrypt.validatePassword(password, hashedPassword);
                 if (isValidPassword) {
-                    console.log(user.rows[0]);
                     return done(null, user.rows[0]);
                 } else {
                     return done(null, false, { message: 'Invalid password' });
