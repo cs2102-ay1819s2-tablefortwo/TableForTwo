@@ -3,21 +3,25 @@ const db = require('../../server/helpers/database').db;
 const branchQueries = require('../../sqlQueries/restaurantsQueries');
 
 let getBranch = (req, res) => {
-    console.log('Displaying details for branch');
-    console.log(JSON.stringify(req.body));
+    let rid = req.params.restaurant_id;
+    let bid = req.params.branch_id;    
 
-    let rname = req.body.rname;
-    let bid = req.body.bid;
-    let bname = req.body.bname;
-    let baddress = req.body.baddress;
-    let bphone = req.body.bphone;
-    let rimage = encodeURI('../images/' + rname + '.jpg');
-
-    Promise.all([db.query(branchQueries.getReservations, [bid]),
+    Promise.all([db.query(branchQueries.getBranchDetails, [bid]),
+            db.query(branchQueries.getReservations, [bid]),
             db.query(branchQueries.getTimeslots, [bid]),
             db.query(branchQueries.getBranchMenuItems, [bid])])
         .then(response => {
-            let branch_reservations = response[0];
+            // get and restaurant details
+            let branch_details = response[0].rows[0];
+            console.log('Displaying details for branch');
+            console.log(JSON.stringify(branch_details));
+            let rname = branch_details.rname;
+            let rimage = encodeURI('/images/' + rname + '.jpg');
+            let bname = branch_details.bname;
+            let baddress = branch_details.baddress;
+            let bphone = branch_details.bphone;        
+
+            let branch_reservations = response[1];
             // create object for reservations
             let reservationsObj = {};
             for (let i = 0; i < branch_reservations.rowCount; i++) {
@@ -26,7 +30,7 @@ let getBranch = (req, res) => {
                 reservationsObj[row.reserveddate+row.reservedslot] = row.paxbooked;
             }
 
-            let branch_timeslots = response[1];
+            let branch_timeslots = response[2];
             // add time slots table for branch
             let timeslots = [];
             for (let i = 0; i < branch_timeslots.rowCount; i++) {
@@ -39,7 +43,7 @@ let getBranch = (req, res) => {
                 timeslots.push(timeslot_data);
             }
 
-            let branch_menuitems = response[2];
+            let branch_menuitems = response[3];
             // add menu items
             let foodItems = [];
             for (let i = 0; i < branch_menuitems.rowCount; i++) {
