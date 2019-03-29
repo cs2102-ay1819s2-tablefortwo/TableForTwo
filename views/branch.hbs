@@ -24,11 +24,11 @@
                     <td>{{toTime this.timing}}</td>
                     <td>{{this.slots}}</td>
                     <td>
-                        <form method="post" action="book">
+                        <form method="post" action="{{br_id}}/book">
                             <input type="number" name="pax" min="1" max="5" value="2">
                             <input type="hidden" name="bid" value={{br_id}}>
                             <input type="hidden" name="slotdate" value='{{toDate dateslot}}'>
-                            <input type="hidden" name="timing" value={{toTime timing}}>
+                            <input type="hidden" name="timing" value={{timing}}>
                             <button id="bookButton" type="submit" class="btn btn-info"
                                 onclick="book(this.timing)">Book Now!</button>
                         </form>

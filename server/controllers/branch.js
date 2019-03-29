@@ -1,6 +1,7 @@
 'use strict';
 const db = require('../../server/helpers/database').db;
 const branchQueries = require('../../sqlQueries/restaurantsQueries');
+const moment = require('moment');
 
 let getBranch = (req, res) => {
     let rid = req.params.restaurant_id;
@@ -37,7 +38,6 @@ let getBranch = (req, res) => {
                 let row = branch_timeslots.rows[i];
                 const currentTimeslot = row.timeslot;
                 const currentDateslot = row.dateslot;
-                console.log(currentDateslot);
                 const paxBooked = reservationsObj[currentDateslot+currentTimeslot] == null ? 0 : reservationsObj[currentDateslot+currentTimeslot];
                 let timeslot_data = { dateslot: currentDateslot, timing: currentTimeslot, slots: row.numslots - paxBooked, br_id: row.branch_id };
                 timeslots.push(timeslot_data);
@@ -62,6 +62,8 @@ let reserveTimeslot = (req, res) => {
     console.log('Reserving timeslot');
     console.log(JSON.stringify(req.body));
 
+    var time = moment(req.body.timing, ["h:mm A", "H:mm"]).format('LT');
+
     let bookingInfo = [1];   // TODO: customer_id
     bookingInfo.push(req.body.bid);
     bookingInfo.push(req.body.pax);
@@ -71,10 +73,10 @@ let reserveTimeslot = (req, res) => {
     db.query(branchQueries.makeReservation, bookingInfo)
         .then(() => {
             console.log("successfully booked ");
-            req.flash('success', `Booking on '${req.body.slotdate}' at '${req.body.timing}' has been added!`);
+            req.flash('success', `Booking on '${req.body.slotdate}' at '${time}' has been added!`);
             res.redirect('/home');
         }).catch(error => {
-            req.flash('error', `Unable to make reservation on '${req.body.slotdate}' at '${req.body.timing}'`);
+            req.flash('error', `Unable to make reservation on '${req.body.slotdate}' at '${time}'`);
             res.redirect('/home');
         });
 };
