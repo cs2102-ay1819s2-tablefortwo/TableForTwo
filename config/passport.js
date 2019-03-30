@@ -24,7 +24,6 @@ let loginStrategy = new LocalStrategy({
                 // check if clear text password matches with hash
                 let isValidPassword = encrypt.validatePassword(password, hashedPassword);
                 if (isValidPassword) {
-                    console.log(user.rows[0]);
                     return done(null, user.rows[0]);
                 } else {
                     return done(null, false, { message: 'Invalid password' });
@@ -47,7 +46,9 @@ let signupStrategy = new LocalStrategy({
                     console.log('adding new signup ' + username);
                     // add new user to db 
                     db.query(userSqlQueries.signupUser, [req.body.name, username, hashedPassword])
-                        .then(done(null, user.rows[0], { message: 'successful signup' }))
+                        .then((created_user) => {
+                            done(null, created_user.rows[0], { message: 'successful signup' })
+                        })
                         .catch(err => {
                             console.error(err);
                         });

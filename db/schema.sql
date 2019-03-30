@@ -174,4 +174,5 @@ create table Offers (
 	
 	foreign key (branch_id) references Branches,
 	foreign key (promo_id) references Promotions
-)
+);
+

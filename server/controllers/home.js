@@ -6,7 +6,15 @@ const sqlQuery = require('../../sqlQueries/promotions');
 
 
 let index = (req, res) => {
-    Promise.all([db.query(sqlQuery.visiblePromotions)])
+    let promotionsApiCall;
+
+    if (req.user && req.user.role === 'ADMIN') {
+        promotionsApiCall = db.query(sqlQuery.allPromotions);
+    } else {
+        promotionsApiCall = db.query(sqlQuery.visiblePromotions)
+    }
+
+    Promise.all([promotionsApiCall])
         .then(response => {
             const promotions = parsePromotions(response[0]);
             return res.render('home', { layout: 'index', title: 'Home', promotions: promotions });
