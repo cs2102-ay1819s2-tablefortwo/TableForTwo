@@ -7,20 +7,20 @@
                 <h1 class="mb-5">Feeling hungry? We got you covered!</h1>
             </div>
             <div class="col-xl-8 mx-auto">
-                <form action="" method="post">
-                    <div class="form-row">
-                        <div class="col-md-6">
-                            <input type="text" class="form-control form-control-lg" placeholder="Your cravings...">
-                        </div>
-                        <div class="col-md-4">
-                            <input type="text" class="form-control form-control-lg" placeholder="Location">
-                        </div>
-                        <div class="col-md-2">
-                            <button type="submit" formaction="home/search" class="btn btn-block btn-lg btn-primary">Search!</button>
-                        </div>
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <input type="text" class="form-control form-control-lg" placeholder="Your cravings...">
                     </div>
-                    <button type="submit" formaction="home/restaurants" formmethod="get" name="viewAllRestaurants">View All Restaurants</button>
-                </form>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control form-control-lg" placeholder="Location">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" formaction="home/search"
+                            class="btn btn-block btn-lg btn-primary">Search!</button>
+                    </div>
+                </div>
+                <br />
+                <a class="btn btn-info" href="restaurants" role="button">View All Restaurants</a>
             </div>
         </div>
     </div>
@@ -32,19 +32,20 @@
         <div>
             <h3 class="inline-block">Promotions</h3>
             {{#if_eq user.role "ADMIN"}}
-                <a class="btn btn-success inline-block btn-sm mb-2 ml-2" href="promotions/new" role="button">New Promotion</a>
+            <a class="btn btn-success inline-block btn-sm mb-2 ml-2" href="promotions/new" role="button">New
+                Promotion</a>
             {{/if_eq}}
         </div>
 
         <div class="horizontal-scroll">
             {{#each promotions}}
-                <div class="card homepage-card">
-                    <img class="card-img-top" src="images/promo1.jpeg" alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title">{{this.name}}</h5>
-                        <a href="promotions/{{this.id}}" class="btn btn-primary mt-2">See more</a>
-                    </div>
+            <div class="card homepage-card">
+                <img class="card-img-top" src="images/promo1.jpeg" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">{{this.name}}</h5>
+                    <a href="promotions/{{this.id}}" class="btn btn-primary mt-2">See more</a>
                 </div>
+            </div>
             {{/each}}
         </div>
     </div>

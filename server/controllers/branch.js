@@ -1,42 +1,57 @@
 'use strict';
 const db = require('../../server/helpers/database').db;
 const branchQueries = require('../../sqlQueries/restaurantsQueries');
+const moment = require('moment');
 
 let getBranch = (req, res) => {
-    console.log('Displaying details for branch');
-    console.log(JSON.stringify(req.body));
+    let rid = req.params.restaurant_id;
+    let bid = req.params.branch_id;    
 
-    let rname = req.body.rname;
-    let bid = req.body.bid;
-    let bname = req.body.bname;
-    let baddress = req.body.baddress;
-    let bphone = req.body.bphone;
-    let rimage = encodeURI('../images/' + rname + '.jpg');
-    let timeslots = [];
+    Promise.all([db.query(branchQueries.getBranchDetails, [bid]),
+            db.query(branchQueries.getReservations, [bid]),
+            db.query(branchQueries.getTimeslots, [bid]),
+            db.query(branchQueries.getBranchMenuItems, [bid])])
+        .then(response => {
+            // get and restaurant details
+            let branch_details = response[0].rows[0];
+            console.log('Displaying details for branch');
+            console.log(JSON.stringify(branch_details));
+            let rname = branch_details.rname;
+            let rimage = encodeURI('/images/' + rname + '.jpg');
+            let bname = branch_details.bname;
+            let baddress = branch_details.baddress;
+            let bphone = branch_details.bphone;        
 
-    db.query(branchQueries.getTimeslots, [bid])
-        .then(val => {
-            for (let i = 0; i < val.rowCount; i++) {
-                let row = val.rows[i];
-                let timeSlot = { timing: row.timeslot, slots: row.numslots, br_id: row.branch_id };
-                timeslots.push(timeSlot);
+            let branch_reservations = response[1];
+            // create object for reservations
+            let reservationsObj = {};
+            for (let i = 0; i < branch_reservations.rowCount; i++) {
+                let row = branch_reservations.rows[i];
+                // TODO: DATE
+                reservationsObj[row.reserveddate+row.reservedslot] = row.paxbooked;
             }
-        })
-        .catch(err => {
-            console.error(err);
-        });
 
-    db.query(branchQueries.getBranchMenuItems, [bid])
-        .then(val => {
+            let branch_timeslots = response[2];
+            // add time slots table for branch
+            let timeslots = [];
+            for (let i = 0; i < branch_timeslots.rowCount; i++) {
+                let row = branch_timeslots.rows[i];
+                const currentTimeslot = row.timeslot;
+                const currentDateslot = row.dateslot;
+                const paxBooked = reservationsObj[currentDateslot+currentTimeslot] == null ? 0 : reservationsObj[currentDateslot+currentTimeslot];
+                let timeslot_data = { dateslot: currentDateslot, timing: currentTimeslot, slots: row.numslots - paxBooked, br_id: row.branch_id };
+                timeslots.push(timeslot_data);
+            }
+
+            let branch_menuitems = response[3];
             // add menu items
             let foodItems = [];
-            for (let i = 0; i < val.rowCount; i++) {
-                let row = val.rows[i];
+            for (let i = 0; i < branch_menuitems.rowCount; i++) {
+                let row = branch_menuitems.rows[i];
                 let food = { name: row.name, price: row.price };
                 foodItems.push(food);
             }
             res.render('branch', { rimage: rimage, bname: bname, baddress: baddress, bphone: bphone, timeslots: timeslots, sells: foodItems });
-
         })
         .catch(err => {
             console.error(err);
@@ -47,18 +62,21 @@ let reserveTimeslot = (req, res) => {
     console.log('Reserving timeslot');
     console.log(JSON.stringify(req.body));
 
+    var time = moment(req.body.timing, ["h:mm A", "H:mm"]).format('LT');
+
     let bookingInfo = [1];   // TODO: customer_id
     bookingInfo.push(req.body.bid);
     bookingInfo.push(req.body.pax);
     bookingInfo.push(req.body.timing);
-    
+    bookingInfo.push(req.body.slotdate);
+
     db.query(branchQueries.makeReservation, bookingInfo)
         .then(() => {
             console.log("successfully booked ");
-            req.flash('success', `Booking at '${req.body.timing}' has been added!`);
+            req.flash('success', `Booking on '${req.body.slotdate}' at '${time}' has been added!`);
             res.redirect('/home');
         }).catch(error => {
-            req.flash('error', `Unable to make reservation at '${req.body.timing}'`);
+            req.flash('error', `Unable to make reservation on '${req.body.slotdate}' at '${time}'`);
             res.redirect('/home');
         });
 };

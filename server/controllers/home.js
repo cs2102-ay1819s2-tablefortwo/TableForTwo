@@ -1,7 +1,5 @@
 'use strict';
 const searchQuery = require('../../sqlQueries/searchFoodItems');
-const restaurantController = require('../controllers/restaurant');
-const branchController = require('../controllers/branch');
 const passport = require('passport');
 const db = require('../../server/helpers/database').db;
 const sqlQuery = require('../../sqlQueries/promotions');
@@ -88,8 +86,6 @@ let search = (req, res) => {
     })(req, res, next);
 };
 
-let viewRestaurants = (req, res) => restaurantController(req, res);
-let getBranch = (req, res) => branchController.getBranch(req, res);
 let parsePromotions = (promoResponse) => {
     let promotions = [];
     for (let i = 0; i < promoResponse.rowCount; i++) {
@@ -99,6 +95,4 @@ let parsePromotions = (promoResponse) => {
     return promotions;
 };
 
-let reserveTimeslot = (req, res) => branchController.reserveTimeslot(req, res);
-
-module.exports = { index: index, handleLoginValidation: handleLoginValidation, search: search, viewRestaurants: viewRestaurants, getBranch: getBranch, reserveTimeslot: reserveTimeslot };
+module.exports = { index: index, handleLoginValidation: handleLoginValidation, search: search };
