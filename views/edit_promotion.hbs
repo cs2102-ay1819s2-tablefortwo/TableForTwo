@@ -4,7 +4,7 @@
             <h1>Edit Promotion</h1>
         </div>
 
-        <form class="px-4 py-3" id="new_promotion_form" action="promotions/{{form.id}}/update" role="form" method="post">
+        <form class="px-4 py-3" id="new_promotion_form" action="{{form.id}}/update" role="form" method="post">
             <input type="hidden" id="id" name="id" value="{{form.id}}">
             <div class="form-row mb-3">
                 <div class="form-group col-md-12">
@@ -77,4 +77,4 @@
     </div>
 </div>
 
-<script src="javascripts/promo_form.js"></script>
+<script src="/javascripts/promo_form.js"></script>
