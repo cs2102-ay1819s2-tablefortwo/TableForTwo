@@ -1,5 +1,5 @@
 'use strict';
-const db = require('../../server/helpers/database').db;
+const db = require('../helpers/database').db;
 const restaurantsQuery = require('../../sqlQueries/restaurantsQueries');
 
 let viewRestaurants = (req, res) => {
@@ -29,4 +29,4 @@ let viewRestaurants = (req, res) => {
         });
 };
 
-module.exports = viewRestaurants;
+module.exports = { viewRestaurants: viewRestaurants };
