@@ -164,7 +164,7 @@ create table Promotions (
   start_timeslot  time,
   end_timeslot    time,
   
-  check(end_date > start_date and end_date > current_timestamp),
+  check(end_date > start_date),
   check(start_timeslot < end_timeslot)
 );
 
