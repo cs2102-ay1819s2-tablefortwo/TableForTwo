@@ -2,7 +2,6 @@ const db = require('../../server/helpers/database').db;
 const sqlQuery = require('../../sqlQueries/users');
 
 $(function () {
-
     const form = $("#signup_form");
 
     jQuery.validator.addMethod("uniqueUidConstraint", function (value, element) {
@@ -19,7 +18,6 @@ $(function () {
             });
     }, "Username taken");
     
-
     form.validate({
         rules: {
             signUpName: {
@@ -28,7 +26,7 @@ $(function () {
             },
             signUpUsername: {
                 required: true,
-                uniqueUidConstraint: true,
+                // uniqueUidConstraint: true,
                 minlength: 5
             },
             signUpPassword: {
