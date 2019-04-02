@@ -81,6 +81,7 @@ let search = (req, res) => {
             if (loginErr) {
                 next(loginErr);
             }
+           
             return res.redirect('../home');
         });
     })(req, res, next);
