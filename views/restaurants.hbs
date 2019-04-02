@@ -15,18 +15,11 @@
                 {{ @branches }}{{#each this.branches }}
                 <div class="card-body" id=b{{@bid}}{{this.bid}}>
 
-                    <form action="branch" method="post">
-                        <input type="hidden" name="rname" value="{{../rname}}">
-                        <input type="hidden" name="bid" value={{@bid}}{{this.bid}}>
-                        <input type="hidden" name="bname" value="{{@bname}}{{this.bname}}">
-                        <input type="hidden" name="baddress" value="{{@baddress}}{{this.baddress}}">
-                        <input type="hidden" name="bphone" value="{{@bphone}}{{this.bphone}}">
-                        <button type="submit" class="list-group-item list-group-item-action">
-                            <h5 class="card-title">{{ @bname }}{{ this.bname }}</h5>
-                            <div class="card-text">{{ @baddress }}{{ this.baddress }}</div>
-                            <div class="card-text">{{ @bphone }}{{ this.bphone }}</div>
-                        </button>
-                    </form>
+                <a href="/restaurants/{{../this.rid}}/branches/{{this.bid}}" class="list-group-item list-group-item-action">
+                    <h5 class="card-title">{{ @bname }}{{ this.bname }}</h5>
+                    <div class="card-text">{{ @baddress }}{{ this.baddress }}</div>
+                    <div class="card-text">{{ @bphone }}{{ this.bphone }}</div>
+                </a>
                 </div>
                 {{/each}}
             </div>
