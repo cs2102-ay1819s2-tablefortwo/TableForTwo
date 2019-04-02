@@ -15,24 +15,28 @@
                     <th scope="col">Time</th>
                     <th scope="col">Available Seats</th>
                     <th scope="col">Diners</th>
+                    <th scope="col">Promo Code</th>
                 </tr>
             </thead>
             <tbody>
                 {{#each timeslots}}
                 <tr>
-                    <td>{{toDate this.dateslot}}</td>
-                    <td>{{toTime this.timing}}</td>
-                    <td>{{this.slots}}</td>
-                    <td>
-                        <form method="post" action="{{br_id}}/book">
-                            <input type="number" name="pax" min="1" max="5" value="2">
-                            <input type="hidden" name="bid" value={{br_id}}>
-                            <input type="hidden" name="slotdate" value='{{toDate dateslot}}'>
-                            <input type="hidden" name="timing" value={{timing}}>
-                            <button id="bookButton" type="submit" class="btn btn-info"
-                                onclick="book(this.timing)">Book Now!</button>
-                        </form>
-                    </td>
+                    <form method="post" action="{{br_id}}/book">
+                        <td>{{toDate this.dateslot}}</td>
+                        <td>{{toTime this.timing}}</td>
+                        <td>{{this.slots}}</td>
+                        <td>
+                                <input type="number" name="pax" min="1" max="5" value="2">
+                                <input type="hidden" name="bid" value={{br_id}}>
+                                <input type="hidden" name="slotdate" value='{{toDate dateslot}}'>
+                                <input type="hidden" name="timing" value={{timing}}>
+                        </td>
+                        <td>
+                            <input type="text" name="promoCode" style="width: 30%">
+                            <button id="bookButton{{@index}}" type="submit" class="btn btn-info ml-5"
+                                    onclick="book(this.timing, {{@index}})">Book Now!</button>
+                        </td>
+                    </form>
                 </tr>
                 {{/each}}
             </tbody>
@@ -60,7 +64,7 @@
 
 <script>
     $(document).ready(() => $('.collapse').collapse('hide'));
-    function book(timeslot) {
-        document.getElementById("bookButton").style.color = "red";
+    function book(timeslot, index) {
+        document.getElementById(`bookButton${index}`).style.color = "red";
     }
 </script>

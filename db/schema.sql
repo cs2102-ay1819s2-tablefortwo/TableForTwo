@@ -117,6 +117,30 @@ begin
 end;
 $$ language PLpgSQL;
 
+create or replace function ensureValidPromoUsage()
+returns trigger as
+$$
+declare
+	
+begin
+	if new.promo_code isnull or new.promo_code = '' then
+		return new;
+	elseif not exists (select 1 from promotions where promo_code = new.promo_code) then -- no such promotion in db.
+		raise exception 'No such promotion, please ensure you entered the correct promo code.';
+	elsif not exists (select 1 from promotions p inner join offers o on p.id = o.promo_id 
+				  where p.promo_code = new.promo_code and new.branch_id = o.branch_id) then
+		raise exception 'Promotion is not available for this branch';
+	elsif not (new.reservedDate >= (select start_date from promotions where promo_code = new.promo_code) and
+		   new.reservedDate <= (select end_date from promotions where promo_code = new.promo_code) and
+		   new.reservedSlot >= (select start_timeslot from promotions where promo_code = new.promo_code) and
+		   new.reservedSlot <= (select end_timeslot from promotions where promo_code = new.promo_code)) then
+		raise exception 'Promotion is currently not available';
+	else
+		return new;
+	end if;
+end
+$$ language PLpgSQL;
+
 create table Reservations (
   id        serial primary key,
   customer_id       integer not null,
@@ -124,12 +148,18 @@ create table Reservations (
   pax       integer not null,
   reservedSlot  time not null,
   reservedDate  date not null,
+  promo_code	varchar(50),
   
   foreign key(customer_id) references Customers(id),
   foreign key(branch_id) references Branches(id),
   foreign key(branch_id, reservedSlot, reservedDate) references Timeslot(branch_id, timeslot, dateslot),
   check (checkAvailability(reservedDate, reservedSlot, branch_id) >= pax)
 );
+
+create trigger ensureValidPromoUsage
+	before insert or update on Reservations
+	for each row 
+	execute procedure ensureValidPromoUsage();
 
 create table Ratings(
   id serial primary key,

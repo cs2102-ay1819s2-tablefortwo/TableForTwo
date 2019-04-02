@@ -69,15 +69,17 @@ let reserveTimeslot = (req, res) => {
     bookingInfo.push(req.body.pax);
     bookingInfo.push(req.body.timing);
     bookingInfo.push(req.body.slotdate);
+    bookingInfo.push(req.body.promoCode.trim());
 
     db.query(branchQueries.makeReservation, bookingInfo)
         .then(() => {
             console.log("successfully booked ");
             req.flash('success', `Booking on '${req.body.slotdate}' at '${time}' has been added!`);
-            res.redirect('/home');
+            res.redirect(`/restaurants/${req.params.restaurant_id}/branches/${req.params.branch_id}`);
         }).catch(error => {
-            req.flash('error', `Unable to make reservation on '${req.body.slotdate}' at '${time}'`);
-            res.redirect('/home');
+            req.flash('error', `Unable to make reservation on '${req.body.slotdate}' at '${time}`);
+            req.flash('error', `${error.message}`);
+            res.redirect(`/restaurants/${req.params.restaurant_id}/branches/${req.params.branch_id}`);
         });
 };
 
