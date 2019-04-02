@@ -150,15 +150,12 @@ create table Reservations (
 create or replace function customerReserveOnceInBranch()
   returns trigger as
 $$
-declare count numeric;
 begin
-  select customer_id, branch_id, count(*) into count
-  from Reservations r1
-  group by customer_id, branch_id
-  having new.customer_id = r1.customer_id
-     and new.branch_id = r1.branch_id;
-
-  if count > 1 then return null;
+  if exists (
+      select 1
+      from Reservations r1
+      where r1.customer_id = new.customer_id
+        and r1.branch_id = new.branch_id) then raise exception 'duplicate reservation detected';
   else return new;
   end if;
 end;
