@@ -22,28 +22,28 @@ $(function () {
 
     form.validate({
         rules: {
-            signupName: {
+            signUpName: {
                 required: true,
                 minlength: 3
             },
-            signupUsername: {
+            signUpUsername: {
                 required: true,
                 uniqueUidConstraint: true,
                 minlength: 5
             },
-            signupPassword: {
+            signUpPassword: {
                 required: true,
                 minlength: 5
             }
         },
         messages: {
-            signupName: {
+            signUpName: {
                 required: 'Name cannot be empty.'
             },
-            signupPassword: {
+            signUpPassword: {
                 required: 'Password cannot be empty.'
             },
-            signupUsername: {
+            signUpUsername: {
                 required: 'Username cannot be empty.'
             }
         }
