@@ -9,7 +9,7 @@
 const logoutRoute = require('./logout'),
       signupRoute = require('./signup'),
       homeRoute = require('./home'),
-      restaurantRoute = require('./restaurant'),
+      restaurantRoute = require('./restaurants'),
       searchRoute = require('./search'),
       promotionsRoute = require('./promotions'),
       errorRoute = require('./error');

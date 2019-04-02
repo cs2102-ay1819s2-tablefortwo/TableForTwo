@@ -1,9 +1,15 @@
 <div style="padding: 20px">
     <div class="text-center">
         <h3 style="display: inline"> Promotion: {{promotion.name}} </h3>
-        <a href="/promotions/{{promotion.id}}/edit" class="btn btn-primary btn-sm mb-3">
-            Edit
-        </a>
+        {{#if_eq user.role 'ADMIN'}}
+            <a href="/promotions/{{promotion.id}}/edit" class="btn btn-primary btn-sm mb-3">
+                Edit
+            </a>
+
+        <form class="inline-block" style="float: right" action="{{promotion.id}}/delete" method="post">
+            <input type="submit" class="btn btn-danger btn-sm mb-3" value="Delete"/>
+        </form>
+        {{/if_eq}}
     </div>
 
     <div class="card mt-5">
@@ -51,7 +57,7 @@
                                 <h5 class="card-title">{{this.bname}}</h5>
                                 <div class="card-text">Address: {{this.baddress}}</div>
                                 <div class="card-text">Contact no: {{this.bphone}}</div>
-                                <a href="#" class="btn btn-primary mt-2">View</a>
+                                <a href="/restaurants/{{this.restaurant_id}}/branches/{{this.id}}" class="btn btn-primary mt-2">View</a>
                             </div>
                         </div>
                     </div>
@@ -60,5 +66,3 @@
         </div>
     </div>
 </div>
-
-<script src="../javascripts/promotion.js"></script>

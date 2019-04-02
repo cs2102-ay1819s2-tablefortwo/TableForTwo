@@ -1,4 +1,4 @@
-function check(event) {
+function checkLogin(event) {
     // Get Values
     var name = document.getElementById('loginName').value;
     var username = document.getElementById('loginUsername').value;

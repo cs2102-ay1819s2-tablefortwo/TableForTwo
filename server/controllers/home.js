@@ -1,21 +1,28 @@
 'use strict';
-
 const passport = require('passport');
 const db = require('../../server/helpers/database').db;
 const sqlQuery = require('../../sqlQueries/promotions');
 
 
 let index = (req, res) => {
-    Promise.all([db.query(sqlQuery.visiblePromotions)])
+    let promotionsApiCall;
+
+    if (req.user && req.user.role === 'ADMIN') {
+        promotionsApiCall = db.query(sqlQuery.allPromotions);
+    } else {
+        promotionsApiCall = db.query(sqlQuery.visiblePromotions)
+    }
+
+    Promise.all([promotionsApiCall])
         .then(response => {
             const promotions = parsePromotions(response[0]);
             return res.render('home', { layout: 'index', title: 'Home', promotions: promotions });
         }).catch(error => {
             console.log(error);
-    });
+        });
 };
 
-    let handleLoginValidation = (req, res, next) => {
+let handleLoginValidation = (req, res, next) => {
     console.log('Handling login validation' + req.body.name);
     passport.authenticate('local-login', (err, user, info) => {
         if (err) {
@@ -34,7 +41,6 @@ let index = (req, res) => {
         });
     })(req, res, next);
 };
-
 
 let parsePromotions = (promoResponse) => {
     let promotions = [];
