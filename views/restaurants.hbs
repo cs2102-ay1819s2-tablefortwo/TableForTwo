@@ -9,7 +9,7 @@
                 aria-expanded="true" , aria-controls=collapse{{@rid}}{{this.rid}}>Available Branches</button>
         </div>
 
-        <div id=collapse{{@rid}}{{this.rid}} class="collapse show" data-parent="#accordion"
+        <div id=collapse{{@rid}}{{this.rid}} class="collapse" data-parent="#accordion"
             aria-labelledby={{@rid}}{{this.rid}}>
             <div class="list-group">
                 {{ @branches }}{{#each this.branches }}
@@ -29,6 +29,3 @@
     {{/each}}
 </div>
 
-<script>
-    $(document).ready(() => $('.collapse').collapse('hide'));
-</script>
