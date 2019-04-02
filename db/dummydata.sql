@@ -154,7 +154,7 @@ select populateTimeslots(10, 25);
 
 alter sequence reservations_id_seq restart with 1;
 insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate) values (2, 1, 3, '10:00:00', '2019-03-20');
-insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate) values (2, 1, 3, '12:00:00', '2019-03-20');
+insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate) values (2, 4, 3, '12:00:00', '2019-03-20');
 insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate) values (3, 2, 2, '12:00:00', '2019-03-20');
 insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate) values (5, 4, 5, '18:00:00', '2019-03-20');
 insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate) values (6, 6, 3, '10:00:00', '2019-03-20');

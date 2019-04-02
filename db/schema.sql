@@ -153,12 +153,12 @@ $$
 declare count numeric;
 begin
   select customer_id, branch_id, count(*) into count
-  from Resevations r
-  group by customer_id
+  from Reservations r1
+  group by customer_id, branch_id
   having new.customer_id = r1.customer_id
      and new.branch_id = r1.branch_id;
 
-  if count = 1 then return null;
+  if count > 1 then return null;
   else return new;
   end if;
 end;
@@ -189,7 +189,7 @@ $$
 declare count numeric;
   begin
   select count(*) into count
-  from Resevations r
+  from Reservations r
   where new.customer_id = r.customer_id
     and new.branch_id = r.branch_id;
 
