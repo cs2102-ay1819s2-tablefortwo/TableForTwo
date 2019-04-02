@@ -19,7 +19,7 @@ let init = (server) => {
     server.use('/logout', logoutRoute);
     server.use('/signup', signupRoute);
     server.use('/home', homeRoute);
-    server.use('/restaurant', restaurantRoute);
+    server.use('/restaurants', restaurantRoute);
     server.use('/search', searchRoute);
     server.use('/promotions', promotionsRoute);
     server.use('/error', errorRoute);
