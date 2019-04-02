@@ -1,14 +1,20 @@
 'use strict';
 const searchQuery = require('../../sqlQueries/searchFoodItems');
-const restaurantController = require('../controllers/restaurant');
-const branchController = require('../controllers/branch');
 const passport = require('passport');
 const db = require('../../server/helpers/database').db;
 const sqlQuery = require('../../sqlQueries/promotions');
 
 
 let index = (req, res) => {
-    Promise.all([db.query(sqlQuery.visiblePromotions)])
+    let promotionsApiCall;
+
+    if (req.user && req.user.role === 'ADMIN') {
+        promotionsApiCall = db.query(sqlQuery.allPromotions);
+    } else {
+        promotionsApiCall = db.query(sqlQuery.visiblePromotions)
+    }
+
+    Promise.all([promotionsApiCall])
         .then(response => {
             const promotions = parsePromotions(response[0]);
             return res.render('home', { layout: 'index', title: 'Home', promotions: promotions });
@@ -80,8 +86,6 @@ let search = (req, res) => {
     })(req, res, next);
 };
 
-let viewRestaurants = (req, res) => restaurantController(req, res);
-let getBranch = (req, res) => branchController.getBranch(req, res);
 let parsePromotions = (promoResponse) => {
     let promotions = [];
     for (let i = 0; i < promoResponse.rowCount; i++) {
@@ -91,6 +95,4 @@ let parsePromotions = (promoResponse) => {
     return promotions;
 };
 
-let reserveTimeslot = (req, res) => branchController.reserveTimeslot(req, res);
-
-module.exports = { index: index, handleLoginValidation: handleLoginValidation, search: search, viewRestaurants: viewRestaurants, getBranch: getBranch, reserveTimeslot: reserveTimeslot };
+module.exports = { index: index, handleLoginValidation: handleLoginValidation, search: search };

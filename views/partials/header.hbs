@@ -7,7 +7,7 @@
                 Sign in
             </button>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                <form class="px-4 py-3" id="login_form" action="../home/login" role="form" method="post">
+                <form class="px-4 py-3" id="login_form" action="/home/login" role="form" method="post">
                     <div class="form-group">
                         <label for="loginName">Name</label>
                         <input type="text" class="form-control" id="loginName" name="name" placeholder="Enter your name">
@@ -27,12 +27,12 @@
             </div>
         </div>
     {{else}}
-        <a class="btn btn-primary" href='../logout'>Log Out</a>
+        <a class="btn btn-primary" href='/logout'>Log Out</a>
     {{/unless}}
 </nav>
 
 
-<script src="../javascripts/login.js"></script>
+<script src="/javascripts/login.js"></script>
 <script>
     $("#login_form").submit(check);
 </script>

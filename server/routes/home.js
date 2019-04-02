@@ -6,9 +6,6 @@ let router = express.Router();
 
 router.get('/', homeController.index);
 router.post('/search', homeController.search);
-router.all('/restaurants', homeController.viewRestaurants);
-router.all('/branch', homeController.getBranch);
 router.post('/login', homeController.handleLoginValidation);
-router.post('/book', homeController.reserveTimeslot);
 
 module.exports = router;
