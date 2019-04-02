@@ -52,4 +52,4 @@ let parsePromotions = (promoResponse) => {
     return promotions;
 };
 
-module.exports = { index: index, handleLoginValidation: handleLoginValidation, search: search };
+module.exports = { index: index, handleLoginValidation: handleLoginValidation };
