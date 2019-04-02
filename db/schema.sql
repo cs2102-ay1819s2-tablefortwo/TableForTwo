@@ -183,17 +183,17 @@ create table Ratings(
 create or replace function checkCustomerRateExistingBranch()
   returns trigger as
 $$
-declare count numeric;
-  begin
-  select count(*) into count
-  from Reservations r
-  where new.customer_id = r.customer_id
-    and new.branch_id = r.branch_id;
-
-  if count > 0 then return new;
-  else return null;
+begin
+  if exists (
+      select 1
+      from Reservations r
+      where new.customer_id = r.customer_id
+        and new.branch_id = r.branch_id)
+  then return new;
+  else
+    raise exception 'customer did not make reservation to this branch';
   end if;
-  end;
+end;
 $$
   language plpgsql;
 
