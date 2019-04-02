@@ -1,6 +1,24 @@
 let sqlQueries = {
-    visiblePromotions: 'SELECT * FROM Promotions WHERE visibility = TRUE',
-    allPromotions: 'SELECT * FROM Promotions',
+    visiblePromotions: 'with usage_stats as (\n' +
+        '\tselect p.id, count(*) as usage_count, true as trending\n' +
+        '\tfrom promotions p inner join reservations r on p.id = r.promo_used \n' +
+        '\twhere r.reserveddate > now() - interval \'2 week\' and p.visibility = true\n' +
+        '\tgroup by p.id\n' +
+        '\tlimit 3\n' +
+        ')\n' +
+        'select p.id, name, description, visibility, start_date, end_date, start_timeslot, end_timeslot, COALESCE(usage_count, 0) as usage_count, trending\n' +
+        '\tfrom promotions p left join usage_stats u on p.id = u.id where p.visibility = true' +
+        '\torder by usage_count desc\n',
+    allPromotions: 'with usage_stats as (\n' +
+        '\tselect p.id, count(*) as usage_count, true as trending\n' +
+        '\tfrom promotions p inner join reservations r on p.id = r.promo_used \n' +
+        '\twhere r.reserveddate > now() - interval \'2 week\'\n' +
+        '\tgroup by p.id\n' +
+        '\tlimit 3\n' +
+        ')\n' +
+        'select p.id, name, description, visibility, start_date, end_date, start_timeslot, end_timeslot, COALESCE(usage_count, 0) as usage_count, trending\n' +
+        '\tfrom promotions p left join usage_stats u on p.id = u.id\n' +
+        '\torder by usage_count desc\n',
     getPromotion: 'SELECT * FROM Promotions WHERE id = $1',
     getPromotionByCode: 'SELECT * FROM Promotions where promo_code = $1',
     createPromotion: 'INSERT INTO Promotions(name, promo_code, description, start_timeslot, end_timeslot, start_date, end_date, visibility) VALUES($1, $2, $3, $4, $5, $6, $7, $8) returning id',
