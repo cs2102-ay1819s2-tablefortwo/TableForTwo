@@ -11,6 +11,7 @@ const logoutRoute = require('./logout'),
       homeRoute = require('./home'),
       restaurantRoute = require('./restaurant'),
       searchRoute = require('./search'),
+      promotionsRoute = require('./promotions'),
       errorRoute = require('./error');
 
 let init = (server) => {
@@ -20,6 +21,7 @@ let init = (server) => {
     server.use('/home', homeRoute);
     server.use('/restaurant', restaurantRoute);
     server.use('/search', searchRoute);
+    server.use('/promotions', promotionsRoute);
     server.use('/error', errorRoute);
 
     server.get('/', (req, res, next) => {

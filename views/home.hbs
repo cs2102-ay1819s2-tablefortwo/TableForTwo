@@ -27,24 +27,49 @@
 </header>
 
 <div class="container mt-5">
+
+    <div class='mb-5'>
+        <div>
+            <h3 class="inline-block">Promotions</h3>
+            {{#if_eq user.role "ADMIN"}}
+            <a class="btn btn-success inline-block btn-sm mb-2 ml-2" href="promotions/new" role="button">New
+                Promotion</a>
+            {{/if_eq}}
+        </div>
+
+        <div class="horizontal-scroll">
+            {{#each promotions}}
+            <div class="card homepage-card">
+                <img class="card-img-top" src="images/promo1.jpeg" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">{{this.name}}</h5>
+                    <a href="promotions/{{this.id}}" class="btn btn-primary mt-2">See more</a>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+
     <div class="mb-5">
         <h3>Recommendations</h3>
-        <div class="card" style="display:inline-block;width: 18rem;">
-            <img class="card-img-top" src="images/promo1.jpeg" alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-title">Heavenly Food</h5>
-                <div class="card-text">Chinese</div>
-                <div class="card-text">Clementi Mall</div>
-                <a href="#" class="btn btn-primary mt-2">See more</a>
+        <div class="horizontal-scroll">
+            <div class="card homepage-card">
+                <img class="card-img-top" src="images/promo1.jpeg" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Heavenly Food</h5>
+                    <div class="card-text">Chinese</div>
+                    <div class="card-text">Clementi Mall</div>
+                    <a href="#" class="btn btn-primary mt-2">See more</a>
+                </div>
             </div>
-        </div>
-        <div class="card" style="width: 18rem; display: inline-block">
-            <img class="card-img-top" src="images/promo2.jpeg" alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-title">Fong Din Tai</h5>
-                <div class="card-text">Chinese</div>
-                <div class="card-text">JEM</div>
-                <a href="#" class="btn btn-primary mt-2">See more</a>
+            <div class="card homepage-card">
+                <img class="card-img-top" src="images/promo2.jpeg" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Fong Din Tai</h5>
+                    <div class="card-text">Chinese</div>
+                    <div class="card-text">JEM</div>
+                    <a href="#" class="btn btn-primary mt-2">See more</a>
+                </div>
             </div>
         </div>
     </div>

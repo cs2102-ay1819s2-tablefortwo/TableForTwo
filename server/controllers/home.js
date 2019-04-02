@@ -1,20 +1,29 @@
 'use strict';
+const searchQuery = require('../../sqlQueries/searchFoodItems');
 const passport = require('passport');
+const db = require('../../server/helpers/database').db;
+const sqlQuery = require('../../sqlQueries/promotions');
+
 
 let index = (req, res) => {
-    if (req.isAuthenticated()) {
-        const user = {
-            id: req.session.passport.user,
-            isloggedin: req.isAuthenticated()
-        };
-        let userDetails = user.id[0];
-        return res.render('home', { layout: 'index', title: 'Home', user: userDetails, isLoggedIn: user.isloggedin });
+    let promotionsApiCall;
+
+    if (req.user && req.user.role === 'ADMIN') {
+        promotionsApiCall = db.query(sqlQuery.allPromotions);
     } else {
-        return res.render('home', { layout: 'index', title: 'Home', isLoggedIn: req.isAuthenticated() });
+        promotionsApiCall = db.query(sqlQuery.visiblePromotions)
     }
+
+    Promise.all([promotionsApiCall])
+        .then(response => {
+            const promotions = parsePromotions(response[0]);
+            return res.render('home', { layout: 'index', title: 'Home', promotions: promotions });
+        }).catch(error => {
+            console.log(error);
+        });
 };
 
-    let handleLoginValidation = (req, res, next) => {
+let handleLoginValidation = (req, res, next) => {
     console.log('Handling login validation' + req.body.name);
     passport.authenticate('local-login', (err, user, info) => {
         if (err) {
@@ -34,4 +43,13 @@ let index = (req, res) => {
     })(req, res, next);
 };
 
-module.exports = { index: index, handleLoginValidation: handleLoginValidation };
+let parsePromotions = (promoResponse) => {
+    let promotions = [];
+    for (let i = 0; i < promoResponse.rowCount; i++) {
+        let row = promoResponse.rows[i];
+        promotions.push(row);
+    }
+    return promotions;
+};
+
+module.exports = { index: index, handleLoginValidation: handleLoginValidation, search: search };

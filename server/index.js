@@ -1,9 +1,10 @@
 'use strict';
-require('dotenv').config()
+require('dotenv').config();
 const express = require('express');
 const expressHandlebars = require('express-handlebars');
 const bodyParser = require('body-parser');
 const passport = require('passport');
+const moment = require('moment');
 
 module.exports = () => {
     let server = express();
@@ -30,10 +31,45 @@ module.exports = () => {
         server.use(require('connect-flash')());
         server.use(passport.initialize());
         server.use(passport.session());
-       
+
+        // default data loaded to into each page.
+        server.use(function(req, res, next){
+            res.locals.success = req.flash('success');
+            res.locals.errors = req.flash('error');
+            res.locals.isLoggedIn = req.isAuthenticated();
+            res.locals.user = req.user ? req.user : undefined;
+            next();
+        });
 
         // Initialize view engine
         server.engine('.hbs', expressHandlebars({
+            helpers: {
+                toDateTime: function(datetime) {
+                  return moment(datetime).format('lll');
+                  },
+                toDate: function(date) {
+                    return moment(date).format('LL');
+                },
+                toTime: function(time) {
+                    return moment(time, ["h:mm A", "H:mm"]).format('LT')
+                },
+                if_eq: function(a, b, opts) {
+                    if (a === b) {
+                        return opts.fn(this)
+                    } else {
+                        return opts.inverse(this);
+                    }
+                },
+                if_contains: function(el, array, opts) {
+                    if (!array) {
+                        return opts.inverse(this);
+                    } else if (array.includes(el)) {
+                        return opts.fn(this);
+                    } else {
+                        return opts.inverse(this);
+                    }
+                }
+            },
             defaultLayout: 'index',
             layoutsDir: config.layoutsDir,
             partialsDir: config.partialsDir,
