@@ -46,9 +46,6 @@ $(function () {
             signupUsername: {
                 required: 'Username cannot be empty.'
             }
-        },
-        submitHandler: function (form) {
-            form.submit();
         }
     });
 });
