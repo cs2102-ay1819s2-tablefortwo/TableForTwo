@@ -1,14 +1,39 @@
-function check(event) {
-    // Get Values
-    var name = document.getElementById('loginName').value;
-    var username = document.getElementById('loginUsername').value;
-    var password = document.getElementById('loginPassword').value;
+$(function() {
+    jQuery.validator.addMethod("lengthConstraint", function (value, element) {
+        const loginName = $("#loginName").val();
+        const loginUsername = $("#loginUsername").val();
+        const loginPassword = $("#loginPassword").val();
 
-    // Simple Check
-    if (name.length == 0 || username.length == 0 || password.length == 0) {
-        alert("All fields cannot be empty");
-        event.preventDefault();
-        event.stopPropagation();
-        return false;
-    }
-}
+        return length(loginName) > 3 && length(loginUsername) > 3 && length(loginPassword) > 3;
+    }, "Length of name, username, password must be > 3.");
+    
+    const form = $("#login_form");
+
+    form.validate({
+        rules: {
+            loginPassword: {
+                required: true,
+                lengthConstraint: true
+            },
+            name: {
+                required: true,
+                lengthConstraint: true
+            },
+            loginUsername: {
+                required: true,
+                lengthConstraint: true
+            }
+        },
+        messages: { 
+            name: {
+                required: 'Name cannot be empty.'
+            },
+            loginPassword: {
+                required: 'Password cannot be empty.'
+            },
+            loginUsername: {
+                required: 'Username cannot be empty.'
+            }
+        },
+    });
+});
