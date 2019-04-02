@@ -1,0 +1,31 @@
+<form action="search" method="post" class="navbar-form navbar-right">
+    <div class="container">
+        <div class="row searchFilter">
+            <div class="col-sm-12">
+                <div class="input-group">
+                    <input id="table_filter" type="text" formaction="" name="search_query" class="form-control" aria-label="Text input with segmented button dropdown">
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="label-icon">Category</span> <span class="caret">&nbsp;</span></button>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <ul class="category_filters">
+                                <li>
+                                    <input type="radio" name="filter" id="foodname" value="foodname" checked><label class="category-label" for="foodname">Food</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="filter" id="location" value="location"><label class="category-label" for="location">Location</label>
+                                </li>
+                            </ul>
+                        </div>
+                        <button id="searchBtn" type="submit" class="btn btn-secondary btn-search"><span class="glyphicon glyphicon-search">&nbsp;</span> <span class="label-icon">Search</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<script src="javascripts/search.js"></script>
+<script>
+    $("#searchBtn").click(check);
+</script>

@@ -7,20 +7,20 @@
                 <h1 class="mb-5">Feeling hungry? We got you covered!</h1>
             </div>
             <div class="col-xl-8 mx-auto">
-                <div class="form-row">
-                    <div class="col-md-6">
-                        <input type="text" class="form-control form-control-lg" placeholder="Your cravings...">
+                <form action="" method="post">
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <input type="text" name="foodname" class="form-control form-control-lg" placeholder="Your cravings...">
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="location" class="form-control form-control-lg" placeholder="Location">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" formaction="search" class="btn btn-block btn-lg btn-primary">Search!</button>
+                        </div>
                     </div>
-                    <div class="col-md-4">
-                        <input type="text" class="form-control form-control-lg" placeholder="Location">
-                    </div>
-                    <div class="col-md-2">
-                        <button type="submit" formaction="search"
-                            class="btn btn-block btn-lg btn-primary">Search!</button>
-                    </div>
-                </div>
-                <br />
-                <a class="btn btn-info" href="restaurants" role="button">View All Restaurants</a>
+                    <button type="submit" formaction="restaurant" formmethod="post" name="viewAllRestaurants">View All Restaurants</button>
+                </form>
             </div>
         </div>
     </div>
