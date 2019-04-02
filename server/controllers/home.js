@@ -20,53 +20,10 @@ let index = (req, res) => {
             return res.render('home', { layout: 'index', title: 'Home', promotions: promotions });
         }).catch(error => {
             console.log(error);
-    });
+        });
 };
 
-let search = (req, res) => {
-    let foodName = req.body.foodName;
-    let location = req.body.location;
-
-    // performs a logical AND to find all restaurants selling foodName and at location
-    if (foodName != undefined && location != undefined) {
-        db.query(searchQuery.findByNameAndLocation, [foodName, location])
-            .then(val => {
-                if (val) {
-                    res.send(val.rows);
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                next(err);
-            });
-    } else if (foodName != undefined) { // only foodName specified
-        // search by foodName only
-        db.query(searchQuery.findByName, [foodName])
-            .then(val => {
-                if (val) {
-                    res.send(val.rows);
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                next(err);
-            });
-    } else if (location != undefined) { 
-        // search by location only
-        db.query(searchQuery.findByLocation, [location])
-            .then(val => {
-                if (val) {
-                    res.send(val.rows);
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                next(err);
-            });
-    }
-};
-
-    let handleLoginValidation = (req, res, next) => {
+let handleLoginValidation = (req, res, next) => {
     console.log('Handling login validation' + req.body.name);
     passport.authenticate('local-login', (err, user, info) => {
         if (err) {
@@ -95,4 +52,4 @@ let parsePromotions = (promoResponse) => {
     return promotions;
 };
 
-module.exports = { index: index, handleLoginValidation: handleLoginValidation, search: search };
+module.exports = { index: index, handleLoginValidation: handleLoginValidation };
