@@ -1,6 +1,8 @@
 const db = require('../../server/helpers/database').db;
 const sqlQuery = require('../../sqlQueries/users');
 
+
+
 function check(event) {
     // Get Values
     var name = document.getElementById('signUpName').value;
