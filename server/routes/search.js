@@ -10,7 +10,8 @@ router.post('/', (req, res, next) => {
     } else if (req.body.search_query) {
         return searchController.navBarSearch(req, res);
     } 
-    return next('Unable to find match in search routing');
+    req.flash('error', 'Unable to find match in search routing');
+    res.redirect('/');
 });
 
 module.exports = router;
