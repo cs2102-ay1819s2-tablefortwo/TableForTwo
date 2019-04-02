@@ -1,3 +1,19 @@
+-- FUNCTIONS FOR SEARCH FEATURE --
+create EXTENSION if not exists pg_trgm;
+create or replace function
+  inlineMax(val1 real, val2 real)
+returns real
+as $$
+begin
+  if val1 > val2 then
+    return val1;
+  end if;
+  return val2;
+end;
+$$
+language plpgsql;
+-- END --
+
 alter sequence users_id_seq restart with 1;
 insert into USERS (name, username, password, role) values ('Crichton Reece', 'creece0', 'NAUA0dH', 'CUSTOMER');
 insert into USERS (name, username, password, role) values ('Bobina Bassham', 'bbassham1', '7KiCLLnT9Zm5', 'CUSTOMER');
