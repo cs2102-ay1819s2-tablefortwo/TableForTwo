@@ -117,23 +117,45 @@ begin
 end;
 $$ language PLpgSQL;
 
+create table Promotions (
+  id              serial primary key,
+  name 			  varchar(100),
+  description     text,
+  promo_code	  varchar(50) unique,
+  visibility		  boolean default true,
+  
+  start_date      date,
+  end_date        date,
+  start_timeslot  time,
+  end_timeslot    time,
+  
+  check(end_date > start_date),
+  check(start_timeslot < end_timeslot)
+);
+
+create table Offers (
+	branch_id 	integer not null,
+	promo_id	integer not null,
+	
+	foreign key (branch_id) references Branches,
+	foreign key (promo_id) references Promotions
+);
+
 create or replace function ensureValidPromoUsage()
 returns trigger as
 $$
 declare
 	
 begin
-	if new.promo_code isnull or new.promo_code = '' then
+	if new.promo_used isnull then
 		return new;
-	elseif not exists (select 1 from promotions where promo_code = new.promo_code) then -- no such promotion in db.
-		raise exception 'No such promotion, please ensure you entered the correct promo code.';
 	elsif not exists (select 1 from promotions p inner join offers o on p.id = o.promo_id 
-				  where p.promo_code = new.promo_code and new.branch_id = o.branch_id) then
+				  where p.id = new.promo_used and new.branch_id = o.branch_id) then
 		raise exception 'Promotion is not available for this branch';
-	elsif not (new.reservedDate >= (select start_date from promotions where promo_code = new.promo_code) and
-		   new.reservedDate <= (select end_date from promotions where promo_code = new.promo_code) and
-		   new.reservedSlot >= (select start_timeslot from promotions where promo_code = new.promo_code) and
-		   new.reservedSlot <= (select end_timeslot from promotions where promo_code = new.promo_code)) then
+	elsif not (new.reservedDate >= (select start_date from promotions where id = new.promo_used) and
+		   new.reservedDate <= (select end_date from promotions where id = new.promo_used) and
+		   new.reservedSlot >= (select start_timeslot from promotions where id = new.promo_used) and
+		   new.reservedSlot <= (select end_timeslot from promotions where id = new.promo_used)) then
 		raise exception 'Promotion is currently not available';
 	else
 		return new;
@@ -148,8 +170,9 @@ create table Reservations (
   pax       integer not null,
   reservedSlot  time not null,
   reservedDate  date not null,
-  promo_code	varchar(50),
+  promo_used	integer,
   
+  foreign key(promo_used) references Promotions(id),
   foreign key(customer_id) references Customers(id),
   foreign key(branch_id) references Branches(id),
   foreign key(branch_id, reservedSlot, reservedDate) references Timeslot(branch_id, timeslot, dateslot),
@@ -180,29 +203,5 @@ create table Points (
   
   foreign key(reservation_id) references Reservations(id),
   foreign key(customer_id) references Users(id)
-);
-
-create table Promotions (
-  id              serial primary key,
-  name 			  varchar(100),
-  description     text,
-  promo_code	  varchar(50) unique,
-  visibility		  boolean default true,
-  
-  start_date      date,
-  end_date        date,
-  start_timeslot  time,
-  end_timeslot    time,
-  
-  check(end_date > start_date),
-  check(start_timeslot < end_timeslot)
-);
-
-create table Offers (
-	branch_id 	integer not null,
-	promo_id	integer not null,
-	
-	foreign key (branch_id) references Branches,
-	foreign key (promo_id) references Promotions
 );
 
