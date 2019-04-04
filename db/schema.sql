@@ -1,3 +1,19 @@
+-- FUNCTIONS FOR SEARCH FEATURE --
+create EXTENSION if not exists pg_trgm;
+create or replace function
+  inlineMax(val1 real, val2 real)
+returns real
+as $$
+begin
+  if val1 > val2 then
+    return val1;
+  end if;
+  return val2;
+end;
+$$
+language plpgsql;
+-- END --
+
 create table Users(
   id serial primary key,
   name varchar(50) not null,
