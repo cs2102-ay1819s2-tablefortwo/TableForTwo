@@ -1,7 +1,12 @@
 <!-- Navigation -->
 <nav class="navbar navbar-dark bg-dark sticky-top">
     <a class="navbar-brand" href="/">Table For Two</a>
-
+    {{#if isLoggedIn}}
+    <div class="navbar-nav">
+      <a class="nav-item nav-link" href="viewReservations">Reservations</a>
+    </div>
+    {{/if}}
+    
     {{>search }}
 
     <div class="navbar-right">
@@ -37,7 +42,6 @@
 
     </div>
 </nav>
-
 
 <script src="/javascripts/login.js"></script>
 <script>
