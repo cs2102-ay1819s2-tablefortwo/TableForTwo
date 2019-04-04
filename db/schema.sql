@@ -133,41 +133,6 @@ begin
 end;
 $$ language PLpgSQL;
 
-create table Reservations (
-  id        serial primary key,
-  customer_id       integer not null,
-  branch_id integer not null,
-  pax       integer not null,
-  reservedSlot  time not null,
-  reservedDate  date not null,
-  
-  foreign key(customer_id) references Customers(id),
-  foreign key(branch_id) references Branches(id),
-  foreign key(branch_id, reservedSlot, reservedDate) references Timeslot(branch_id, timeslot, dateslot),
-  check (checkAvailability(reservedDate, reservedSlot, branch_id) >= pax)
-);
-
-create table Ratings(
-  id serial primary key,
-  rating integer not null,
-  comments varchar(50),
-  customer_id integer not null,
-  branch_id integer not null,
- 
-  foreign key(customer_id) references Customers(id),
-  foreign key(branch_id) references Branches(id),
-  check(rating <= 5 and rating >= 0)
-);
-
-create table Points (
-  reservation_id integer unique not null,
-  customer_id    integer not null,
-  point          integer not null,
-  
-  foreign key(reservation_id) references Reservations(id),
-  foreign key(customer_id) references Users(id)
-);
-
 create table Promotions (
   id              serial primary key,
   name 			  varchar(100),
@@ -190,5 +155,69 @@ create table Offers (
 	
 	foreign key (branch_id) references Branches,
 	foreign key (promo_id) references Promotions
+);
+
+create or replace function ensureValidPromoUsage()
+returns trigger as
+$$
+declare
+	
+begin
+	if new.promo_used isnull then
+		return new;
+	elsif not exists (select 1 from promotions p inner join offers o on p.id = o.promo_id 
+				  where p.id = new.promo_used and new.branch_id = o.branch_id) then
+		raise exception 'Promotion is not available for this branch';
+	elsif not (new.reservedDate >= (select start_date from promotions where id = new.promo_used) and
+		   new.reservedDate <= (select end_date from promotions where id = new.promo_used) and
+		   new.reservedSlot >= (select start_timeslot from promotions where id = new.promo_used) and
+		   new.reservedSlot <= (select end_timeslot from promotions where id = new.promo_used)) then
+		raise exception 'Promotion is currently not available';
+	else
+		return new;
+	end if;
+end
+$$ language PLpgSQL;
+
+create table Reservations (
+  id        serial primary key,
+  customer_id       integer not null,
+  branch_id integer not null,
+  pax       integer not null,
+  reservedSlot  time not null,
+  reservedDate  date not null,
+  promo_used	integer,
+  
+  foreign key(promo_used) references Promotions(id),
+  foreign key(customer_id) references Customers(id),
+  foreign key(branch_id) references Branches(id),
+  foreign key(branch_id, reservedSlot, reservedDate) references Timeslot(branch_id, timeslot, dateslot),
+  check (checkAvailability(reservedDate, reservedSlot, branch_id) >= pax)
+);
+
+create trigger ensureValidPromoUsage
+	before insert or update on Reservations
+	for each row 
+	execute procedure ensureValidPromoUsage();
+
+create table Ratings(
+  id serial primary key,
+  rating integer not null,
+  comments varchar(50),
+  customer_id integer not null,
+  branch_id integer not null,
+ 
+  foreign key(customer_id) references Customers(id),
+  foreign key(branch_id) references Branches(id),
+  check(rating <= 5 and rating >= 0)
+);
+
+create table Points (
+  reservation_id integer unique not null,
+  customer_id    integer not null,
+  point          integer not null,
+  
+  foreign key(reservation_id) references Reservations(id),
+  foreign key(customer_id) references Users(id)
 );
 
