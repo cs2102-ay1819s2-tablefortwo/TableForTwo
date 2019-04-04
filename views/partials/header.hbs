@@ -1,7 +1,12 @@
 <!-- Navigation -->
 <nav class="navbar navbar-dark bg-dark sticky-top">
     <a class="navbar-brand" href="/">Table For Two</a>
-
+    {{#if isLoggedIn}}
+    <div class="navbar-nav">
+      <a class="nav-item nav-link" href="viewReservations">Reservations</a>
+    </div>
+    {{/if}}
+    
     {{>search }}
 
     <div class="navbar-right">
@@ -12,7 +17,7 @@
                 Sign in
             </button>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                <form class="px-4 py-3" id="login_form" action="home/login" role="form" method="post">
+                <form class="px-4 py-3" id="login_form" action="/home/login" role="form" method="post">
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input type="text" class="form-control" id="loginName" name="name" placeholder="Enter your name">
@@ -28,16 +33,15 @@
                     <button type="submit" class="btn btn-primary">Sign in</button>
                 </form>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="../signup">New around here? Sign up</a>
+                <a class="dropdown-item" href="/signup">New around here? Sign up</a>
             </div>
         </div>
         {{else}}
-        <a class="btn btn-primary" href='../logout'>Log Out</a>
+        <a class="btn btn-primary" href='/logout'>Log Out</a>
         {{/unless}}
 
     </div>
 </nav>
-
 
 <script src="/javascripts/login.js"></script>
 <script>
