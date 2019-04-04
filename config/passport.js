@@ -46,10 +46,10 @@ let signupStrategy = new LocalStrategy({
                     console.log('adding new signup ' + username);
                     // add new user to db 
                     db.query(userSqlQueries.signupUser, [req.body.name, username, hashedPassword])
-                        .then((created_user) => {
-                            done(null, created_user.rows[0], { message: 'successful signup' })
-                        })
-                        .catch(err => {
+                        .then((response) => {
+                            const created_user = response.rows[0];
+                            done(null, created_user, { message: 'successful signup' })
+                        }).catch(err => {
                             console.error(err);
                         });
                 } else {

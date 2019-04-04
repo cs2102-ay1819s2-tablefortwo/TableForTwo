@@ -11,6 +11,22 @@ create table Customers(
   foreign key(id) references Users(id)
 );
 
+create or replace function insertNewUserIntoCustomers()
+returns trigger as 
+$$
+begin
+	insert into customers(id) values(new.id);
+	return new;
+end;
+$$
+language plpgsql;
+
+-- All signed up user is automatically a customer.
+create trigger insertNewUserIntoCustomers
+	after insert on Users
+	for each row 
+	execute procedure insertNewUserIntoCustomers();
+
 create table Restaurants(
   id       serial primary key,
   rName     varchar(100) not null,
