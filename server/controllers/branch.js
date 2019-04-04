@@ -59,16 +59,23 @@ let getBranch = (req, res) => {
 };
 
 let reserveTimeslot = (req, res) => {
+    if (!req.isAuthenticated()) {
+        req.flash('error', 'Please login to make reservations.');
+        return res.redirect('back');
+    }
+
     console.log('Reserving timeslot');
     console.log(JSON.stringify(req.body));
 
     var time = moment(req.body.timing, ["h:mm A", "H:mm"]).format('LT');
 
-    let bookingInfo = [1];   // TODO: customer_id
+    let bookingInfo = [];
+    bookingInfo.push(req.user.id);
     bookingInfo.push(req.body.bid);
     bookingInfo.push(req.body.pax);
     bookingInfo.push(req.body.timing);
     bookingInfo.push(req.body.slotdate);
+    console.log(bookingInfo);
 
     db.query(branchQueries.makeReservation, bookingInfo)
         .then(() => {

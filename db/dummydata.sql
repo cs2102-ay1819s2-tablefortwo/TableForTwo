@@ -22,28 +22,6 @@ insert into USERS (name, username, password, role) values ('Maryl Seacroft', 'ms
 insert into USERS (name, username, password, role) values ('admin', 'admin', '$2a$04$JMUMXMaA1BdijQT7b0OPP.bD8fyrwjaRvEZIprm.F4dZJC6srO.0y', 'ADMIN'); -- password is pw
 
 
-insert into CUSTOMERS (id) values (1);
-insert into CUSTOMERS (id) values (2);
-insert into CUSTOMERS (id) values (3);
-insert into CUSTOMERS (id) values (4);
-insert into CUSTOMERS (id) values (5);
-insert into CUSTOMERS (id) values (6);
-insert into CUSTOMERS (id) values (7);
-insert into CUSTOMERS (id) values (8);
-insert into CUSTOMERS (id) values (9);
-insert into CUSTOMERS (id) values (10);
-insert into CUSTOMERS (id) values (11);
-insert into CUSTOMERS (id) values (12);
-insert into CUSTOMERS (id) values (13);
-insert into CUSTOMERS (id) values (14);
-insert into CUSTOMERS (id) values (15);
-insert into CUSTOMERS (id) values (16);
-insert into CUSTOMERS (id) values (17);
-insert into CUSTOMERS (id) values (18);
-insert into CUSTOMERS (id) values (19);
-insert into CUSTOMERS (id) values (20);
-
-
 alter sequence restaurants_id_seq restart with 1;
 insert into RESTAURANTS (rName, rPhone, rAddress) values ('Pizza Hut', '3444767495', '13077 Messerschmidt Drive');
 insert into RESTAURANTS (rName, rPhone, rAddress) values ('KFC', '4427088748', '6 Cody Drive');
