@@ -43,10 +43,11 @@
     </div>
 </div>
 
+
 <div class="container">
     <button class="btn btn-link" data-toggle="collapse" data-target=#collapse aria-expanded="true"
         aria-controls=collapse>View Menu</button>
-    <div id=collapse class="collapse show" data-parent=".card" aria-labelledby="menuitems">
+    <div id=collapse class="collapse " data-parent=".card" aria-labelledby="menuitems">
         <div class="list-group">
             {{#each sells }}
             <div class="card-header">
@@ -61,8 +62,7 @@
 </div>
 
 <script>
-    $(document).ready(() => $('.collapse').collapse('hide'));
-    function book(timeslot, index) {
-        document.getElementById(`bookButton${index}`).style.color = "red";
+    function book(timeslot) {
+        document.getElementById("bookButton").style.color = "red";
     }
 </script>

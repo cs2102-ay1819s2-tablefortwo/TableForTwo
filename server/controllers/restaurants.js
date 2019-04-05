@@ -1,6 +1,8 @@
 'use strict';
-const db = require('../helpers/database').db;
+const db = require('../../server/helpers/database').db;
+const branchController = require('../controllers/branch');
 const restaurantsQuery = require('../../sqlQueries/restaurantsQueries');
+
 
 let viewRestaurants = (req, res) => {
     let dictionary = [];
@@ -29,4 +31,6 @@ let viewRestaurants = (req, res) => {
         });
 };
 
-module.exports = { viewRestaurants: viewRestaurants };
+let getBranch = (req, res) => branchController(req, res);
+
+module.exports = { viewRestaurants: viewRestaurants, getBranch: getBranch };
