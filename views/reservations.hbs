@@ -1,0 +1,31 @@
+<div class="container">
+    <br />
+    <div>
+        <h4>Here are your reservations:</h4>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Outlet</th>
+                <th scope="col">Diners</th>
+                <th scope="col">Time</th>
+                <th scope="col">Date</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each reservations}}
+            <tr>
+                <td>{{this.bname}}</td>
+                <td>{{this.pax}}</td>
+                <td>{{toTime this.reservedslot}}</td>
+                <td>{{toDate this.reserveddate}}</td>
+                <td>
+                    <button id="editButton" type="submit" class="btn btn-info">Edit</button>
+                    <button id="deleteButton" type="submit" class="btn btn-danger">Delete</button>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>

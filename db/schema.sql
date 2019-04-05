@@ -27,6 +27,22 @@ create table Customers(
   foreign key(id) references Users(id)
 );
 
+create or replace function insertNewUserIntoCustomers()
+returns trigger as 
+$$
+begin
+	insert into customers(id) values(new.id);
+	return new;
+end;
+$$
+language plpgsql;
+
+-- All signed up user is automatically a customer.
+create trigger insertNewUserIntoCustomers
+	after insert on Users
+	for each row 
+	execute procedure insertNewUserIntoCustomers();
+
 create table Restaurants(
   id       serial primary key,
   rName     varchar(100) not null,
@@ -102,15 +118,16 @@ Create table Sells (
 
 create table Timeslot (
   branch_id   integer,
+  dateslot    date,
   timeslot    time,
   numSlots    integer not null,
 
-  primary key (branch_id, timeslot),
+  primary key (branch_id, dateslot, timeslot),
   foreign key (branch_id) references Branches(id) on delete cascade,
   check (numSlots > 0)
 );
 
-create or replace function checkAvailability(rSlot time, b_id integer)
+create or replace function checkAvailability(rDate date, rSlot time, b_id integer)
 returns integer as $$
 declare
   totalReserved integer;
@@ -119,15 +136,63 @@ begin
 	select coalesce(sum(pax), 0) into totalReserved
 	from Reservations
 	where reservedSlot = rSlot
+	and reservedDate = rDate
   and branch_id = b_id;
 
 	select numSlots into slots
 	from Timeslot
 	where branch_id = b_id
+	and Timeslot.dateslot = rDate
 	and Timeslot.timeslot = rSlot;
 	raise notice 'slots %, total reserved %', slots, totalReserved;
 	return slots - totalReserved;
 end;
+$$ language PLpgSQL;
+
+create table Promotions (
+  id              serial primary key,
+  name 			  varchar(100),
+  description     text,
+  promo_code	  varchar(50) unique,
+  visibility		  boolean default true,
+  
+  start_date      date,
+  end_date        date,
+  start_timeslot  time,
+  end_timeslot    time,
+  
+  check(end_date > start_date),
+  check(start_timeslot < end_timeslot)
+);
+
+create table Offers (
+	branch_id 	integer not null,
+	promo_id	integer not null,
+	
+	foreign key (branch_id) references Branches,
+	foreign key (promo_id) references Promotions
+);
+
+create or replace function ensureValidPromoUsage()
+returns trigger as
+$$
+declare
+	
+begin
+	if new.promo_used isnull then
+		return new;
+	elsif not exists (select 1 from promotions p inner join offers o on p.id = o.promo_id 
+				  where p.id = new.promo_used and new.branch_id = o.branch_id) then
+		raise exception 'Promotion is not available for this branch';
+	elsif not (new.reservedDate >= (select start_date from promotions where id = new.promo_used) and
+		   new.reservedDate <= (select end_date from promotions where id = new.promo_used) and
+		   new.reservedSlot >= (select start_timeslot from promotions where id = new.promo_used) and
+		   new.reservedSlot <= (select end_timeslot from promotions where id = new.promo_used)) then
+		raise exception 'Promotion is currently not available';
+	else
+		return new;
+	end if;
+end
 $$ language PLpgSQL;
 
 create table Reservations (
@@ -135,13 +200,21 @@ create table Reservations (
   customer_id       integer not null,
   branch_id integer not null,
   pax       integer not null,
-  reservedSlot  time,
+  reservedSlot  time not null,
+  reservedDate  date not null,
+  promo_used	integer,
   
+  foreign key(promo_used) references Promotions(id),
   foreign key(customer_id) references Customers(id),
   foreign key(branch_id) references Branches(id),
-  foreign key(branch_id, reservedSlot) references Timeslot(branch_id, timeslot),
-  check (checkAvailability(reservedSlot, branch_id) >= pax)
+  foreign key(branch_id, reservedSlot, reservedDate) references Timeslot(branch_id, timeslot, dateslot),
+  check (checkAvailability(reservedDate, reservedSlot, branch_id) >= pax)
 );
+
+create trigger ensureValidPromoUsage
+	before insert or update on Reservations
+	for each row 
+	execute procedure ensureValidPromoUsage();
 
 create table Ratings(
   id serial primary key,
@@ -164,26 +237,3 @@ create table Points (
   foreign key(customer_id) references Users(id)
 );
 
-create table Promotions (
-  id              serial primary key,
-  name 			  varchar(100),
-  description     text,
-  promo_code	  varchar(50) unique,
-  visibility		  boolean default true,
-  
-  start_date      date,
-  end_date        date,
-  start_timeslot  time,
-  end_timeslot    time,
-  
-  check(end_date > start_date and end_date > current_timestamp),
-  check(start_timeslot < end_timeslot)
-);
-
-create table Offers (
-	branch_id 	integer not null,
-	promo_id	integer not null,
-	
-	foreign key (branch_id) references Branches,
-	foreign key (promo_id) references Promotions
-)

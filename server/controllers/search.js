@@ -45,11 +45,12 @@ let homepageSearch = (req, res) => {
             .then(val => {
                 if (val) {
                     res.send(val.rows);
+                } else {
+                    res.send( "No data" );
                 }
             })
             .catch(err => {
                 console.error(err);
-                next(err);
             });
     } else if (foodName != undefined) { // only foodName specified
         // search by foodName only
@@ -58,6 +59,8 @@ let homepageSearch = (req, res) => {
             .then(val => {
                 if (val) {
                     res.send(val.rows);
+                } else {
+                    res.send("No data");
                 }
             })
             .catch(err => {
@@ -70,6 +73,8 @@ let homepageSearch = (req, res) => {
             .then(val => {
                 if (val) {
                     res.send(val.rows);
+                } else {
+                    res.send( "" );
                 }
             })
             .catch(err => {

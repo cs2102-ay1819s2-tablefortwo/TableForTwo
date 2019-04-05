@@ -22,28 +22,6 @@ insert into USERS (name, username, password, role) values ('Maryl Seacroft', 'ms
 insert into USERS (name, username, password, role) values ('admin', 'admin', '$2a$04$JMUMXMaA1BdijQT7b0OPP.bD8fyrwjaRvEZIprm.F4dZJC6srO.0y', 'ADMIN'); -- password is pw
 
 
-insert into CUSTOMERS (id) values (1);
-insert into CUSTOMERS (id) values (2);
-insert into CUSTOMERS (id) values (3);
-insert into CUSTOMERS (id) values (4);
-insert into CUSTOMERS (id) values (5);
-insert into CUSTOMERS (id) values (6);
-insert into CUSTOMERS (id) values (7);
-insert into CUSTOMERS (id) values (8);
-insert into CUSTOMERS (id) values (9);
-insert into CUSTOMERS (id) values (10);
-insert into CUSTOMERS (id) values (11);
-insert into CUSTOMERS (id) values (12);
-insert into CUSTOMERS (id) values (13);
-insert into CUSTOMERS (id) values (14);
-insert into CUSTOMERS (id) values (15);
-insert into CUSTOMERS (id) values (16);
-insert into CUSTOMERS (id) values (17);
-insert into CUSTOMERS (id) values (18);
-insert into CUSTOMERS (id) values (19);
-insert into CUSTOMERS (id) values (20);
-
-
 alter sequence restaurants_id_seq restart with 1;
 insert into RESTAURANTS (rName, rPhone, rAddress) values ('Pizza Hut', '3444767495', '13077 Messerschmidt Drive');
 insert into RESTAURANTS (rName, rPhone, rAddress) values ('KFC', '4427088748', '6 Cody Drive');
@@ -124,32 +102,50 @@ insert into SELLS (bid, mid, price) values (9, 4, '$1.00');
 insert into SELLS (bid, mid, price) values (10, 10, '$4.00');
 insert into SELLS (bid, mid, price) values (10, 11, '$1.00');
 
+create or replace function populateTimeslots(b_id integer, slots integer)
+returns void as $$
+declare
+  dates date ARRAY := array[current_date, current_date + interval '1 day', current_date + interval '2 days'];
+  currentdate date;
+begin
+  foreach currentdate in array dates
+  loop
+    insert into TIMESLOT (branch_id, dateslot, timeslot, numSlots) values (b_id, currentdate, '10:00:00', slots);
+    insert into TIMESLOT (branch_id, dateslot, timeslot, numSlots) values (b_id, currentdate, '12:00:00', slots);
+    insert into TIMESLOT (branch_id, dateslot, timeslot, numSlots) values (b_id, currentdate, '14:00:00', slots);
+    insert into TIMESLOT (branch_id, dateslot, timeslot, numSlots) values (b_id, currentdate, '18:00:00', slots);
+    insert into TIMESLOT (branch_id, dateslot, timeslot, numSlots) values (b_id, currentdate, '19:00:00', slots);
+  end loop;
+end;
+$$ language PLpgSQL;
 
-insert into TIMESLOT (branch_id, timeslot, numSlots) values (1, '10:00:00', 15);
-insert into TIMESLOT (branch_id, timeslot, numSlots) values (1, '12:00:00', 15);
-insert into TIMESLOT (branch_id, timeslot, numSlots) values (1, '14:00:00', 15);
-insert into TIMESLOT (branch_id, timeslot, numSlots) values (1, '16:00:00', 15);
-insert into TIMESLOT (branch_id, timeslot, numSlots) values (2, '12:00:00', 10);
-insert into TIMESLOT (branch_id, timeslot, numSlots) values (2, '14:00:00', 10);
-insert into TIMESLOT (branch_id, timeslot, numSlots) values (3, '12:00:00', 10);
-insert into TIMESLOT (branch_id, timeslot, numSlots) values (3, '10:00:00', 10);
-insert into TIMESLOT (branch_id, timeslot, numSlots) values (4, '13:00:00', 7);
-insert into TIMESLOT (branch_id, timeslot, numSlots) values (4, '18:00:00', 7);
-insert into TIMESLOT (branch_id, timeslot, numSlots) values (4, '20:00:00', 7);
-insert into TIMESLOT (branch_id, timeslot, numSlots) values (6, '10:00:00', 12);
-insert into TIMESLOT (branch_id, timeslot, numSlots) values (7, '10:00:00', 4);
-insert into TIMESLOT (branch_id, timeslot, numSlots) values (8, '13:00:00', 1);
-insert into TIMESLOT (branch_id, timeslot, numSlots) values (9, '12:00:00', 1);
-insert into TIMESLOT (branch_id, timeslot, numSlots) values (10, '12:00:00', 1);
+select populateTimeslots(1, 15);
+select populateTimeslots(2, 10);
+select populateTimeslots(3, 10);
+select populateTimeslots(4, 8);
+select populateTimeslots(5, 4);
+select populateTimeslots(6, 5);
+select populateTimeslots(7, 7);
+select populateTimeslots(8, 7);
+select populateTimeslots(9, 20);
+select populateTimeslots(10, 25);
 
+alter sequence promotions_id_seq restart with 1;
+insert into PROMOTIONS (name, description, promo_code, start_date, end_date, start_timeslot, end_timeslot, visibility) values
+	('Pizza WHAT?!', 'Save up to $50.00 off any second pizza purchased! Valid till 31 March 2019.', 'P001', '2019-02-01', current_date + interval '4 weeks', '00:00:00', '23:59:00', true),
+	('1 for you, 1 for me', '1-for-1 for all stores', '1FOR1', '2010-01-01', current_date + interval '4 weeks', '12:00:00', '14:00:00', true),
+	('Prata Week!', 'Kosong now comes with eggs!', 'PRATAFLIP', '2019-02-01', current_date + interval '4 weeks', '00:00:00', '23:59:00', false);
+	
+insert into OFFERS (branch_id, promo_id) values (1, 1), (3, 2), (4, 3), (9, 3);
 
 alter sequence reservations_id_seq restart with 1;
-insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot) values (2, 1, 3, '10:00:00');
-insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot) values (3, 2, 2, '12:00:00');
-insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot) values (4, 4, 3, '13:00:00');
-insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot) values (5, 4, 5, '18:00:00');
-insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot) values (6, 6, 3, '10:00:00');
-insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot) values (7, 8, 1, '13:00:00');
+insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used) values (2, 1, 3, '10:00:00', current_date, 1);
+insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used) values (2, 1, 3, '12:00:00', current_date, 1);
+insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used) values (3, 2, 2, '12:00:00', current_date, null);
+insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used) values (5, 4, 5, '18:00:00', current_date, 3);
+insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used) values (6, 6, 3, '10:00:00', current_date, null);
+insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used) values (7, 8, 1, '18:00:00', current_date + interval '1 day', null);
+insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used) values (7, 1, 1, '18:00:00', current_date + interval '1 day', null);
 
 
 alter sequence ratings_id_seq restart with 1;
@@ -165,9 +161,3 @@ insert into POINTS (reservation_id, customer_id, point) values (3, 4, 1);
 insert into POINTS (reservation_id, customer_id, point) values (4, 5, 1);
 insert into POINTS (reservation_id, customer_id, point) values (5, 6, 1);
 
-alter sequence promotions_id_seq restart with 1;
-insert into PROMOTIONS (name, description, promo_code, start_date, end_date, start_timeslot, end_timeslot) values
-	('Pizza WHAT?!', 'Save up to $50.00 off any second pizza purchased! Valid till 31 March 2019.', 'P001', '2019-02-01', '2019-03-31', '00:00:00', '	24:00:00'),
-	('1 for you, 1 for me', '1-for-1 for all stores', '1FOR1', '2010-01-01', '2020-12-31', '12:00:00', '14:00:00');
-	
-insert into OFFERS (branch_id, promo_id) values ('1', '1'), ('3', '2');
