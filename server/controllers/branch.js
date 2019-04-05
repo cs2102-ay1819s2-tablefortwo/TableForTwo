@@ -1,6 +1,7 @@
 'use strict';
 const db = require('../../server/helpers/database').db;
 const branchQueries = require('../../sqlQueries/restaurantsQueries');
+const promotionQueries = require('../../sqlQueries/promotions');
 const moment = require('moment');
 
 let getBranch = (req, res) => {
@@ -68,6 +69,7 @@ let reserveTimeslot = (req, res) => {
     console.log(JSON.stringify(req.body));
 
     var time = moment(req.body.timing, ["h:mm A", "H:mm"]).format('LT');
+    const promoCode = req.body.promoCode.trim();
 
     let bookingInfo = [];
     bookingInfo.push(req.user.id);
@@ -75,17 +77,36 @@ let reserveTimeslot = (req, res) => {
     bookingInfo.push(req.body.pax);
     bookingInfo.push(req.body.timing);
     bookingInfo.push(req.body.slotdate);
-    console.log(bookingInfo);
+    bookingInfo.push(promoCode);
 
-    db.query(branchQueries.makeReservation, bookingInfo)
-        .then(() => {
-            console.log("successfully booked ");
-            req.flash('success', `Booking on '${req.body.slotdate}' at '${time}' has been added!`);
-            res.redirect('/home');
-        }).catch(error => {
-            req.flash('error', `Unable to make reservation on '${req.body.slotdate}' at '${time}'`);
-            res.redirect('/home');
+    new Promise((resolve, reject) => {
+        if (promoCode !== '') {
+            db.query(promotionQueries.getPromotionByCode, [promoCode])
+                .then((response) => {
+                    if (response.rows.length === 0) {
+                        reject(`No such promotion \'${promoCode}\'`);
+                    } else {
+                        resolve();
+                    }
+                })
+        } else {
+            resolve();
+        }
+    }).then(success => {
+        db.query(branchQueries.makeReservation, bookingInfo)
+            .then(() => {
+                console.log("successfully booked ");
+                req.flash('success', `Booking on '${req.body.slotdate}' at '${time}' has been added!`);
+                res.redirect(`/restaurants/${req.params.restaurant_id}/branches/${req.params.branch_id}`);
+            }).catch(error => {
+            req.flash('error', `Unable to make reservation on '${req.body.slotdate}' at '${time}`);
+            req.flash('error', `${error.message}`);
+            res.redirect(`/restaurants/${req.params.restaurant_id}/branches/${req.params.branch_id}`);
         });
+    }).catch(error => {
+        req.flash('error', `${error}`);
+        res.redirect(`/restaurants/${req.params.restaurant_id}/branches/${req.params.branch_id}`);
+    })
 };
 
 module.exports = { getBranch: getBranch, reserveTimeslot: reserveTimeslot };
