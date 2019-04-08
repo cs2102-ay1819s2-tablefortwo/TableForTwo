@@ -10,7 +10,7 @@ let index = (req, res) => {
     if (req.user && req.user.role === 'ADMIN') {
         promotionsApiCall = db.query(sqlQuery.allPromotions);
     } else {
-        promotionsApiCall = db.query(sqlQuery.visiblePromotions)
+        promotionsApiCall = db.query(sqlQuery.nonExclusivePromotions)
     }
 
     Promise.all([promotionsApiCall])

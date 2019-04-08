@@ -60,16 +60,23 @@
                 </div>
             </div>
 
-            <div class="mb-2 form-row">
+            <div class="form-row">
                 <div class="form-group custom-control custom-checkbox mr-sm-2">
-                    <input type="checkbox" class="custom-control-input" id="promoVisibility" name="promoVisibility"
-                        {{#unless form}} checked {{/unless}}
+                    <input type="checkbox" class="custom-control-input" id="isExclusive" name="isExclusive"
                         {{#if form}}
-                            {{#if form.promoVisibility}} checked {{/if}}
+                            {{#if form.isExclusive}} checked {{/if}}
                         {{/if}}>
-                    <label class="custom-control-label" for="promoVisibility">Visible to public</label>
+                    <label class="custom-control-label" for="isExclusive">Exclusive</label>
                 </div>
             </div>
+
+            <div class="mb-2 form-row" id="redemptionCostDiv">
+                <div class="form-group col-md-6">
+                    <label for="Redemption cost">Redemption cost</label> <br />
+                    <input type="number" class="form-control" id="redemptionCost" name="redemptionCost" value="{{form.redemptionCost}}">
+                </div>
+            </div>
+
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>

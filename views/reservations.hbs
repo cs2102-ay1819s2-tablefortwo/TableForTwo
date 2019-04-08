@@ -10,6 +10,7 @@
                 <th scope="col">Diners</th>
                 <th scope="col">Time</th>
                 <th scope="col">Date</th>
+                <th scope="col">Promo Code</th>
                 <th scope="col">Actions</th>
             </tr>
         </thead>
@@ -20,6 +21,14 @@
                 <td>{{this.pax}}</td>
                 <td>{{toTime this.reservedslot}}</td>
                 <td>{{toDate this.reserveddate}}</td>
+
+                {{#if this.promo_code}}
+                    <td>{{this.promo_code}}</td>
+                {{/if}}
+                {{#unless this.promo_code}}
+                    <td>-</td>
+                {{/unless}}
+
                 <td>
                     <button id="editButton" type="submit" class="btn btn-info">Edit</button>
                     <button id="deleteButton" type="submit" class="btn btn-danger">Delete</button>
@@ -29,3 +38,46 @@
         </tbody>
     </table>
 </div>
+
+{{#if_eq user.role 'BRANCH_OWNER'}}
+<div class="container">
+    <br />
+    <div>
+        <h4>Unconfirmed reservations (for branches you own):</h4>
+    </div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Outlet</th>
+            <th scope="col">Customer</th>
+            <th scope="col">Diners</th>
+            <th scope="col">Time</th>
+            <th scope="col">Date</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each unconfirmedReservations}}
+            <tr>
+                <td>{{this.bname}}</td>
+                <td>{{this.username}}</td>
+                <td>{{this.pax}}</td>
+                <td>{{toTime this.reservedslot}}</td>
+                <td>{{toDate this.reserveddate}}</td>
+                <td>
+
+                    <form action="viewReservations/confirmReservation" method="post">
+                        <input type="hidden" name="reservationId" value="{{this.reservation_id}}">
+                        <input type="hidden" name="BranchName" value="{{this.bname}}">
+                        <input type="hidden" name="reservedDate" value="{{toDate this.reserveddate}}">
+                        <input type="hidden" name="reservedSlot" value="{{toTime this.reservedslot}}">
+                        <button type="submit" class="btn btn-info">Confirm</button>
+                    </form>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</div>
+{{/if_eq}}
