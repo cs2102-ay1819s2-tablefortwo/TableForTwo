@@ -1,3 +1,6 @@
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
+
 -- FUNCTIONS FOR SEARCH FEATURE --
 create EXTENSION if not exists pg_trgm;
 create or replace function
@@ -249,6 +252,7 @@ create table Ratings(
  
   foreign key(customer_id) references Customers(id),
   foreign key(branch_id) references Branches(id),
+  unique(customer_id, branch_id),
   check(rating <= 5 and rating >= 0)
 );
 

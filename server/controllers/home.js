@@ -37,7 +37,7 @@ let handleLoginValidation = (req, res, next) => {
             if (loginErr) {
                 return next(loginErr);
             }
-            return res.redirect('/');
+            return res.redirect('back');
         });
     })(req, res, next);
 };
