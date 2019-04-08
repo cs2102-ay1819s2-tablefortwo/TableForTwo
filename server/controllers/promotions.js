@@ -10,7 +10,8 @@ let show = (req, res) => {
             const promotion = promo.rows[0];
             const branches = dbBranches.rows;
             const sortedBranches = sortBranchesAccordingToRestaurant(branches);
-            return res.render('promotion', {layout: 'index', title: `Promotions | ${promotion.name}`, promotion: promotion, branchesByRestaurant: sortedBranches});
+            return res.render('promotion', {layout: 'index', title: `Promotions | ${promotion.name}`,
+                promotion: promotion, branchesByRestaurant: sortedBranches});
         }).catch(error => {
             req.flash('error', `Server error: ${error}`);
             return res.redirect('../home');
@@ -23,7 +24,7 @@ let show = (req, res) => {
 
 let newPromo = (req, res) => {
     if (!req.isAuthenticated() || req.user.role !== 'ADMIN') {
-        req.flash('error', 'Unauthorized access.');
+        req.flash('error', 'You are not allowed to do this');
         return res.redirect('/home');
     }
 
@@ -45,17 +46,13 @@ let create = (req, res) => {
     const originalForm = req.body;
     let { applicableBranches, ...form } = originalForm;
 
-    let branches = [];
-    if (Array.isArray(applicableBranches)) {
-        branches = applicableBranches;
-    } else {
-        branches.push(applicableBranches);
-    }
+    let branches = getUpdatedOffers(applicableBranches);
 
     form = {
         ...form,
-        promoVisibility: !!form['promoVisibility'],
+        isExclusive: !!form['isExclusive'],
     };
+    console.log(form);
 
     db.query(promoQueries.createPromotion, Object.values(form)).then((promo) => {
         const promoId = promo.rows[0].id;
@@ -82,7 +79,7 @@ let create = (req, res) => {
 
 let edit = (req, res) => {
     if (!req.isAuthenticated() || req.user.role !== 'ADMIN') {
-        req.flash('error', 'Unauthorized access.');
+        req.flash('error', 'You are not allowed to do this.');
         return res.redirect('/home');
     }
 
@@ -92,19 +89,24 @@ let edit = (req, res) => {
             const promotion = response[0].rows[0];
             const branchesUsingPromo = response[1].rows.map(branchUsingPromo => branchUsingPromo.id);
             const allBranches = response[2].rows;
-            const form = {
-                id: promotion['id'],
-                name: promotion['name'],
-                promoCode: promotion['promo_code'],
-                description: promotion['description'],
-                startTime: promotion['start_timeslot'],
-                endTime: promotion['end_timeslot'],
-                startDate: moment.utc(promotion['start_date']).local().format("YYYY-MM-DDTHH:mm:ss"),
-                endDate: moment.utc(promotion['end_date']).local().format("YYYY-MM-DDTHH:mm:ss"),
-                promoVisibility: promotion['visibility'],
-                applicableBranches: branchesUsingPromo,
-            };
-            return res.render('edit_promotion', {layout: 'index', title: `Edit Promotion`, branches: allBranches, form: form});
+            let form = req.flash('form')[0];
+            if (!form) {
+                form = {
+                    id: promotion['id'],
+                    name: promotion['name'],
+                    promoCode: promotion['promo_code'],
+                    description: promotion['description'],
+                    startTime: promotion['start_timeslot'],
+                    endTime: promotion['end_timeslot'],
+                    startDate: moment.utc(promotion['start_date']).local().format("YYYY-MM-DDTHH:mm:ss"),
+                    endDate: moment.utc(promotion['end_date']).local().format("YYYY-MM-DDTHH:mm:ss"),
+                    isExclusive: promotion['is_exclusive'],
+                    applicableBranches: branchesUsingPromo,
+                    redemptionCost: promotion['redemption_cost'],
+                };
+            }
+            return res.render('edit_promotion', {layout: 'index', title: `Edit Promotion`, branches: allBranches,
+                form: form});
         }).catch(error => {
             req.flash('error', `Server error: ${error}`);
             return res.redirect(`/promotions/${promoId}`);
@@ -113,13 +115,15 @@ let edit = (req, res) => {
 
 let update = (req, res) => {
     if (!req.isAuthenticated() || req.user.role !== 'ADMIN') {
-        req.flash('error', 'Unauthorized access.');
+        req.flash('error', 'You are not allowed to do this.');
         return res.redirect('/home');
     }
 
     const promoId = req.params['promoId'];
     const originalForm = req.body;
     const { applicableBranches, ...form } = originalForm;
+    const branches = getUpdatedOffers(applicableBranches);
+
     db.connect((err, client, done) => {
         const shouldAbort = (trans_err) => {
             if (trans_err) {
@@ -129,6 +133,10 @@ let update = (req, res) => {
                         console.error('Error rolling back client', err.stack);
                     }
                     // release the client back to the pool
+                    req.flash('form', {
+                        ...form,
+                        applicableBranches: branches.map(branchId => +branchId), // coerce to number
+                    });
                     req.flash('error', `Server error: ${trans_err.message}`);
                     res.redirect(`/promotions/${promoId}/edit`);
                     done();
@@ -139,11 +147,11 @@ let update = (req, res) => {
         client.query('BEGIN;', [], (err) => {
             if (shouldAbort(err)) return;
             client.query(promoQueries.updatePromotion, [form['id'], form['name'], form['description'], form['promoCode'],
-                !!form['promoVisibility'], form['startDate'], form['endDate'], form['startTime'], form['endTime']], (err) => {
+                !!form['isExclusive'], form['startDate'], form['endDate'], form['startTime'], form['endTime'], form['redemptionCost']], (err) => {
                 if (shouldAbort(err)) return;
-                client.query(promoQueries.insertOffersFromPromoUpdate, [promoId, getUpdatedOffers(promoId, applicableBranches)], (err) => {
+                client.query(promoQueries.insertOffersFromPromoUpdate, [promoId, branches], (err) => {
                     if (shouldAbort(err)) return;
-                    client.query(promoQueries.deleteOffersFromPromoUpdate, [promoId, getUpdatedOffers(promoId, applicableBranches)], (err) => {
+                    client.query(promoQueries.deleteOffersFromPromoUpdate, [promoId, branches], (err) => {
                         if (shouldAbort(err)) return;
                         client.query('COMMIT;', [], (err) => {
                             if (shouldAbort(err)) return;
@@ -197,7 +205,7 @@ let deletePromo = (req, res) => {
 };
 
 
-function getUpdatedOffers(promoId, applicableBranches) {
+function getUpdatedOffers(applicableBranches) {
     let updatedOffers = [];
     if (Array.isArray(applicableBranches)) {
         updatedOffers = applicableBranches;

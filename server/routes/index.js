@@ -13,6 +13,7 @@ const logoutRoute = require('./logout'),
       searchRoute = require('./search'),
       promotionsRoute = require('./promotions'),
       reservationsRoute = require('./reservations'),
+      pointsRoute = require('./points'),
       errorRoute = require('./error');
 
 let init = (server) => {
@@ -24,6 +25,7 @@ let init = (server) => {
     server.use('/search', searchRoute);
     server.use('/promotions', promotionsRoute);
     server.use('/viewReservations', reservationsRoute);
+    server.use('/points', pointsRoute);
     server.use('/error', errorRoute);
 
     server.get('/', (req, res, next) => {

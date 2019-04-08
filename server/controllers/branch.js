@@ -81,7 +81,7 @@ let reserveTimeslot = (req, res) => {
 
     new Promise((resolve, reject) => {
         if (promoCode !== '') {
-            db.query(promotionQueries.getPromotionByCode, [promoCode])
+            db.query(promotionQueries.getPromotionByCode, [promoCode, req.user.id])
                 .then((response) => {
                     if (response.rows.length === 0) {
                         reject(`No such promotion \'${promoCode}\'`);

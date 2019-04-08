@@ -1,26 +1,14 @@
 alter sequence users_id_seq restart with 1;
-insert into USERS (name, username, password, role) values ('Crichton Reece', 'creece0', 'NAUA0dH', 'CUSTOMER');
-insert into USERS (name, username, password, role) values ('Bobina Bassham', 'bbassham1', '7KiCLLnT9Zm5', 'CUSTOMER');
-insert into USERS (name, username, password, role) values ('Kerr Gonzales', 'kgonzales2', 'VTEKdTpSg1', 'CUSTOMER');
-insert into USERS (name, username, password, role) values ('Joshua Norsworthy', 'jnorsworthy3', 'N6i0Zpn4ypx8', 'CUSTOMER');
-insert into USERS (name, username, password, role) values ('Nye Kennaway', 'nkennaway4', 'nVM31lo1', 'CUSTOMER');
-insert into USERS (name, username, password, role) values ('Ianthe Scotsbrook', 'iscotsbrook5', 'Ym8aNDKs2Lf', 'CUSTOMER');
-insert into USERS (name, username, password, role) values ('Friedrick Smythin', 'fsmythin6', 'AwbbotTR9bv', 'CUSTOMER');
-insert into USERS (name, username, password, role) values ('Delmer Beeho', 'dbeeho7', 'rS97pVG4YQ', 'CUSTOMER');
-insert into USERS (name, username, password, role) values ('Zerk Robroe', 'zrobroe8', '4Snimfy8', 'CUSTOMER');
-insert into USERS (name, username, password, role) values ('Ashleigh Gatrell', 'agatrell9', 'mtMhwkYsqXi', 'CUSTOMER');
-insert into USERS (name, username, password, role) values ('Hillard Border', 'hbordera', 'odPjIa', 'CUSTOMER');
-insert into USERS (name, username, password, role) values ('Carmel Hubner', 'chubnerb', 'ZLX3uur8a', 'CUSTOMER');
-insert into USERS (name, username, password, role) values ('Hamilton Testro', 'htestroc', 'WqRskIpE', 'CUSTOMER');
-insert into USERS (name, username, password, role) values ('Rana Zanneli', 'rzannelid', 'A26FEBNZiKl', 'CUSTOMER');
-insert into USERS (name, username, password, role) values ('Sybyl Lockless', 'slocklesse', 'svw4dG', 'CUSTOMER');
-insert into USERS (name, username, password, role) values ('Iorgos Heinschke', 'iheinschkef', 'qB7QX4cr', 'CUSTOMER');
-insert into USERS (name, username, password, role) values ('Guendolen Dellit', 'gdellitg', 'UeUkTL', 'CUSTOMER');
-insert into USERS (name, username, password, role) values ('Nicola Rings', 'nringsh', 'lDG0H2D', 'CUSTOMER');
-insert into USERS (name, username, password, role) values ('Cassey Daniaud', 'cdaniaudi', '9RUQzgzpr', 'CUSTOMER');
-insert into USERS (name, username, password, role) values ('Maryl Seacroft', 'mseacroftj', 'ZAOXs2ieuZT', 'CUSTOMER');
-insert into USERS (name, username, password, role) values ('admin', 'admin', '$2a$04$JMUMXMaA1BdijQT7b0OPP.bD8fyrwjaRvEZIprm.F4dZJC6srO.0y', 'ADMIN'); -- password is pw
-
+-- everyone has same password of pw
+insert into USERS (name, username, password, role) values ('customer1', 'customer1', '$2a$04$JMUMXMaA1BdijQT7b0OPP.bD8fyrwjaRvEZIprm.F4dZJC6srO.0y', 'CUSTOMER');
+insert into USERS (name, username, password, role) values ('customer2', 'customer2', '$2a$04$JMUMXMaA1BdijQT7b0OPP.bD8fyrwjaRvEZIprm.F4dZJC6srO.0y', 'CUSTOMER');
+insert into USERS (name, username, password, role) values ('customer3', 'customer3', '$2a$04$JMUMXMaA1BdijQT7b0OPP.bD8fyrwjaRvEZIprm.F4dZJC6srO.0y', 'CUSTOMER');
+insert into USERS (name, username, password, role) values ('admin', 'admin', '$2a$04$JMUMXMaA1BdijQT7b0OPP.bD8fyrwjaRvEZIprm.F4dZJC6srO.0y', 'ADMIN');
+insert into USERS (name, username, password, role) values ('pizza_owner', 'pizza_owner', '$2a$04$JMUMXMaA1BdijQT7b0OPP.bD8fyrwjaRvEZIprm.F4dZJC6srO.0y', 'BRANCH_OWNER'); -- id = 5
+insert into USERS (name, username, password, role) values ('kfc_owner', 'kfc_owner', '$2a$04$JMUMXMaA1BdijQT7b0OPP.bD8fyrwjaRvEZIprm.F4dZJC6srO.0y', 'BRANCH_OWNER'); -- id = 6
+insert into USERS (name, username, password, role) values ('gongcha_owner', 'gongcha_owner', '$2a$04$JMUMXMaA1BdijQT7b0OPP.bD8fyrwjaRvEZIprm.F4dZJC6srO.0y', 'BRANCH_OWNER'); -- id = 7
+insert into USERS (name, username, password, role) values ('ameens_owner', 'ameens_owner', '$2a$04$JMUMXMaA1BdijQT7b0OPP.bD8fyrwjaRvEZIprm.F4dZJC6srO.0y', 'BRANCH_OWNER'); -- id = 8
+insert into USERS (name, username, password, role) values ('subway_owner', 'subway_owner', '$2a$04$JMUMXMaA1BdijQT7b0OPP.bD8fyrwjaRvEZIprm.F4dZJC6srO.0y', 'BRANCH_OWNER'); -- id = 9
 
 alter sequence restaurants_id_seq restart with 1;
 insert into RESTAURANTS (rName, rPhone, rAddress) values ('Pizza Hut', '3444767495', '13077 Messerschmidt Drive');
@@ -29,18 +17,17 @@ insert into RESTAURANTS (rName, rPhone, rAddress) values ('Gongcha', '1679365024
 insert into RESTAURANTS (rName, rPhone, rAddress) values ('Ameens', '4809862218', '40669 Saint Paul Place');
 insert into RESTAURANTS (rName, rPhone, rAddress) values ('Subway', '2159655239', '1 Nelson Street');
 
-
 alter sequence branches_id_seq restart with 1;
-insert into BRANCHES (bName, restaurant_id, bPhone, bAddress, openingHour) values ('Pizza Hut @ Clementi', 1, '6063075864', '80 Loeprich Lane', '10:00 AM');
-insert into BRANCHES (bName, restaurant_id, bPhone, bAddress, openingHour) values ('KFC @ Kent Ridge', 2, '5197751577', '5 Oxford Terrace', '12:00 PM');
-insert into BRANCHES (bName, restaurant_id, bPhone, bAddress, openingHour) values ('Gongcha @ uTown', 3, '6931442672', '9 Hollow Ridge Trail', '11:00 AM');
-insert into BRANCHES (bName, restaurant_id, bPhone, bAddress, openingHour) values ('Ameens @ Jurong', 4, '3003793180', '24 Goodland Street', '12:30 PM');
-insert into BRANCHES (bName, restaurant_id, bPhone, bAddress, openingHour) values ('Subway @ YIH', 5, '8326702434', '7 Commercial Circle', '11:00 PM');
-insert into BRANCHES (bName, restaurant_id, bPhone, bAddress, openingHour) values ('Pizza Hut @ Tampines', 1, '2687690580', '06 Northfield Parkway', '8:00 PM');
-insert into BRANCHES (bName, restaurant_id, bPhone, bAddress, openingHour) values ('KFC @ NUH', 2, '6644211151', '8279 West Junction', '6:30 AM');
-insert into BRANCHES (bName, restaurant_id, bPhone, bAddress, openingHour) values ('Gongcha @ City Hall', 3, '4729430682', '333 Myrtle Lane', '6:00 AM');
-insert into BRANCHES (bName, restaurant_id, bPhone, bAddress, openingHour) values ('Ameens @ Woodlands', 4, '8518661312', '25 Hansons Junction', '8:15 AM');
-insert into BRANCHES (bName, restaurant_id, bPhone, bAddress, openingHour) values ('Subway @ Seng Kang', 5, '7666749085', '93798 Gale Junction', '10:00 AM');
+insert into BRANCHES (bName, restaurant_id, branch_owner_id, bPhone, bAddress, openingHour) values ('Pizza Hut @ Clementi', 1, 5, '6063075864', '80 Loeprich Lane', '10:00 AM');
+insert into BRANCHES (bName, restaurant_id, branch_owner_id, bPhone, bAddress, openingHour) values ('KFC @ Kent Ridge', 2, 6, '5197751577', '5 Oxford Terrace', '12:00 PM');
+insert into BRANCHES (bName, restaurant_id, branch_owner_id, bPhone, bAddress, openingHour) values ('Gongcha @ uTown', 3, 7, '6931442672', '9 Hollow Ridge Trail', '11:00 AM');
+insert into BRANCHES (bName, restaurant_id, branch_owner_id, bPhone, bAddress, openingHour) values ('Ameens @ Jurong', 4, 8, '3003793180', '24 Goodland Street', '12:30 PM');
+insert into BRANCHES (bName, restaurant_id, branch_owner_id, bPhone, bAddress, openingHour) values ('Subway @ YIH', 5, 9, '8326702434', '7 Commercial Circle', '11:00 PM');
+insert into BRANCHES (bName, restaurant_id, branch_owner_id, bPhone, bAddress, openingHour) values ('Pizza Hut @ Tampines', 1, 5, '2687690580', '06 Northfield Parkway', '8:00 PM');
+insert into BRANCHES (bName, restaurant_id, branch_owner_id, bPhone, bAddress, openingHour) values ('KFC @ NUH', 2, 6, '6644211151', '8279 West Junction', '6:30 AM');
+insert into BRANCHES (bName, restaurant_id, branch_owner_id, bPhone, bAddress, openingHour) values ('Gongcha @ City Hall', 3, 7, '4729430682', '333 Myrtle Lane', '6:00 AM');
+insert into BRANCHES (bName, restaurant_id, branch_owner_id, bPhone, bAddress, openingHour) values ('Ameens @ Woodlands', 4, 8, '8518661312', '25 Hansons Junction', '8:15 AM');
+insert into BRANCHES (bName, restaurant_id, branch_owner_id, bPhone, bAddress, openingHour) values ('Subway @ Seng Kang', 5, 9, '7666749085', '93798 Gale Junction', '10:00 AM');
 
 alter sequence menuitems_id_seq restart with 1;
 insert into MENUITEMS (restaurant_id, name, type, cuisine, allergens) values (4, 'Chicken Rice', 'food', 'eastern', '');
@@ -65,14 +52,14 @@ insert into MENUITEMS (restaurant_id, name, type, cuisine, allergens) values (5,
 insert into MENUITEMS (restaurant_id, name, type, cuisine, allergens) values (1, 'Beer', 'drinks', '', '');
 
 
-insert into FAVOURITES (customer_id, food_id) values (2, 11);
-insert into FAVOURITES (customer_id, food_id) values (2, 7);
-insert into FAVOURITES (customer_id, food_id) values (10, 7);
-insert into FAVOURITES (customer_id, food_id) values (10, 15);
-insert into FAVOURITES (customer_id, food_id) values (10, 4);
-insert into FAVOURITES (customer_id, food_id) values (16, 2);
-insert into FAVOURITES (customer_id, food_id) values (17, 14);
-insert into FAVOURITES (customer_id, food_id) values (19, 1);
+insert into FAVOURITES (customer_id, food_id) values (1, 11);
+insert into FAVOURITES (customer_id, food_id) values (1, 7);
+insert into FAVOURITES (customer_id, food_id) values (1, 7);
+insert into FAVOURITES (customer_id, food_id) values (2, 15);
+insert into FAVOURITES (customer_id, food_id) values (2, 4);
+insert into FAVOURITES (customer_id, food_id) values (3, 2);
+insert into FAVOURITES (customer_id, food_id) values (3, 14);
+insert into FAVOURITES (customer_id, food_id) values (3, 1);
 
 
 insert into SELLS (bid, mid, price) values (1, 6, '$6.00');
@@ -131,21 +118,21 @@ select populateTimeslots(9, 20);
 select populateTimeslots(10, 25);
 
 alter sequence promotions_id_seq restart with 1;
-insert into PROMOTIONS (name, description, promo_code, start_date, end_date, start_timeslot, end_timeslot, visibility) values
-	('Pizza WHAT?!', 'Save up to $50.00 off any second pizza purchased! Valid till 31 March 2019.', 'P001', '2019-02-01', current_date + interval '4 weeks', '00:00:00', '23:59:00', true),
-	('1 for you, 1 for me', '1-for-1 for all stores', '1FOR1', '2010-01-01', current_date + interval '4 weeks', '12:00:00', '14:00:00', true),
-	('Prata Week!', 'Kosong now comes with eggs!', 'PRATAFLIP', '2019-02-01', current_date + interval '4 weeks', '00:00:00', '23:59:00', false);
+insert into PROMOTIONS (name, description, promo_code, start_date, end_date, start_timeslot, end_timeslot, is_exclusive, redemption_cost) values
+	('Pizza WHAT?!', 'Save up to $50.00 off any second pizza purchased! Valid till 31 March 2019.', 'P001', '2019-02-01', current_date + interval '4 weeks', '00:00:00', '23:59:00', false, 0),
+	('1 for you, 1 for me', '1-for-1 for all stores', '1FOR1', '2010-01-01', current_date + interval '4 weeks', '12:00:00', '14:00:00', false, 0),
+	('Prata Week!', 'Kosong now comes with eggs!', 'PRATAFLIP', '2019-02-01', current_date + interval '4 weeks', '00:00:00', '23:59:00', true, 1);
 	
 insert into OFFERS (branch_id, promo_id) values (1, 1), (3, 2), (4, 3), (9, 3);
 
 alter sequence reservations_id_seq restart with 1;
-insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used) values (2, 1, 3, '10:00:00', current_date, 1);
-insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used) values (2, 1, 3, '12:00:00', current_date, 1);
-insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used) values (3, 2, 2, '12:00:00', current_date, null);
-insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used) values (5, 4, 5, '18:00:00', current_date, 3);
-insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used) values (6, 6, 3, '10:00:00', current_date, null);
-insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used) values (7, 8, 1, '18:00:00', current_date + interval '1 day', null);
-insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used) values (7, 1, 1, '18:00:00', current_date + interval '1 day', null);
+insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used, confirmed) values (1, 1, 3, '10:00:00', current_date, 1, false);
+insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used, confirmed) values (2, 1, 3, '12:00:00', current_date, 1, false);
+insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used, confirmed) values (3, 2, 2, '12:00:00', current_date, null, true);
+insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used, confirmed) values (1, 4, 5, '18:00:00', current_date, 3, true);
+insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used, confirmed) values (2, 6, 3, '10:00:00', current_date, null, true);
+insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used, confirmed) values (3, 8, 1, '18:00:00', current_date + interval '1 day', null, false);
+insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used, confirmed) values (1, 1, 1, '18:00:00', current_date + interval '1 day', null, false);
 
 
 alter sequence ratings_id_seq restart with 1;
@@ -155,9 +142,9 @@ insert into RATINGS (rating, comments, customer_id, branch_id) values (0, 'Bad s
 insert into RATINGS (rating, comments, customer_id, branch_id) values (4, 'Food is good', 4, 4);
 insert into RATINGS (rating, comments, customer_id, branch_id) values (3, 'Kinda meh.', 5, 5);
 
-insert into POINTS (reservation_id, customer_id, point) values (1, 2, 1);
-insert into POINTS (reservation_id, customer_id, point) values (2, 3, 1);
-insert into POINTS (reservation_id, customer_id, point) values (3, 4, 1);
-insert into POINTS (reservation_id, customer_id, point) values (4, 5, 1);
-insert into POINTS (reservation_id, customer_id, point) values (5, 6, 1);
-
+insert into PointTransactions (reservation_id, customer_id, point, description) values 
+	(3, 1, 1, format('A completed reservation at KFC @ Kent Ridge on %s, %s.', (select reservedDate from reservations where id = 3), (select reservedSlot from reservations where id = 3)));
+insert into PointTransactions (reservation_id, customer_id, point, description) values 
+	(4, 2, 1, format('A completed reservation at KFC @ Kent Ridge on %s, %s.', (select reservedDate from reservations where id = 4), (select reservedSlot from reservations where id = 4)));
+insert into PointTransactions (reservation_id, customer_id, point, description) values 
+	(5, 3, 1, format('A completed reservation at KFC @ Kent Ridge on %s, %s.', (select reservedDate from reservations where id = 5), (select reservedSlot from reservations where id = 5)));

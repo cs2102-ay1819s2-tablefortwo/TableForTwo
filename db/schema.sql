@@ -27,11 +27,20 @@ create table Customers(
   foreign key(id) references Users(id)
 );
 
+create table BranchOwner (
+ id integer primary key,
+ foreign key(id) references Users(id)
+);
+
 create or replace function insertNewUserIntoCustomers()
 returns trigger as 
 $$
 begin
 	insert into customers(id) values(new.id);
+	if new.role = 'BRANCH_OWNER' then
+		insert into branchowner(id) values(new.id);
+	end if;
+
 	return new;
 end;
 $$
@@ -53,6 +62,7 @@ create table Restaurants(
 create table Branches(
   id       serial primary key,
   restaurant_id	integer not null,
+  branch_owner_id integer not null,
   
   bName     varchar(100),
   bPhone    bigint,
@@ -60,6 +70,7 @@ create table Branches(
   bArea     varchar(100), --eg: South
   openingHour time not null,
   
+  foreign key(branch_owner_id) references BranchOwner(id),
   foreign key(restaurant_id) references Restaurants(id) on delete cascade
 );
 
@@ -150,17 +161,17 @@ end;
 $$ language PLpgSQL;
 
 create table Promotions (
-  id              serial primary key,
-  name 			  varchar(100),
-  description     text,
-  promo_code	  varchar(50) unique,
-  visibility		  boolean default true,
-  
-  start_date      date,
-  end_date        date,
-  start_timeslot  time,
-  end_timeslot    time,
-  
+  id				serial primary key,
+  name				varchar(100),
+  description		text,
+  promo_code		varchar(50) unique,
+  is_exclusive		boolean default false,
+  redemption_cost	integer, -- redemption_cost only applicable when promotion is exclusive.
+    
+  start_date		date,
+  end_date			date,
+  start_timeslot	time,
+  end_timeslot		time,
   check(end_date > start_date),
   check(start_timeslot < end_timeslot)
 );
@@ -169,8 +180,8 @@ create table Offers (
 	branch_id 	integer not null,
 	promo_id	integer not null,
 	
-	foreign key (branch_id) references Branches,
-	foreign key (promo_id) references Promotions
+	foreign key (branch_id) references Branches on delete cascade,
+	foreign key (promo_id) references Promotions on delete cascade
 );
 
 create or replace function ensureValidPromoUsage()
@@ -196,17 +207,18 @@ end
 $$ language PLpgSQL;
 
 create table Reservations (
-  id        serial primary key,
-  customer_id       integer not null,
-  branch_id integer not null,
-  pax       integer not null,
+  id        	serial primary key,
+  customer_id   integer not null,
+  branch_id 	integer not null,
+  pax       	integer not null,
   reservedSlot  time not null,
   reservedDate  date not null,
   promo_used	integer,
+  confirmed		boolean default false,
   
-  foreign key(promo_used) references Promotions(id),
-  foreign key(customer_id) references Customers(id),
-  foreign key(branch_id) references Branches(id),
+  foreign key(promo_used) references Promotions(id) on delete set null,
+  foreign key(customer_id) references Customers(id) on delete cascade,
+  foreign key(branch_id) references Branches(id) on delete cascade,
   foreign key(branch_id, reservedSlot, reservedDate) references Timeslot(branch_id, timeslot, dateslot),
   check (checkAvailability(reservedDate, reservedSlot, branch_id) >= pax)
 );
@@ -228,12 +240,23 @@ create table Ratings(
   check(rating <= 5 and rating >= 0)
 );
 
-create table Points (
-  reservation_id integer unique not null,
-  customer_id    integer not null,
-  point          integer not null,
+create table PointTransactions (
+  reservation_id 	integer unique,
+  customer_id    	integer not null,
+  point          	integer not null,
+  description    	varchar(200) not null,
+  transaction_date	timestamp default current_timestamp,
   
   foreign key(reservation_id) references Reservations(id),
   foreign key(customer_id) references Users(id)
 );
 
+create table Redemption (
+  customer_id	integer not null,
+  promo_id		integer not null,
+  date_redeemed	timestamp default current_timestamp ,
+  
+  primary key(customer_id, promo_id),
+  foreign key(customer_id) references Customers(id) on delete cascade,
+  foreign key(promo_id) references Promotions(id) on delete cascade
+)

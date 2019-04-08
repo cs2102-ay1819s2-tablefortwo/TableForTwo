@@ -18,6 +18,14 @@ $(function() {
         const startDateValue = $("#startDate").val();
         return !startDateValue || (Date.parse(value) > Date.parse(startDateValue));
     }, "End date must be after start date.");
+    jQuery.validator.addMethod("redemptionCostConstraint", function(value, element) {
+        const isExclusive = $('#isExclusive').is(':checked');
+        if (isExclusive) {
+            return value > 0;
+        } else {
+            return value === 0;
+        }
+    }, "Invalid redemption cost.");
 
     const form = $("#new_promotion_form");
 
@@ -51,6 +59,9 @@ $(function() {
                 required: true,
                 endDateConstraint: true,
             },
+            redemptionCost: {
+                redemptionCostConstraint: true,
+            }
         },
         messages: {
             applicableBranches: {
@@ -79,4 +90,21 @@ $(function() {
             },
         },
     });
+
+    $("#isExclusive").change(function() {
+        if(this.checked) {
+            console.log('changed');
+            $("#redemptionCostDiv").show();
+            $("#redemptionCost").val(1);
+        } else {
+            $("#redemptionCostDiv").hide();
+            $("#redemptionCost").val(0);
+        }
+    });
+});
+
+$( document ).ready(function() {
+    if (!$('#isExclusive').is(':checked')) {
+        $("#redemptionCostDiv").hide();
+    }
 });
