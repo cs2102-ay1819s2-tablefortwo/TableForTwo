@@ -52,7 +52,6 @@ let create = (req, res) => {
         ...form,
         isExclusive: !!form['isExclusive'],
     };
-    console.log(form);
 
     db.query(promoQueries.createPromotion, Object.values(form)).then((promo) => {
         const promoId = promo.rows[0].id;
@@ -193,7 +192,6 @@ let deletePromo = (req, res) => {
                     if (shouldAbort(err)) return;
                     client.query('COMMIT;', [], (err) => {
                         if (shouldAbort(err)) return;
-                        console.log('here');
                         req.flash('success', 'Promotion has been deleted.');
                         res.redirect(`/home`);
                         done();
