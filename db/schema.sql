@@ -1,3 +1,4 @@
+
 drop table if exists Users cascade;
 drop table if exists Customers cascade;
 drop table if exists Restaurants cascade;
@@ -11,6 +12,9 @@ drop table if exists Ratings cascade;
 drop table if exists Points cascade;
 drop table if exists Promotions cascade;
 drop table if exists Offers cascade;
+
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
 
 -- FUNCTIONS FOR SEARCH FEATURE --
 create EXTENSION if not exists pg_trgm;
@@ -286,6 +290,7 @@ create table Ratings(
 
   foreign key(customer_id) references Customers(id),
   foreign key(branch_id) references Branches(id),
+  unique(customer_id, branch_id),
   check(rating <= 5 and rating >= 0)
 );
 

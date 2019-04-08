@@ -270,7 +270,8 @@ header.masthead h1 {
     }
 }
 
-/* end */
+/* end for nav bar search */
+
 .chip {
     display: inline-block;
     padding: 0 25px;
@@ -328,3 +329,39 @@ header.masthead h1 {
 .red span {background: linear-gradient(#F70505 0%, #8F0808 100%);}
 .red span::before {border-left-color: #8F0808; border-top-color: #8F0808;}
 .red span::after {border-right-color: #8F0808; border-top-color: #8F0808;}
+
+
+/* ratings modal */
+.starrating > input {
+    display: none;
+}
+/* Remove radio buttons */
+.starrating > label:before {
+    font-family: "Font Awesome 5 Free";
+    content: '\f005'; /* Star */
+    margin: 2px;
+    font-size: 1em;
+    align-content: center;
+    align-items:center;
+    display: inline-block;
+}
+
+.starrating > label {
+    color: #222222; /* Start color when not clicked */
+}
+
+.starrating > input:checked ~ label {
+    color: #ffca08;
+}
+/* Set yellow color when star checked */
+
+.starrating > input:hover ~ label {
+    color: #ffca08;
+}
+/* Set yellow color when star hover */
+/* end ratings modal */
+
+.menu_collapse {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
