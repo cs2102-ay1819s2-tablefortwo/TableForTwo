@@ -328,3 +328,30 @@ header.masthead h1 {
 .red span {background: linear-gradient(#F70505 0%, #8F0808 100%);}
 .red span::before {border-left-color: #8F0808; border-top-color: #8F0808;}
 .red span::after {border-right-color: #8F0808; border-top-color: #8F0808;}
+
+.starrating > input {
+    display: none;
+}
+/* Remove radio buttons */
+
+.starrating > label:before {
+    content: "\f005"; /* Star */
+    margin: 2px;
+    font-size: 8em;
+    font-family: FontAwesome;
+    display: inline-block;
+}
+
+.starrating > label {
+    color: #222222; /* Start color when not clicked */
+}
+
+.starrating > input:checked ~ label {
+    color: #ffca08;
+}
+/* Set yellow color when star checked */
+
+.starrating > input:hover ~ label {
+    color: #ffca08;
+}
+/* Set yellow color when star hover */
