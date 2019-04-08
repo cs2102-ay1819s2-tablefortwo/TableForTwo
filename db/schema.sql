@@ -184,21 +184,33 @@ create table Offers (
 	foreign key (promo_id) references Promotions on delete cascade
 );
 
+
+-- check if user specify a promo to use then check the following:
+-- 	1) such a promotion exist
+-- 	2) check whether the user owns the promo if promo is exclusive 
+--  3) check if promotion is available for current branch.
+--  4) check if promotion is still active. 
 create or replace function ensureValidPromoUsage()
 returns trigger as
 $$
 declare
-	
+	is_promo_exclusive boolean;
 begin
+	select is_exclusive into is_promo_exclusive from promotions where promo_code = new.promo_used;
 	if new.promo_used isnull then
 		return new;
+	elseif not exists (select 1 from promotions p where new.promo_used = p.promo_code)
+		or (is_promo_exclusive and
+		not exists (select 1 from redemption r
+			where (select promo_code from promotions where id = r.promo_id) = new.promo_used and r.customer_id = new.customer_id)) then
+		raise exception 'No such promotion, %', new.promo_used;
 	elsif not exists (select 1 from promotions p inner join offers o on p.id = o.promo_id 
-				  where p.id = new.promo_used and new.branch_id = o.branch_id) then
+				  where p.promo_code = new.promo_used and new.branch_id = o.branch_id) then
 		raise exception 'Promotion is not available for this branch';
-	elsif not (new.reservedDate >= (select start_date from promotions where id = new.promo_used) and
-		   new.reservedDate <= (select end_date from promotions where id = new.promo_used) and
-		   new.reservedSlot >= (select start_timeslot from promotions where id = new.promo_used) and
-		   new.reservedSlot <= (select end_timeslot from promotions where id = new.promo_used)) then
+	elsif not (new.reservedDate >= (select start_date from promotions where promo_code = new.promo_used) and
+		   new.reservedDate <= (select end_date from promotions where promo_code = new.promo_used) and
+		   new.reservedSlot >= (select start_timeslot from promotions where promo_code = new.promo_used) and
+		   new.reservedSlot <= (select end_timeslot from promotions where promo_code = new.promo_used)) then
 		raise exception 'Promotion is currently not available';
 	else
 		return new;
@@ -213,10 +225,10 @@ create table Reservations (
   pax       	integer not null,
   reservedSlot  time not null,
   reservedDate  date not null,
-  promo_used	integer,
+  promo_used	varchar(50),
   confirmed		boolean default false,
   
-  foreign key(promo_used) references Promotions(id) on delete set null,
+  foreign key(promo_used) references Promotions(promo_code) on delete set null,
   foreign key(customer_id) references Customers(id) on delete cascade,
   foreign key(branch_id) references Branches(id) on delete cascade,
   foreign key(branch_id, reservedSlot, reservedDate) references Timeslot(branch_id, timeslot, dateslot),
@@ -251,7 +263,7 @@ create table PointTransactions (
   foreign key(customer_id) references Users(id)
 );
 
-create or replace function logPointTransaction()
+create or replace function logPointTransactionWhenReservationConfirmed()
 returns trigger as
 $$
 declare branch_involved varchar(100); 
@@ -265,18 +277,54 @@ begin
 end
 $$ language plpgsql;
 
-create trigger logPointTransaction
+create trigger logPointTransactionWhenReservationConfirmed
 	after insert or update on reservations
 	for each row 
-	execute procedure logPointTransaction();
-
+	execute procedure logPointTransactionWhenReservationConfirmed();
 
 create table Redemption (
   customer_id	integer not null,
-  promo_id		integer not null,
+  promo_id		integer,
   date_redeemed	timestamp default current_timestamp ,
   
-  primary key(customer_id, promo_id),
+  unique(customer_id, promo_id),
   foreign key(customer_id) references Customers(id) on delete cascade,
-  foreign key(promo_id) references Promotions(id) on delete cascade
-)
+  foreign key(promo_id) references Promotions(id) on delete set null
+);
+
+create or replace function ensurePromoIdOfRedemptionNotNull()
+returns trigger as 
+$$
+begin
+	if (new.promo_id isnull) then
+		raise exception 'Please specify the promotion that was redeemed';
+	else
+		return new;
+	end if;
+end
+$$ language plpgsql;
+
+create trigger ensurePromoIdOfRedemptionNotNullWhenInsert
+	before insert on Redemption
+	for each row 
+	execute procedure ensurePromoIdOfRedemptionNotNull();
+
+create or replace function logPointTransactionWhenRedeemed()
+returns trigger as
+$$
+declare redemption_cost integer; promo_code varchar(50);
+begin
+	select p.redemption_cost into redemption_cost from promotions p where p.id = new.promo_id;
+	select p.promo_code into promo_code from promotions p where p.id = new.promo_id;
+	insert into PointTransactions(customer_id, point, description) values
+		(new.customer_id, -1 * redemption_cost, format('Redeemed an exclusive promotion, %s', promo_code));
+	return new;
+end
+$$ language plpgsql;
+
+create trigger logPointTransactionWhenRedeemed
+	after insert on Redemption
+	for each row 
+	execute procedure logPointTransactionWhenRedeemed();
+
+

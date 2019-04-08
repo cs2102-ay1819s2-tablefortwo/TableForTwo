@@ -1,7 +1,7 @@
 let sqlQueries = {
     nonExclusivePromotions: 'with usage_stats as (\n' +
         '\tselect p.id, count(*) as usage_count, true as trending\n' +
-        '\tfrom promotions p inner join reservations r on p.id = r.promo_used \n' +
+        '\tfrom promotions p inner join reservations r on p.promo_code = r.promo_used \n' +
         '\twhere r.reserveddate > now() - interval \'2 week\' and p.is_exclusive = false\n' +
         '\tgroup by p.id\n' +
         '\tlimit 3\n' +
@@ -11,7 +11,7 @@ let sqlQueries = {
         '\torder by usage_count desc\n',
     allPromotions: 'with usage_stats as (\n' +
         '\tselect p.id, count(*) as usage_count, true as trending\n' +
-        '\tfrom promotions p inner join reservations r on p.id = r.promo_used \n' +
+        '\tfrom promotions p inner join reservations r on p.promo_code = r.promo_used \n' +
         '\twhere r.reserveddate > now() - interval \'2 week\'\n' +
         '\tgroup by p.id\n' +
         '\tlimit 3\n' +
@@ -23,15 +23,6 @@ let sqlQueries = {
         '\tfrom redemption r inner join promotions p on r.promo_id = p.id\n' +
         '\twhere p.start_date <= now() and p.end_date >= now() and r.customer_id = $1',
     getPromotion: 'SELECT * FROM Promotions WHERE id = $1',
-    getPromotionByCode: 'select *\n' +
-        '\tfrom promotions p\n' +
-        '\twhere promo_code = $1\n' +
-        '\tand (p.is_exclusive = false\n' +
-        '\tor exists (\n' +
-        '\t\tselect 1\n' +
-        '\t\tfrom redemption r\n' +
-        '\t\twhere r.customer_id = $2\n' +
-        '\t\tand p.id = r.promo_id))',
     createPromotion: 'INSERT INTO Promotions(name, promo_code, description, start_timeslot, end_timeslot, start_date, end_date, is_exclusive, redemption_cost) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) returning id',
     createOffers: 'INSERT INTO Offers(branch_id, promo_id) VALUES($1, $2)',
     promoBranches: 'SELECT * FROM Branches b INNER JOIN Restaurants r on b.restaurant_id = r.id WHERE b.id in (SELECT branch_id FROM Offers WHERE promo_id = $1)',
