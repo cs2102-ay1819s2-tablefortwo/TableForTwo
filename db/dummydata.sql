@@ -141,10 +141,3 @@ insert into RATINGS (rating, comments, customer_id, branch_id) values (3, 'No co
 insert into RATINGS (rating, comments, customer_id, branch_id) values (0, 'Bad service.', 3, 3);
 insert into RATINGS (rating, comments, customer_id, branch_id) values (4, 'Food is good', 4, 4);
 insert into RATINGS (rating, comments, customer_id, branch_id) values (3, 'Kinda meh.', 5, 5);
-
-insert into PointTransactions (reservation_id, customer_id, point, description) values 
-	(3, 1, 1, format('A completed reservation at KFC @ Kent Ridge on %s, %s.', (select reservedDate from reservations where id = 3), (select reservedSlot from reservations where id = 3)));
-insert into PointTransactions (reservation_id, customer_id, point, description) values 
-	(4, 2, 1, format('A completed reservation at KFC @ Kent Ridge on %s, %s.', (select reservedDate from reservations where id = 4), (select reservedSlot from reservations where id = 4)));
-insert into PointTransactions (reservation_id, customer_id, point, description) values 
-	(5, 3, 1, format('A completed reservation at KFC @ Kent Ridge on %s, %s.', (select reservedDate from reservations where id = 5), (select reservedSlot from reservations where id = 5)));

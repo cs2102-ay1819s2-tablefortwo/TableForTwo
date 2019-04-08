@@ -1,7 +1,6 @@
 'use strict';
 const db = require('../helpers/database').db;
 const reservationQuery = require('../../sqlQueries/reservations');
-const pointTransactionQuery = require('../../sqlQueries/pointTransaction');
 
 let viewReservations = (req, res) => {
     if (!req.user) {
@@ -42,42 +41,14 @@ let confirmReservation = (req, res) => {
     }
 
     const reservationId = req.body['reservationId'];
-    db.connect((err, client, done) => {
-        const shouldAbort = (trans_err) => {
-            if (trans_err) {
-                console.error('Error in transaction', trans_err.stack);
-                client.query('ROLLBACK', (err) => {
-                    if (err) {
-                        console.error('Error rolling back client', err.stack);
-                    }
-                    // release the client back to the pool
-                    req.flash('error', `Server error: ${trans_err.message}`);
-                    res.redirect(`/viewReservations`);
-                    done();
-                })
-            }
-            return !!trans_err
-        };
-        client.query('BEGIN;', [], (err) => {
-            if (shouldAbort(err)) return;
-            client.query(reservationQuery.confirmReservation, [reservationId], (err, response) => {
-                if (shouldAbort(err)) return;
-                const reservation = response.rows[0];
-                client.query(pointTransactionQuery.insertPointTransaction,
-                    [reservation['id'], reservation['customer_id'], 1, `A completed reservation 
-                    at ${req.body['BranchName']} on ${req.body['reservedDate']}, ${req.body['reservedSlot']}.`], err => {
-
-                    if (shouldAbort(err)) return;
-                    client.query('COMMIT;', [], (err) => {
-                        if (shouldAbort(err)) return;
-                        req.flash('success', 'Customer\'s Reservation confirmed.');
-                        res.redirect(`/viewReservations`);
-                        done();
-                    })
-                });
-            });
-        })
-    });
+    db.query(reservationQuery.confirmReservation, [reservationId])
+        .then((response) => {
+            req.flash('success', 'Customer\'s Reservation confirmed.');
+            res.redirect(`/viewReservations`);
+        }).catch(err => {
+            req.flash('error', `Server error: ${err.message}`);
+            res.redirect(`/viewReservations`);
+        });
 };
 
 module.exports = { viewReservations: viewReservations, confirmReservation: confirmReservation };

@@ -251,6 +251,26 @@ create table PointTransactions (
   foreign key(customer_id) references Users(id)
 );
 
+create or replace function logPointTransaction()
+returns trigger as
+$$
+declare branch_involved varchar(100); 
+begin
+	if new.confirmed = true and not exists (select 1 from PointTransactions where reservation_id = new.id) then
+		select b.bname into branch_involved from branches b where new.branch_id = b.id;
+		insert into PointTransactions(reservation_id, customer_id, point, description) values
+			(new.id, new.customer_id, 1, format('A completed reservation at %s on %s, %s', branch_involved, new.reservedDate, new.reservedSlot));
+	end if;
+	return new;
+end
+$$ language plpgsql;
+
+create trigger logPointTransaction
+	after insert or update on reservations
+	for each row 
+	execute procedure logPointTransaction();
+
+
 create table Redemption (
   customer_id	integer not null,
   promo_id		integer not null,
