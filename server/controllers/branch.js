@@ -2,6 +2,7 @@
 const db = require('../../server/helpers/database').db;
 const branchQueries = require('../../sqlQueries/restaurantsQueries');
 const promotionQueries = require('../../sqlQueries/promotions');
+const ratingsQueries = require('../../sqlQueries/ratings');
 const moment = require('moment');
 
 let getBranch = (req, res) => {
@@ -11,7 +12,9 @@ let getBranch = (req, res) => {
     Promise.all([db.query(branchQueries.getBranchDetails, [bid]),
             db.query(branchQueries.getReservations, [bid]),
             db.query(branchQueries.getTimeslots, [bid]),
-            db.query(branchQueries.getBranchMenuItems, [bid])])
+            db.query(branchQueries.getBranchMenuItems, [bid]),
+            db.query(ratingsQueries.getAvgBranchRating, [bid]),
+            db.query(ratingsQueries.getRatingsForBranch, [bid])])
         .then(response => {
             // get and restaurant details
             let branch_details = response[0].rows[0];
@@ -52,12 +55,47 @@ let getBranch = (req, res) => {
                 let food = { name: row.name, price: row.price };
                 foodItems.push(food);
             }
-            res.render('branch', { rimage: rimage, bname: bname, baddress: baddress, bphone: bphone, timeslots: timeslots, sells: foodItems });
+
+            // get summary of rating for branch
+            let avgRating = response[4].rows[0].rating;
+            avgRating = Math.trunc(avgRating);
+
+            // verbose version of ratings
+            let ratingsDetails = response[5];
+            let allRatings = [];
+            for (let i = 0; i < ratingsQueries.rowCount; i++) {
+                let row = ratingsDetails.rows[i];
+                let ratingInfo = { rating: row.rating, comments: row.comments, cid: row.customer_id };
+                allRatings.push(ratingInfo);
+            }
+
+            res.render('branch', { rimage: rimage, bname: bname, baddress: baddress, bphone: bphone, timeslots: timeslots, sells: foodItems, avgRating: avgRating, allRatings: allRatings });
         })
         .catch(err => {
             console.error(err);
         });
 };
+
+let addRating = (req, res) => {
+    if (!req.isAuthenticated()) {
+        req.flash('error', 'Please login to rate.');
+        return res.redirect('back');
+    }
+
+    let cid = req.user.id;
+    let rating = req.body.rating;
+    let comments = req.body.comments;
+    let bid = req.locals.bid;
+
+    console.log('Adding rating');
+
+    db.query(ratingsQueries.addRating, [rating, comments, cid, bid])
+        .then(res => {
+
+        })
+        .catch(err => console.error(err));
+
+}
 
 let reserveTimeslot = (req, res) => {
     if (!req.isAuthenticated()) {

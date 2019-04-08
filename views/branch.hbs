@@ -7,6 +7,10 @@
             <h5 class="card-title">{{ bname }}</h5>
             <div class="card-text">Address: {{ baddress }}</div>
             <div class="card-text">Phone Number: {{ bphone }}</div>
+            <div class="card-text">Rating: {{ avgRating }}</div>
+
+            <a class="btn btn-primary" data-toggle="modal" data-target="rating_modal">Rate</a>
+            {{> rating_modal }}
         </div>
         <table class="table table-striped">
             <thead>

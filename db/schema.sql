@@ -1,3 +1,6 @@
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
+
 -- FUNCTIONS FOR SEARCH FEATURE --
 create EXTENSION if not exists pg_trgm;
 create or replace function
