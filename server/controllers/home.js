@@ -1,5 +1,4 @@
 'use strict';
-const searchQuery = require('../../sqlQueries/searchFoodItems');
 const passport = require('passport');
 const db = require('../../server/helpers/database').db;
 const sqlQuery = require('../../sqlQueries/promotions');
@@ -11,7 +10,7 @@ let index = (req, res) => {
     if (req.user && req.user.role === 'ADMIN') {
         promotionsApiCall = db.query(sqlQuery.allPromotions);
     } else {
-        promotionsApiCall = db.query(sqlQuery.visiblePromotions)
+        promotionsApiCall = db.query(sqlQuery.nonExclusivePromotions)
     }
 
     Promise.all([promotionsApiCall])
@@ -36,9 +35,9 @@ let handleLoginValidation = (req, res, next) => {
 
         req.login(user, loginErr => {
             if (loginErr) {
-                next(loginErr);
+                return next(loginErr);
             }
-            return res.redirect('../home');
+            return res.redirect('/');
         });
     })(req, res, next);
 };
@@ -52,4 +51,6 @@ let parsePromotions = (promoResponse) => {
     return promotions;
 };
 
-module.exports = { index: index, handleLoginValidation: handleLoginValidation };
+let reserveTimeslot = (req, res) => branchController.reserveTimeslot(req, res);
+
+module.exports = { index: index, handleLoginValidation: handleLoginValidation, reserveTimeslot: reserveTimeslot };

@@ -9,17 +9,17 @@
                 aria-expanded="true" , aria-controls=collapse{{@rid}}{{this.rid}}>Available Branches</button>
         </div>
 
-        <div id=collapse{{@rid}}{{this.rid}} class="collapse show" data-parent="#accordion"
+        <div id=collapse{{@rid}}{{this.rid}} class="collapse" data-parent="#accordion"
             aria-labelledby={{@rid}}{{this.rid}}>
             <div class="list-group">
                 {{ @branches }}{{#each this.branches }}
                 <div class="card-body" id=b{{@bid}}{{this.bid}}>
-                    <a href="/restaurants/{{../this.rid}}/branches/{{this.bid}}"
-                        class="list-group-item list-group-item-action">
-                        <h5 class="card-title">{{ @bname }}{{ this.bname }}</h5>
-                        <div class="card-text">{{ @baddress }}{{ this.baddress }}</div>
-                        <div class="card-text">{{ @bphone }}{{ this.bphone }}</div>
-                    </a>
+
+                <a href="/restaurants/{{../this.rid}}/branches/{{this.bid}}" class="list-group-item list-group-item-action">
+                    <h5 class="card-title">{{ @bname }}{{ this.bname }}</h5>
+                    <div class="card-text">{{ @baddress }}{{ this.baddress }}</div>
+                    <div class="card-text">{{ @bphone }}{{ this.bphone }}</div>
+                </a>
                 </div>
                 {{/each}}
             </div>
@@ -28,7 +28,3 @@
     </div>
     {{/each}}
 </div>
-
-<script>
-    $(document).ready(() => $('.collapse').collapse('hide'));
-</script>

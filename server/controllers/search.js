@@ -3,6 +3,7 @@ const db = require('../../server/helpers/database').db;
 const searchQuery = require('../../sqlQueries/searchFoodItems');
 
 let navBarSearch = (req, res) => {
+    console.log("navbarsearch " + req.body);
     let userQuery = req.body.search_query.trim();
     let filter = req.body.filter;
 
@@ -32,6 +33,7 @@ let navBarSearch = (req, res) => {
 };
 
 let homepageSearch = (req, res) => {
+    console.log("homepagesearch " + req.body);
     let foodName = req.body.foodname.trim();
     let location = req.body.location.trim();
 
@@ -43,11 +45,12 @@ let homepageSearch = (req, res) => {
             .then(val => {
                 if (val) {
                     res.send(val.rows);
+                } else {
+                    res.send( "No data" );
                 }
             })
             .catch(err => {
                 console.error(err);
-                next(err);
             });
     } else if (foodName != undefined) { // only foodName specified
         // search by foodName only
@@ -56,6 +59,8 @@ let homepageSearch = (req, res) => {
             .then(val => {
                 if (val) {
                     res.send(val.rows);
+                } else {
+                    res.send("No data");
                 }
             })
             .catch(err => {
@@ -68,6 +73,8 @@ let homepageSearch = (req, res) => {
             .then(val => {
                 if (val) {
                     res.send(val.rows);
+                } else {
+                    res.send( "" );
                 }
             })
             .catch(err => {

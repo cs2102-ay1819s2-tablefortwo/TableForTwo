@@ -40,13 +40,7 @@
 
         <div class="horizontal-scroll">
             {{#each promotions}}
-            <div class="card homepage-card">
-                <img class="card-img-top" src="images/promo1.jpeg" alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title">{{this.name}}</h5>
-                    <a href="promotions/{{this.id}}" class="btn btn-primary mt-2">See more</a>
-                </div>
-            </div>
+                {{>promotion_card this}}
             {{/each}}
         </div>
     </div>
