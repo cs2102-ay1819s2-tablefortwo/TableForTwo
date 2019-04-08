@@ -47,9 +47,11 @@
 </div>
 
 
-<div class="container">
-    <button class="btn btn-link" data-toggle="collapse" data-target=#collapse aria-expanded="true"
-        aria-controls=collapse>View Menu</button>
+<div class="container menu_collapse">
+    <button class="btn btn-info" data-toggle="collapse" data-target=#collapse aria-expanded="true"
+            aria-controls=collapse style="margin-bottom:50px">
+        View Menu
+    </button>
     <div id=collapse class="collapse " data-parent=".card" aria-labelledby="menuitems">
         <div class="list-group">
             {{#each sells }}
@@ -62,7 +64,12 @@
             {{/each}}
         </div>
     </div>
+
+    <h4>Reviews</h4>
+    {{> verbose_ratings }}
 </div>
+
+
 
 <script>
     function book(timeslot) {

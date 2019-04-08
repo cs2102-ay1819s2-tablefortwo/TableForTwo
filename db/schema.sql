@@ -228,6 +228,7 @@ create table Ratings(
  
   foreign key(customer_id) references Customers(id),
   foreign key(branch_id) references Branches(id),
+  unique(customer_id, branch_id),
   check(rating <= 5 and rating >= 0)
 );
 

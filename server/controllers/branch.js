@@ -61,15 +61,9 @@ let getBranch = (req, res) => {
             avgRating = Math.trunc(avgRating);
 
             // verbose version of ratings
-            let ratingsDetails = response[5];
-            let allRatings = [];
-            for (let i = 0; i < ratingsQueries.rowCount; i++) {
-                let row = ratingsDetails.rows[i];
-                let ratingInfo = { rating: row.rating, comments: row.comments, cid: row.customer_id };
-                allRatings.push(ratingInfo);
-            }
-
-            res.render('branch', { rimage: rimage, bname: bname, baddress: baddress, bphone: bphone, timeslots: timeslots, sells: foodItems, avgRating: avgRating, allRatings: allRatings });
+            let ratingsDetails = response[5].rows;
+            
+            res.render('branch', { rimage: rimage, bname: bname, baddress: baddress, bphone: bphone, timeslots: timeslots, sells: foodItems, avgRating: avgRating, allRatings: ratingsDetails });
         })
         .catch(err => {
             console.error(err);
@@ -82,16 +76,20 @@ let addRating = (req, res) => {
         return res.redirect('back');
     }
 
+    const maxRating = 5;
     let cid = req.user.id;
     let rating = req.body.rating;
-    let comments = req.body.comments;
-    let bid = req.locals.bid;
+    let comment = req.body.comment;
+    let bid = req.params.branch_id;
+    let rid = req.params.restaurant_id;
+ 
+    console.log('Adding rating of ' + rating + ' for ' + bid);
 
-    console.log('Adding rating');
-
-    db.query(ratingsQueries.addRating, [rating, comments, cid, bid])
-        .then(res => {
-
+    db.query(ratingsQueries.addRating, [rating, comment, cid, bid])
+        .then(response => {
+            console.log(JSON.stringify(response.rows));
+            req.flash('success', 'Successfully rated.');
+            res.redirect('back');
         })
         .catch(err => console.error(err));
 
@@ -147,4 +145,4 @@ let reserveTimeslot = (req, res) => {
     })
 };
 
-module.exports = { getBranch: getBranch, reserveTimeslot: reserveTimeslot };
+module.exports = { getBranch: getBranch, reserveTimeslot: reserveTimeslot, addRating: addRating };
