@@ -137,7 +137,7 @@ insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDat
 
 alter sequence ratings_id_seq restart with 1;
 insert into RATINGS (rating, comments, customer_id, branch_id) values (5, 'Bagus!', 1, 1);
-insert into RATINGS (rating, comments, customer_id, branch_id) values (3, 'No comment', 2, 2);
-insert into RATINGS (rating, comments, customer_id, branch_id) values (0, 'Bad service.', 3, 3);
-insert into RATINGS (rating, comments, customer_id, branch_id) values (4, 'Food is good', 4, 4);
-insert into RATINGS (rating, comments, customer_id, branch_id) values (3, 'Kinda meh.', 5, 5);
+insert into RATINGS (rating, comments, customer_id, branch_id) values (3, 'No comment', 2, 1);
+insert into RATINGS (rating, comments, customer_id, branch_id) values (0, 'Bad service.', 3, 2);
+insert into RATINGS (rating, comments, customer_id, branch_id) values (4, 'Food is good', 1, 3);
+insert into RATINGS (rating, comments, customer_id, branch_id) values (3, 'Kinda meh.', 2, 6);

@@ -158,7 +158,6 @@ end
 $$ language plpgsql;
 ----- END -----
 
-
 ----- TRIGGER FUNCTIONS TO MAINTAIN REDEMPTION TABLE -----
 create or replace function ensurePromoIdOfRedemptionNotNull()
 returns trigger as 
@@ -206,6 +205,25 @@ begin
         and r1.reservedSlot = new.reservedSlot
         and r1.reservedDate = new.reservedDate) then raise exception 'duplicate reservation detected';
   else return new;
+  end if;
+end;
+$$
+  language plpgsql;
+----- END -----
+
+----- Customer who rates the branch must have made a reservation with the branch before -----
+create or replace function checkCustomerRateExistingBranch()
+  returns trigger as
+$$
+begin
+  if exists (
+      select 1
+      from Reservations r
+      where new.customer_id = r.customer_id
+        and new.branch_id = r.branch_id)
+  then return new;
+  else
+    raise exception 'customer did not make reservation to this branch';
   end if;
 end;
 $$
@@ -356,30 +374,6 @@ create table Ratings(
   check(rating <= 5 and rating >= 0)
 );
 
---customer who rates the branch must have made a reservation with the branch before
-create or replace function checkCustomerRateExistingBranch()
-  returns trigger as
-$$
-begin
-  if exists (
-      select 1
-      from Reservations r
-      where new.customer_id = r.customer_id
-        and new.branch_id = r.branch_id)
-  then return new;
-  else
-    raise exception 'customer did not make reservation to this branch';
-  end if;
-end;
-$$
-  language plpgsql;
-
-create trigger rating_check
-  before insert or update on Ratings
-  for each row
-execute procedure checkCustomerRateExistingBranch();
--- end
-
 create table PointTransactions (
   reservation_id 	integer unique,
   customer_id    	integer not null,
@@ -435,8 +429,13 @@ create trigger ensureSufficientPointsBeforeRedeem
 	execute procedure ensureSufficientPointsBeforeRedeem();
 
 create trigger reservation_check
-  before insert or update on Reservations
-  for each row
-  execute procedure customerReserveOnceInBranch();
+ 	before insert or update on Reservations
+ 	for each row
+ 	execute procedure customerReserveOnceInBranch();
+
+create trigger rating_check
+ 	before insert or update on Ratings
+ 	for each row
+ 	execute procedure checkCustomerRateExistingBranch();
 --#################### END OF DATABASE TRIGGERS ####################--
 
