@@ -126,13 +126,13 @@ insert into PROMOTIONS (name, description, promo_code, start_date, end_date, sta
 insert into OFFERS (branch_id, promo_id) values (1, 1), (3, 2), (4, 3), (9, 3);
 
 alter sequence reservations_id_seq restart with 1;
-insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used, confirmed) values (2, 1, 3, '10:00:00', current_date, 'P001', false);
-insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used, confirmed) values (2, 4, 3, '12:00:00', current_date, 'P001', false);
+insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used, confirmed) values (1, 1, 3, '10:00:00', current_date, 'P001', false);
+insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used, confirmed) values (2, 1, 3, '12:00:00', current_date, 'P001', false);
 insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used, confirmed) values (3, 2, 2, '12:00:00', current_date, null, true);
-insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used, confirmed) values (5, 4, 5, '12:00:00', current_date, '1FOR1', true);
-insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used, confirmed) values (6, 6, 3, '10:00:00', current_date, null, true);
-insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used, confirmed) values (7, 8, 1, '18:00:00', current_date + interval '1 day', null, false);
-insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used, confirmed) values (7, 1, 1, '18:00:00', current_date + interval '1 day', null, false);
+insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used, confirmed) values (1, 3, 5, '12:00:00', current_date, '1FOR1', true);
+insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used, confirmed) values (2, 6, 3, '10:00:00', current_date, null, true);
+insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used, confirmed) values (3, 8, 1, '18:00:00', current_date + interval '1 day', null, false);
+insert into RESERVATIONS (customer_id, branch_id, pax, reservedSlot, reservedDate, promo_used, confirmed) values (1, 1, 1, '18:00:00', current_date + interval '1 day', null, false);
 
 
 alter sequence ratings_id_seq restart with 1;

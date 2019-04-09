@@ -1,16 +1,3 @@
-drop table if exists Users cascade;
-drop table if exists Customers cascade;
-drop table if exists Restaurants cascade;
-drop table if exists Branches cascade;
-drop table if exists MenuItems cascade;
-drop table if exists Favourites cascade;
-drop table if exists Sells cascade;
-drop table if exists Timeslot cascade;
-drop table if exists Reservations cascade;
-drop table if exists Ratings cascade;
-drop table if exists Points cascade;
-drop table if exists Promotions cascade;
-drop table if exists Offers cascade;
 DROP SCHEMA public CASCADE;
 CREATE SCHEMA public;
 
@@ -261,7 +248,9 @@ begin
       select 1
       from Reservations r1
       where r1.customer_id = new.customer_id
-        and r1.branch_id = new.branch_id) then raise exception 'duplicate reservation detected';
+        and r1.branch_id = new.branch_id
+        and r1.reservedSlot = new.reservedSlot
+        and r1.reservedDate = new.reservedDate) then raise exception 'duplicate reservation detected';
   else return new;
   end if;
 end;
