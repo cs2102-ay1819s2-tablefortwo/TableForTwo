@@ -2,7 +2,6 @@ DROP SCHEMA public CASCADE;
 CREATE SCHEMA public;
 
 --#################### DATABASE FUNCTIONS ####################--
-
 ----- FUNCTIONS FOR SEARCH FEATURE -----
 create EXTENSION if not exists pg_trgm;
 create or replace function
@@ -19,7 +18,7 @@ $$
 language plpgsql;
 ----- END -----
 
------ FUNCTION TO ALLOCATE ROLES FOR NEW USERS -----
+----- TRIGGER FUNCTION TO ALLOCATE ROLES FOR NEW USERS -----
 -- All signed up user is automatically a customer and this includes BRANCH_OWNER and ADMIN.
 create or replace function alocateRolesToNewUsers()
 returns trigger as 
@@ -82,7 +81,7 @@ $$ language PLpgSQL;
 ----- END -----
 
 
------ FUNCTION AND TRIGGER TO ENSURE THE VALID USE OF PROMOTION WHEN RESERVATION IS CREATED OR UPDATED -----
+----- TRIGGER FUNCTION TO ENSURE THE VALID USE OF PROMOTION WHEN RESERVATION IS CREATED OR UPDATED -----
 
 -- If the user has specified a promo_code to use, then check the following:
 -- 	1) Ensure such a promotion exist.
@@ -119,7 +118,7 @@ $$ language PLpgSQL;
 ----- END -----
 
 
------ FUNCTIONS AND TRIGGERS TO MAINTAIN THE POINT TRANSACTIONS -----
+----- TRIGGER FUNCTIONS TO MAINTAIN THE POINT TRANSACTIONS -----
 
 -- This function will be used as a trigger when a reservation is confirmed by a BRANCH_OWNER.
 -- Once the reservation is confirmed, the user that booked the reservation will receive a point via 
@@ -160,7 +159,7 @@ $$ language plpgsql;
 ----- END -----
 
 
------ FUNCTIONS TO MAINTAIN REDEMPTION OF POINTS -----
+----- TRIGGER FUNCTIONS TO MAINTAIN REDEMPTION TABLE -----
 create or replace function ensurePromoIdOfRedemptionNotNull()
 returns trigger as 
 $$
@@ -193,18 +192,20 @@ begin
 end
 $$ language plpgsql;
 ----- END -----
-
 --#################### END OF DATABASE FUNCTIONS ####################--
 
 
 --#################### DATABASE SCHEMA ####################--
+create type UserRole as enum('CUSTOMER', 'BRANCH_OWNER', 'ADMIN');
+
 create table Users(
   id serial primary key,
   name varchar(50) not null,
   username varchar(50) unique not null,
-  password varchar(200) not null,    
-  role varchar(20) default 'CUSTOMER' not null
+  password varchar(200) not null,
+  role UserRole default 'CUSTOMER' not null
 );
+
 
 create table Customers(
   id integer primary key,
