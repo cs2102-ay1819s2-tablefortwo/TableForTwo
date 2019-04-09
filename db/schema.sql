@@ -234,7 +234,7 @@ create table Reservations (
   foreign key(promo_used) references Promotions(promo_code) on delete set null,
   foreign key(customer_id) references Customers(id) on delete cascade,
   foreign key(branch_id) references Branches(id) on delete cascade,
-  foreign key(branch_id, reservedSlot, reservedDate) references Timeslot(branch_id, timeslot, dateslot),
+  foreign key(branch_id, reservedSlot, reservedDate) references Timeslot(branch_id, timeslot, dateslot) on  delete restrict,
   check (checkAvailability(reservedDate, reservedSlot, branch_id) >= pax)
 );
 

@@ -31,7 +31,12 @@
 
                 <td>
                     <button id="editButton" type="submit" class="btn btn-info">Edit</button>
-                    <button id="deleteButton" type="submit" class="btn btn-danger">Delete</button>
+                    <form style="display: inline;" action="viewReservations/deleteReservation" method="post">
+                        <input type="hidden" name="reservationId" value="{{this.id}}">
+                        <input type="hidden" name="reservedDate" value="{{toDate this.reserveddate}}">
+                        <input type="hidden" name="reservedSlot" value="{{toTime this.reservedslot}}">
+                        <button id="deleteButton" type="submit" class="btn btn-danger">Delete</button>
+                    </form>
                 </td>
             </tr>
             {{/each}}

@@ -101,11 +101,12 @@ let reserveTimeslot = (req, res) => {
         return res.redirect('back');
     }
 
-    console.log('Reserving timeslot');
-    console.log(JSON.stringify(req.body));
-
     var time = moment(req.body.timing, ["h:mm A", "H:mm"]).format('LT');
-    const promoCode = req.body.promoCode.trim();
+    let promoCode = req.body.promoCode.trim();
+    // promoCode does not exist
+    if (!promoCode) {
+        promoCode = null;
+    }
 
     let bookingInfo = [];
     bookingInfo.push(req.user.id);
@@ -114,12 +115,15 @@ let reserveTimeslot = (req, res) => {
     bookingInfo.push(req.body.timing);
     bookingInfo.push(req.body.slotdate);
     bookingInfo.push(promoCode);
+    console.log('Reserving timeslot');
+    console.log(JSON.stringify(req.body));
 
     db.query(branchQueries.makeReservation, bookingInfo)
         .then(() => {
             console.log("successfully booked ");
             req.flash('success', `Booking on '${req.body.slotdate}' at '${time}' has been added!`);
-            res.redirect(`/restaurants/${req.params.restaurant_id}/branches/${req.params.branch_id}`);
+            //res.redirect(`/restaurants/${req.params.restaurant_id}/branches/${req.params.branch_id}`);
+            res.redirect('/viewReservations');
         }).catch(error => {
         req.flash('error', `Unable to make reservation on '${req.body.slotdate}' at '${time}`);
         req.flash('error', `${error.message}`);

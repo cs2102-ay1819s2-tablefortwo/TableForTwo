@@ -6,5 +6,6 @@ let router = express.Router();
 
 router.get('/', reservationsController.viewReservations);
 router.post('/confirmReservation/', reservationsController.confirmReservation);
+router.post('/deleteReservation', reservationsController.deleteReservation);
 
 module.exports = router;

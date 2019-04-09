@@ -51,6 +51,4 @@ let parsePromotions = (promoResponse) => {
     return promotions;
 };
 
-let reserveTimeslot = (req, res) => branchController.reserveTimeslot(req, res);
-
-module.exports = { index: index, handleLoginValidation: handleLoginValidation, reserveTimeslot: reserveTimeslot };
+module.exports = { index: index, handleLoginValidation: handleLoginValidation };

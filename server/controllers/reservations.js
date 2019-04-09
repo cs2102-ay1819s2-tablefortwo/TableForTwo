@@ -51,4 +51,22 @@ let confirmReservation = (req, res) => {
         });
 };
 
-module.exports = { viewReservations: viewReservations, confirmReservation: confirmReservation };
+let deleteReservation = (req, res) => {
+    if (!req.isAuthenticated()) {
+        req.flash('error', 'Please login to delete reservations.');
+        return res.redirect('back');
+    }
+
+    console.log("Deleting reservation: " + JSON.stringify(req.body));
+
+    db.query(reservationQuery.deleteReservation, [req.body.reservationId])
+        .then(() => {
+            req.flash('success', `Booking on '${req.body.reservedDate}' at '${req.body.reservedSlot}' has been removed!`);
+            res.redirect('/viewReservations');
+        }).catch(error => {
+        req.flash('error', `Unable to delete reservation on '${req.body.reservedDate}' at '${req.body.reservedSlot}`);
+        res.redirect('/viewReservations');
+    });
+};
+
+module.exports = { viewReservations: viewReservations, confirmReservation: confirmReservation, deleteReservation: deleteReservation };
