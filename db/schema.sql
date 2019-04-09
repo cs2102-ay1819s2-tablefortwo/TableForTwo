@@ -192,6 +192,25 @@ begin
 end
 $$ language plpgsql;
 ----- END -----
+
+----- Customer who have already did reservation for this branch cannot make another reservation of the same branch. -----
+create or replace function customerReserveOnceInBranch()
+  returns trigger as
+$$
+begin
+  if exists (
+      select 1
+      from Reservations r1
+      where r1.customer_id = new.customer_id
+        and r1.branch_id = new.branch_id
+        and r1.reservedSlot = new.reservedSlot
+        and r1.reservedDate = new.reservedDate) then raise exception 'duplicate reservation detected';
+  else return new;
+  end if;
+end;
+$$
+  language plpgsql;
+----- END -----
 --#################### END OF DATABASE FUNCTIONS ####################--
 
 
@@ -221,17 +240,17 @@ create table Restaurants(
   id       serial primary key,
   rName     varchar(100) not null,
   rPhone    bigint,
-  rAddress  varchar(100)  
+  rAddress  varchar(100)
 );
 
 create table Branches(
   id       serial primary key,
   restaurant_id	integer not null,
   branch_owner_id integer not null,
-  
+
   bName     varchar(100),
   bPhone    bigint,
-  bAddress  varchar(100), --eg: 1A Kent Ridge Road 
+  bAddress  varchar(100), --eg: 1A Kent Ridge Road
   bArea     varchar(100), --eg: South
   openingHour time not null,
   
@@ -242,12 +261,12 @@ create table Branches(
 create table MenuItems (
   id        serial primary key,
   restaurant_id integer not null,
-  
+
   name      varchar(100) not null,
   type      varchar(30),  -- eg: food, drinks
   cuisine   varchar(30),  -- eg: western, eastern, japanese
   allergens text,
-  
+
   foreign key(restaurant_id) references Restaurants(id) on delete cascade
 );
 
@@ -256,15 +275,15 @@ create table Favourites(
   customer_id integer not null,
   food_id integer not null,
 
-  foreign key(food_id) references MenuItems(id),
-  foreign key(customer_id) references Customers(id)
+  foreign key(food_id) references MenuItems(id) on delete cascade,
+  foreign key(customer_id) references Customers(id) on delete cascade
 );
 
 Create table Sells (
-  mid integer not null, 
+  mid integer not null,
   bid integer not null,
   price money not null,
-  
+
   primary key(mid, bid),
   foreign key(mid) references MenuItems(id) on delete cascade,
   foreign key(bid) references Branches(id) on delete cascade,
@@ -330,12 +349,36 @@ create table Ratings(
   comments varchar(50),
   customer_id integer not null,
   branch_id integer not null,
- 
+
   foreign key(customer_id) references Customers(id),
   foreign key(branch_id) references Branches(id),
   unique(customer_id, branch_id),
   check(rating <= 5 and rating >= 0)
 );
+
+--customer who rates the branch must have made a reservation with the branch before
+create or replace function checkCustomerRateExistingBranch()
+  returns trigger as
+$$
+begin
+  if exists (
+      select 1
+      from Reservations r
+      where new.customer_id = r.customer_id
+        and new.branch_id = r.branch_id)
+  then return new;
+  else
+    raise exception 'customer did not make reservation to this branch';
+  end if;
+end;
+$$
+  language plpgsql;
+
+create trigger rating_check
+  before insert or update on Ratings
+  for each row
+execute procedure checkCustomerRateExistingBranch();
+-- end
 
 create table PointTransactions (
   reservation_id 	integer unique,
@@ -343,7 +386,7 @@ create table PointTransactions (
   point          	integer not null,
   description    	varchar(200) not null,
   transaction_date	timestamp default current_timestamp,
-  
+
   foreign key(reservation_id) references Reservations(id),
   foreign key(customer_id) references Users(id)
 );
@@ -390,5 +433,9 @@ create trigger ensureSufficientPointsBeforeRedeem
 	before insert or update on redemption
 	for each row
 	execute procedure ensureSufficientPointsBeforeRedeem();
+create trigger reservation_check
+  before insert or update on Reservations
+  for each row
+execute procedure customerReserveOnceInBranch();
 --#################### END OF DATABASE TRIGGERS ####################--
 
