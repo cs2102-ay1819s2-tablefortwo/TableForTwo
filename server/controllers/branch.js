@@ -76,14 +76,13 @@ let addRating = (req, res) => {
         return res.redirect('back');
     }
 
-    const maxRating = 5;
     let cid = req.user.id;
     let rating = req.body.rating;
     let comment = req.body.comment;
     let bid = req.params.branch_id;
     let rid = req.params.restaurant_id;
  
-    console.log('Adding rating of ' + rating + ' for ' + bid);
+    console.log('Adding rating of ' + rating + ' comment: ' + comment + ' for ' + bid);
 
     db.query(ratingsQueries.addRating, [rating, comment, cid, bid])
         .then(response => {
