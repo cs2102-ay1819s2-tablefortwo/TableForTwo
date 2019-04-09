@@ -30,11 +30,12 @@ let handleLoginValidation = (req, res, next) => {
             return next(err);
         }
         if (!user) {
-            res.redirect('./');
+            res.redirect('back');
         }
 
         req.login(user, loginErr => {
             if (loginErr) {
+                req.flash('error', 'Invalid login');
                 return next(loginErr);
             }
             return res.redirect('back');
