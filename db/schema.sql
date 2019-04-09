@@ -20,7 +20,7 @@ language plpgsql;
 
 ----- TRIGGER FUNCTION TO ALLOCATE ROLES FOR NEW USERS -----
 -- All signed up user is automatically a customer and this includes BRANCH_OWNER and ADMIN.
-create or replace function alocateRolesToNewUsers()
+create or replace function allocateRolesToNewUsers()
 returns trigger as 
 $$
 begin
@@ -404,10 +404,10 @@ create table Redemption (
 
 
 --#################### DATABASE TRIGGERS ####################--
-create trigger alocateRolesToNewUsers
+create trigger allocateRolesToNewUsers
 	after insert on Users
 	for each row 
-	execute procedure alocateRolesToNewUsers();
+	execute procedure allocateRolesToNewUsers();
 
 create trigger ensureValidPromoUsage
 	before insert or update on Reservations
@@ -433,9 +433,10 @@ create trigger ensureSufficientPointsBeforeRedeem
 	before insert or update on redemption
 	for each row
 	execute procedure ensureSufficientPointsBeforeRedeem();
+
 create trigger reservation_check
   before insert or update on Reservations
   for each row
-execute procedure customerReserveOnceInBranch();
+  execute procedure customerReserveOnceInBranch();
 --#################### END OF DATABASE TRIGGERS ####################--
 
