@@ -19,9 +19,14 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6"> <span class="inline-block"> <h5> Promo Code: </h5> </span> {{promotion.promo_code}} </div>
-                <div class="col-md-6"> <span class="inline-block"> <h5> Visibility to public: </h5> </span>
-                    {{#if promotion.visibility}} Yes {{else}} No {{/if}}
+                <div class="col-md-2"> <span class="inline-block"> <h5> Exclusive: </h5> </span>
+                    {{#if promotion.is_exclusive}} Yes {{else}} No {{/if}}
                 </div>
+                {{#if_more_than promotion.redemption_cost 0}}
+                <div class="col-md-4"> <span class="inline-block"> <h5> Redemption Cost: </h5> </span>
+                    {{promotion.redemption_cost}} points
+                </div>
+                {{/if_more_than}}
             </div>
 
             <div class="row mt-3">
@@ -50,17 +55,7 @@
             {{#each branchesByRestaurant}}
                 <h5 class="card-title">{{this.0.rname}}</h5>
                 {{#each this}}
-                    <div class="homepage-card mb-3">
-                        <div class="card" style="width: 18rem;">
-                            <img src="../images/promo1.jpeg" class="card-img-top" alt="{{this.bname}} image">
-                            <div class="card-body">
-                                <h5 class="card-title">{{this.bname}}</h5>
-                                <div class="card-text">Address: {{this.baddress}}</div>
-                                <div class="card-text">Contact no: {{this.bphone}}</div>
-                                <a href="/restaurants/{{this.restaurant_id}}/branches/{{this.id}}" class="btn btn-primary mt-2">View</a>
-                            </div>
-                        </div>
-                    </div>
+                    {{> branch_card this}}
                 {{/each}}
             {{/each}}
         </div>

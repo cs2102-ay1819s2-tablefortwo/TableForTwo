@@ -60,6 +60,13 @@ module.exports = () => {
                         return opts.inverse(this);
                     }
                 },
+                if_more_than: function(a, b, opts) {
+                    if (a > b) {
+                        return opts.fn(this)
+                    } else {
+                        return opts.inverse(this);
+                    }
+                },
                 if_contains: function(el, array, opts) {
                     if (!array) {
                         return opts.inverse(this);

@@ -1,0 +1,72 @@
+<div class="container">
+    <br />
+    <div>
+        <h4>Your Points:</h4>
+    </div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Timestamp</th>
+            <th scope="col">Description</th>
+            <th scope="col">Points Transacted</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each transactions}}
+            <tr>
+                <td>{{toDateTime this.transaction_date}}</td>
+                <td>{{this.description}}</td>
+                <td>{{this.point}}</td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+    <div style="float: right">
+        Total points: {{totalPoints}}
+    </div>
+</div>
+
+<div class="container">
+    <br />
+    <div>
+        <h4>Promotions available for redemption:</h4>
+    </div>
+    <div>
+        {{#if_eq promoForRedemption.length 0}}
+            -
+        {{/if_eq}}
+        {{#each promoForRedemption}}
+            <div class="card homepage-card">
+                <img class="card-img-top" src="images/promo1.jpeg" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">{{this.name}}</h5>
+                    <div class="card-text">Promo Code: {{this.promo_code}}</div>
+                    <div class="card-text">Redemption cost: {{this.redemption_cost}} </div>
+                    <a href="promotions/{{this.id}}" class="btn btn-info mt-2">See more</a>
+                    <form action="/points/redeem" method="post" style="display: inline-block">
+                        <input type="hidden" name="promo_id" value={{this.id}}>
+                        <input type="hidden" name="promo_code" value={{this.promo_code}}>
+                        <input type="hidden" name="redemption_cost" value={{this.redemption_cost}}>
+                        <button type="submit" class="btn btn-primary mt-2">Redeem</button>
+                    </form>
+                </div>
+            </div>
+        {{/each}}
+    </div>
+</div>
+
+<div class="container">
+    <br />
+    <div>
+        <h4>Exclusive promotions for you:</h4>
+    </div>
+    <div>
+        {{#if_eq exclusivePromotions.length 0}}
+            -
+        {{/if_eq}}
+        {{#each exclusivePromotions}}
+            {{>promotion_card this}}
+        {{/each}}
+    </div>
+</div>
+

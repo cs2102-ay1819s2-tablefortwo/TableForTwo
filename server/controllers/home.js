@@ -10,7 +10,7 @@ let index = (req, res) => {
     if (req.user && req.user.role === 'ADMIN') {
         promotionsApiCall = db.query(sqlQuery.allPromotions);
     } else {
-        promotionsApiCall = db.query(sqlQuery.visiblePromotions)
+        promotionsApiCall = db.query(sqlQuery.nonExclusivePromotions)
     }
 
     Promise.all([promotionsApiCall])
@@ -30,11 +30,12 @@ let handleLoginValidation = (req, res, next) => {
             return next(err);
         }
         if (!user) {
-            res.redirect('./');
+            res.redirect('back');
         }
 
         req.login(user, loginErr => {
             if (loginErr) {
+                req.flash('error', 'Invalid login');
                 return next(loginErr);
             }
             return res.redirect('back');
