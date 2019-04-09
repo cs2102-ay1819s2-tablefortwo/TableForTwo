@@ -105,7 +105,10 @@ let reserveTimeslot = (req, res) => {
     console.log(JSON.stringify(req.body));
 
     var time = moment(req.body.timing, ["h:mm A", "H:mm"]).format('LT');
-    const promoCode = req.body.promoCode.trim();
+    var promoCode = req.body.promoCode.trim();
+    if (!promoCode) {
+        promoCode = null;
+    }
 
     let bookingInfo = [];
     bookingInfo.push(req.user.id);
