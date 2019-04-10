@@ -30,9 +30,9 @@
                 {{/unless}}
 
                 <td>
-                    <button id="editButton" formaction="viewReservations/getSlots" type="submit" formmethod="post"
-                        class="btn btn-info" data-toggle="collapse" data-target="#editReservation{{this.id}}"
-                        aria-expanded="false" aria-controls="editReservation{{this.id}}">Edit</button>
+                    <button id="{{this.id}}" type="button" class="edit btn btn-info" data-toggle="collapse"
+                        data-target="#editReservation{{this.id}}" aria-expanded="false"
+                        aria-controls="editReservation{{this.id}}">Edit</button>
 
                     <form style="display: inline;" action="viewReservations/deleteReservation" method="post">
                         <input type="hidden" name="reservationId" value="{{this.id}}">
@@ -43,23 +43,29 @@
                 </td>
             </tr>
             <tr class="collapse" id="editReservation{{this.id}}">
-                <td>{{this.bname}}</td>
-                <td><input type="number" name="pax" min="1" max="5" value={{this.pax}}></td>
-                <td></td>
-                <td>{{toDate this.dateslot}}</td>
-                <td></td>
-                <td>
-                    <form style="display: inline;" action="viewReservations/updateReservation" method="post">
+                <form style="display: inline;" action="viewReservations/updateReservation" method="post">
+                    <td>{{this.bname}}</td>
+                    <td><input type="number" name="pax" min="1" max="5" value={{this.pax}}></td>
+                    <td>
+                        <select name="timeslots" id="timeslots{{this.id}}">
+                            <option value="{{this.reservedslot}}">{{toTime this.reservedslot}}</option>
+                        </select>
+                    </td>
+                    <td>{{toDate this.reserveddate}}</td>
+                    <td></td>
+                    <td>
                         <input type="hidden" name="reservationId" value="{{this.id}}">
-                        <input type="hidden" name="reservedSlot" value="{{toTime this.reservedslot}}">
                         <button id="editButton" type="submit" class="btn btn-warning">Update</button>
-                    </form>
-                </td>
+                    </td>
+                </form>
             </tr>
 
             {{/each}}
         </tbody>
     </table>
+    <div id="allTimeslots" class="box box-default" hidden>
+        {{toJSON allTimeslots}}
+    </div>
 </div>
 
 {{#if_eq user.role 'BRANCH_OWNER'}}
@@ -104,3 +110,5 @@
     </table>
 </div>
 {{/if_eq}}
+
+<script src="/javascripts/retrieve_slots.js"></script>

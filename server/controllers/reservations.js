@@ -1,6 +1,7 @@
 'use strict';
 const db = require('../helpers/database').db;
 const reservationQuery = require('../../sqlQueries/reservations');
+const moment = require('moment');
 
 let viewReservations = (req, res) => {
     if (!req.user) {
@@ -26,7 +27,17 @@ let viewReservations = (req, res) => {
                         console.error(err);
                 })
             } else {
-                res.render('reservations', { reservations: reservations });
+                const allTimeslots = [];
+                db.query(reservationQuery.getTimeslotsForReservation, [userid])
+                    .then(val2 => {
+                        let rows = val2.rows;
+                        for (let i = 0; i < val2.rowCount; i++) {
+                            allTimeslots.push(rows[i]);
+                        }
+                        res.render('reservations', { reservations: reservations, allTimeslots: allTimeslots });
+                    }).catch(err => {
+                        console.error(err);
+                })
             }
         })
         .catch(err => {
@@ -69,4 +80,29 @@ let deleteReservation = (req, res) => {
     });
 };
 
-module.exports = { viewReservations: viewReservations, confirmReservation: confirmReservation, deleteReservation: deleteReservation };
+let updateReservation = (req, res) => {
+    if (!req.isAuthenticated()) {
+        req.flash('error', 'Please login to update reservations.');
+        return res.redirect('back');
+    }
+
+    console.log("Update reservation: " + JSON.stringify(req.body));
+    let reservationInfo = [];
+    reservationInfo.push(req.body.pax);
+    reservationInfo.push(req.body.timeslots);
+    reservationInfo.push(req.body.reservationId);
+    console.log(reservationInfo);
+    var time = moment(req.body.timeslots, ["h:mm A", "H:mm"]).format('LT');
+
+    db.query(reservationQuery.updateReservation, reservationInfo)
+        .then(() => {
+            req.flash('success', `Booking at '${time}' has been updated!`);
+            res.redirect('/viewReservations');
+        }).catch(error => {
+        req.flash('error', `Unable to change reservation at '${time}'`);
+        req.flash('error', `${error.message}`);
+        res.redirect('/viewReservations');
+    });
+};
+
+module.exports = { viewReservations: viewReservations, confirmReservation: confirmReservation, deleteReservation: deleteReservation, updateReservation: updateReservation };

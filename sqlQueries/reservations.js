@@ -7,6 +7,8 @@ let sqlQueries = {
         '\twhere r.confirmed = false;',
     confirmReservation: 'UPDATE reservations SET confirmed = TRUE WHERE id = $1 returning *',
     deleteReservation: 'DELETE FROM Reservations where id = $1;',
+    getTimeslotsForReservation: 'SELECT * FROM Timeslot T INNER JOIN Reservations R ON R.branch_id = T.branch_id WHERE R.customer_id = $1 AND T.dateslot = R.reserveddate;',
+    updateReservation: 'UPDATE Reservations SET pax = $1, reservedslot = $2 WHERE id = $3;',
 };
 
 module.exports = sqlQueries;

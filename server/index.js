@@ -75,6 +75,9 @@ module.exports = () => {
                     } else {
                         return opts.inverse(this);
                     }
+                },
+                toJSON: function(object) {
+                    return JSON.stringify(object, null, 3);
                 }
             },
             defaultLayout: 'index',
