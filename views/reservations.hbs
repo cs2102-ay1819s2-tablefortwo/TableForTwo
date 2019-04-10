@@ -6,6 +6,7 @@
     <table class="table table-striped">
         <thead>
             <tr>
+                <th scope="col">ID</th>
                 <th scope="col">Outlet</th>
                 <th scope="col">Diners</th>
                 <th scope="col">Time</th>
@@ -17,26 +18,57 @@
         <tbody>
             {{#each reservations}}
             <tr>
+                <td>{{this.id}}</td>
                 <td>{{this.bname}}</td>
                 <td>{{this.pax}}</td>
                 <td>{{toTime this.reservedslot}}</td>
                 <td>{{toDate this.reserveddate}}</td>
 
                 {{#if this.promo_code}}
-                    <td>{{this.promo_code}}</td>
+                <td>{{this.promo_code}}</td>
                 {{/if}}
                 {{#unless this.promo_code}}
-                    <td>-</td>
+                <td>-</td>
                 {{/unless}}
 
                 <td>
-                    <button id="editButton" type="submit" class="btn btn-info">Edit</button>
-                    <button id="deleteButton" type="submit" class="btn btn-danger">Delete</button>
+                    <button id="{{this.id}}" type="button" class="edit btn btn-info" data-toggle="collapse"
+                        data-target="#editReservation{{this.id}}" aria-expanded="false"
+                        aria-controls="editReservation{{this.id}}">Edit</button>
+
+                    <form style="display: inline;" action="viewReservations/deleteReservation" method="post">
+                        <input type="hidden" name="reservationId" value="{{this.id}}">
+                        <input type="hidden" name="reservedDate" value="{{toDate this.reserveddate}}">
+                        <input type="hidden" name="reservedSlot" value="{{toTime this.reservedslot}}">
+                        <button id="deleteButton" type="submit" class="btn btn-danger">Delete</button>
+                    </form>
                 </td>
             </tr>
+            <tr class="collapse" id="editReservation{{this.id}}">
+                <form style="display: inline;" action="viewReservations/updateReservation" method="post">
+                    <td></td>
+                    <td>{{this.bname}}</td>
+                    <td><input type="number" name="pax" min="1" max="5" value={{this.pax}}></td>
+                    <td>
+                        <select name="timeslots" id="timeslots{{this.id}}">
+                            <option value="{{this.reservedslot}}">{{toTime this.reservedslot}}</option>
+                        </select>
+                    </td>
+                    <td>{{toDate this.reserveddate}}</td>
+                    <td></td>
+                    <td>
+                        <input type="hidden" name="reservationId" value="{{this.id}}">
+                        <button id="editButton" type="submit" class="btn btn-warning">Update</button>
+                    </td>
+                </form>
+            </tr>
+
             {{/each}}
         </tbody>
     </table>
+    <div id="allTimeslots" class="box box-default" hidden>
+        {{toJSON allTimeslots}}
+    </div>
 </div>
 
 {{#if_eq user.role 'BRANCH_OWNER'}}
@@ -47,17 +79,17 @@
     </div>
     <table class="table table-striped">
         <thead>
-        <tr>
-            <th scope="col">Outlet</th>
-            <th scope="col">Customer</th>
-            <th scope="col">Diners</th>
-            <th scope="col">Time</th>
-            <th scope="col">Date</th>
-            <th scope="col">Actions</th>
-        </tr>
+            <tr>
+                <th scope="col">Outlet</th>
+                <th scope="col">Customer</th>
+                <th scope="col">Diners</th>
+                <th scope="col">Time</th>
+                <th scope="col">Date</th>
+                <th scope="col">Actions</th>
+            </tr>
         </thead>
         <tbody>
-        {{#each unconfirmedReservations}}
+            {{#each unconfirmedReservations}}
             <tr>
                 <td>{{this.bname}}</td>
                 <td>{{this.username}}</td>
@@ -76,8 +108,10 @@
                     <button type="submit" class="btn btn-danger">Delete</button>
                 </td>
             </tr>
-        {{/each}}
+            {{/each}}
         </tbody>
     </table>
 </div>
 {{/if_eq}}
+
+<script src="/javascripts/retrieve_slots.js"></script>
