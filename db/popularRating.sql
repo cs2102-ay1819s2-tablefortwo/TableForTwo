@@ -2,7 +2,7 @@ with mostPopularBranches as (
 select b.id as branch_id,
        sum(pax) / (select sum(ts.numslots) from timeslot ts where ts.branch_id = b.id) as paxScore
 from reservations r right join branches b on r.branch_id = b.id
--- where r.reserveddate = current_date
+where r.reserveddate = current_date
 group by b.id),
      weightedScores as (
         select coalesce((avg(rt.rating)/5 + sum(mpb.paxScore)) / 2, 0) as weightedScore, mpb.branch_id
