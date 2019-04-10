@@ -14,6 +14,7 @@ const logoutRoute = require('./logout'),
       promotionsRoute = require('./promotions'),
       reservationsRoute = require('./reservations'),
       pointsRoute = require('./points'),
+      manageRoute = require('./manage'),
       errorRoute = require('./error');
 
 let init = (server) => {
@@ -26,6 +27,7 @@ let init = (server) => {
     server.use('/promotions', promotionsRoute);
     server.use('/viewReservations', reservationsRoute);
     server.use('/points', pointsRoute);
+    server.use('/manage', manageRoute);
     server.use('/error', errorRoute);
 
     server.get('/', (req, res, next) => {

@@ -12,7 +12,8 @@
                 <th scope="col">Time</th>
                 <th scope="col">Date</th>
                 <th scope="col">Promo Code</th>
-                <th scope="col">Actions</th>
+                <th scope="col">Confirmed?</th>
+                <th scope="col">Actions</th>                
             </tr>
         </thead>
         <tbody>
@@ -30,7 +31,7 @@
                 {{#unless this.promo_code}}
                 <td>-</td>
                 {{/unless}}
-
+                <td>{{this.confirmed}}</td>
                 <td>
                     <button id="{{this.id}}" type="button" class="edit btn btn-info" data-toggle="collapse"
                         data-target="#editReservation{{this.id}}" aria-expanded="false"
@@ -98,7 +99,7 @@
                 <td>{{toDate this.reserveddate}}</td>
                 <td>
 
-                    <form action="viewReservations/confirmReservation" method="post">
+                    <form style="display: inline;" action="viewReservations/confirmReservation" method="post">
                         <input type="hidden" name="reservationId" value="{{this.reservation_id}}">
                         <input type="hidden" name="BranchName" value="{{this.bname}}">
                         <input type="hidden" name="reservedDate" value="{{toDate this.reserveddate}}">
