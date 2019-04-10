@@ -52,7 +52,7 @@ let homepageSearch = (req, res) => {
             .catch(err => {
                 console.error(err);
             });
-    } else if (foodName != undefined) { // only foodName specified
+    } else if (foodName) { // only foodName specified
         // search by foodName only
         console.log('search by foodname', foodName);
         db.query(searchQuery.findByName, [foodName])
@@ -66,7 +66,7 @@ let homepageSearch = (req, res) => {
             .catch(err => {
                 console.error(err);
             });
-    } else if (location != undefined) {
+    } else if (location) {
         // search by location only
         console.log('search by location', location);
         db.query(searchQuery.findByLocation, [location])
