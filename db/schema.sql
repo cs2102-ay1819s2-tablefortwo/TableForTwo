@@ -201,6 +201,7 @@ begin
       select 1
       from Reservations r1
       where r1.customer_id = new.customer_id
+      	and r1.id <> new.id
         and r1.branch_id = new.branch_id
         and r1.reservedSlot = new.reservedSlot
         and r1.reservedDate = new.reservedDate) then raise exception 'duplicate reservation detected';
