@@ -48,24 +48,9 @@
     <div class="mb-5">
         <h3>Recommendations</h3>
         <div class="horizontal-scroll">
-            <div class="card homepage-card">
-                <img class="card-img-top" src="images/promo1.jpeg" alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title">Heavenly Food</h5>
-                    <div class="card-text">Chinese</div>
-                    <div class="card-text">Clementi Mall</div>
-                    <a href="#" class="btn btn-primary mt-2">See more</a>
-                </div>
-            </div>
-            <div class="card homepage-card">
-                <img class="card-img-top" src="images/promo2.jpeg" alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title">Fong Din Tai</h5>
-                    <div class="card-text">Chinese</div>
-                    <div class="card-text">JEM</div>
-                    <a href="#" class="btn btn-primary mt-2">See more</a>
-                </div>
-            </div>
+            {{#each recommendedBranches}}
+                {{> branch_card this}}
+            {{/each}}
         </div>
     </div>
 

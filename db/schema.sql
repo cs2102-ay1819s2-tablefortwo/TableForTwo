@@ -288,11 +288,13 @@ returns table (
 ) as
 $$
 begin
-	return query
-	select *, q.area_score + q.cuisine_score + q.food_score + q.rating final_score
-	from getCustomerBranchScores(cid) q
-	order by final_score desc
-	limit 5;
+	if exists (select 1 from reservations r where r.customer_id = cid) then
+		return query
+		select *, q.area_score + q.cuisine_score + q.food_score + q.rating final_score
+		from getCustomerBranchScores(cid) q
+		order by final_score desc
+		limit 5;
+	end if;
 end 
 $$ language PLpgSQL;
 ----- END -----

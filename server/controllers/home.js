@@ -1,22 +1,28 @@
 'use strict';
 const passport = require('passport');
 const db = require('../../server/helpers/database').db;
-const sqlQuery = require('../../sqlQueries/promotions');
+const promoQuery = require('../../sqlQueries/promotions');
+const branchQuery = require('../../sqlQueries/branches');
 
 
 let index = (req, res) => {
-    let promotionsApiCall;
+    let apiCalls = [];
 
     if (req.user && req.user.role === 'ADMIN') {
-        promotionsApiCall = db.query(sqlQuery.allPromotions);
+        apiCalls.push(db.query(promoQuery.allPromotions));
     } else {
-        promotionsApiCall = db.query(sqlQuery.nonExclusivePromotions)
+        apiCalls.push(db.query(promoQuery.nonExclusivePromotions));
     }
 
-    Promise.all([promotionsApiCall])
+    if (req.user) {
+        apiCalls.push(db.query(branchQuery.recommendedBranches, [req.user.id]));
+    }
+
+    Promise.all(apiCalls)
         .then(response => {
             const promotions = parsePromotions(response[0]);
-            return res.render('home', { layout: 'index', title: 'Home', promotions: promotions });
+            const recommendedBranches = response[1] ? response[1].rows : null;
+            return res.render('home', { layout: 'index', title: 'Home', promotions: promotions, recommendedBranches: recommendedBranches });
         }).catch(error => {
             console.log(error);
         });
