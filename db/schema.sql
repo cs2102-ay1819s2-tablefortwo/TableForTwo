@@ -232,6 +232,23 @@ $$
 
 ----- FUNCTIONS FOR RECOMMENDATIONS -----
 -- Obtain the individual scores and ratings of each branch given the customer -----
+-- The recommendations are based on the below mentioned statistics.
+--
+-- BranchAreaScore (Weight 30%): 
+-- 	Calculate the scores for individual branches base on the area in which the customer 
+--	previously made their reservation.
+-- BranchCuisineScore (Weight 30%):
+-- 	Calculate the scores of each branch based on the number of times the customer
+-- 	has made a reservation with the same main cuisine type.
+-- 	For example, if KFC @ NUH sells 2 western as main cuisine type. And the customer
+-- 	has made 3 reservations to branch with main cuisine as 'western', then KFC @ NUH 
+-- 	will get a score of 3 * 2 = 6. 
+-- BranchFoodKeywordScore (Weight 10%):
+-- 	Calculate the score of each branch based on the number of times the customer
+-- 	has visited a branch selling a keyword that exist in the sells menu of branch which 
+-- 	we are interested in.
+-- BranchRatings (Weight 30%): 
+-- 	This will calculate the average ratings for each of the branches.
 create or replace function getCustomerBranchScores(cid integer)
 returns table (
 	bid		int,
