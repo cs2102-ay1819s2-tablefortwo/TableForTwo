@@ -230,11 +230,99 @@ end;
 $$
   language plpgsql;
 ----- END -----
+
+----- FUNCTIONS FOR RECOMMENDATIONS -----
+-- Obtain the individual scores and ratings of each branch given the customer -----
+-- The recommendations are based on the below mentioned statistics.
+--
+-- BranchAreaScore (Weight 30%): 
+-- 	Calculate the scores for individual branches base on the area in which the customer 
+--	previously made their reservation.
+-- BranchCuisineScore (Weight 30%):
+-- 	Calculate the scores of each branch based on the number of times the customer
+-- 	has made a reservation with the same main cuisine type.
+-- 	For example, if KFC @ NUH sells 2 western as main cuisine type. And the customer
+-- 	has made 3 reservations to branch with main cuisine as 'western', then KFC @ NUH 
+-- 	will get a score of 3 * 2 = 6. 
+-- BranchFoodKeywordScore (Weight 10%):
+-- 	Calculate the score of each branch based on the number of times the customer
+-- 	has visited a branch selling a keyword that exist in the sells menu of branch which 
+-- 	we are interested in.
+-- BranchRatings (Weight 30%): 
+-- 	This will calculate the average ratings for each of the branches.
+create or replace function getCustomerBranchScores(cid integer)
+returns table (
+	bid		int,
+	bname 			varchar(100),
+	area_score 		numeric, 
+	cuisine_score	numeric, 
+	food_score 		numeric, 
+	rating 			numeric
+) as
+$$
+begin
+	return query
+	with BranchAreaScore as (
+	select b.id, b.bname, (coalesce(sum(count), 0) / 
+		(select count(*) from reservations r where r.customer_id = cid)) * 0.3 score
+	from branches b left join CustomerAreaPreference c 
+		on b.barea = c.barea and c.customer_id = cid
+	group by b.id, b.bname
+	order by score desc
+), BranchCuisineScore as (
+	select b.id, b.bname, (coalesce(sum(count), 0) / 
+		((select count(*) from reservations r where r.customer_id = cid) * 
+			(select count(*) from branchsells bs where bs.id = b.id))) * 0.3 score
+	from branchsells b left join CustomerCuisinePreference p 
+		on b.cuisine = p.cuisine and p.customer_id = cid
+	group by b.id, b.bname
+	order by score desc
+), BranchFoodKeywordScore as (
+	select b.id, b.bname, (coalesce(sum(count), 0) / 
+		(select sum(count) from CustomerMenuKeywordPreference m where m.customer_id = cid)) * 0.1 score
+	from BranchSellKeywords b left join CustomerMenuKeywordPreference m 
+		on b.menu_keyword = m.menu_keyword 
+		and m.customer_id = cid
+	group by b.id, b.bname
+	order by score desc
+) select a.id bid, a.bname, a.score area_score, c.score cuisine_score, f.score food_score, 
+		((r.avgrating::numeric) / 5) * 0.3
+	from (((BranchAreaScore a inner join BranchCuisineScore c on a.id = c.id)
+		inner join BranchFoodKeywordScore f on f.id = a.id)
+		inner join BranchRatings r on r.id = a.id);
+end
+$$ language PLpgSQL;
+
+-- Obtain the recommendation list with their respective recommendation scores.
+create or replace function getRecommendations(cid integer)
+returns table (
+	bid				int,
+	bname 			varchar(100),
+	area_score 		numeric, 
+	cuisine_score	numeric, 
+	food_score 		numeric, 
+	rating 			numeric,
+	final_score		numeric
+) as
+$$
+begin
+	if exists (select 1 from reservations r where r.customer_id = cid) then
+		return query
+		select *, q.area_score + q.cuisine_score + q.food_score + q.rating final_score
+		from getCustomerBranchScores(cid) q
+		order by final_score desc
+		limit 5;
+	end if;
+end 
+$$ language PLpgSQL;
+----- END -----
 --#################### END OF DATABASE FUNCTIONS ####################--
 
 
 --#################### DATABASE SCHEMA ####################--
 create type UserRole as enum('CUSTOMER', 'BRANCH_OWNER', 'ADMIN');
+
+create type BranchArea as enum('North', 'South', 'East', 'West', 'Central'); 
 
 create table Users(
   id serial primary key,
@@ -270,7 +358,7 @@ create table Branches(
   bName     varchar(100),
   bPhone    bigint,
   bAddress  varchar(100), --eg: 1A Kent Ridge Road
-  bArea     varchar(100), --eg: South
+  bArea     BranchArea, --eg: South
   openingHour time not null,
   
   foreign key(branch_owner_id) references BranchOwner(id),
@@ -440,3 +528,69 @@ create trigger rating_check
  	execute procedure checkCustomerRateExistingBranch();
 --#################### END OF DATABASE TRIGGERS ####################--
 
+ 
+ --#################### DATABASE VIEWS ####################--
+ -- Obtain the information of what the branch sells. 
+ create view BranchSells as
+	select b.id, b.bname, m.name, m.cuisine
+	from (branches b inner join sells s on b.id = s.bid) 
+		inner join menuitems m on m.id = s.mid;
+
+-- Obtain the branch keywords that they have in their menu.
+create view BranchSellKeywords as (
+	select b.id, b.bname, unnest(regexp_split_to_array(b.name, ' ')) menu_keyword
+		from branchsells b
+);
+
+-- obtain the main cuisine type that the branch sells 
+create view BranchMainCuisine as (
+	with SellsCount as (
+		select b.id, b.bname, b.cuisine, count(*) sellsCount
+		from branchsells b 
+		where b.cuisine is not null and b.cuisine <> ''
+		group by b.id, b.bname, b.cuisine
+	)
+	select s.id branch_id, s.bname, s.cuisine
+		from SellsCount s
+		where s.sellsCount >= all (
+			select s2.sellsCount
+			from SellsCount s2
+			where s2.id = s.id and s.cuisine <> s2.cuisine
+		)
+);
+
+-- Obtain the average rating for each branch.
+create view BranchRatings as (
+	select b.id, b.bname, coalesce(sum(rating) / count(*), 0) avgRating
+	from branches b left join ratings on b.id = branch_id
+	group by b.id, b.bname
+);
+	
+-- Obtain the number of times that the customer place their reservation in the area.
+create view CustomerAreaPreference as
+	select r.customer_id, b.barea, count(b.barea)
+	from reservations r inner join branches b on r.branch_id = b.id 
+	group by r.customer_id, b.barea;
+
+-- Obtain the customer's rating for the reservations that they made.
+create view CustomerRatings as 
+	select res.customer_id, res.branch_id, rate.rating
+	from reservations res inner join ratings rate on res.branch_id = rate.branch_id 
+		and res.customer_id = rate.customer_id;
+	
+-- Count the number of times the customer visited a branch of the main cuisine type 
+-- that the branch serve.
+create view CustomerCuisinePreference as 
+	select r.customer_id, b.cuisine, count(*)
+		from reservations r inner join BranchMainCuisine b on b.branch_id = r.branch_id
+		group by r.customer_id, b.cuisine;
+	
+-- Base on the food items that the branch sells, we calculate the the number of times
+-- the keyword appear in the food item in which the customer place their reservation.
+create view CustomerMenuKeywordPreference as 
+	select r.customer_id, unnest(regexp_split_to_array(b.name, ' ')) menu_keyword, count(*) 
+	from reservations r inner join BranchSells b on r.branch_id = b.id
+	group by r.customer_id, menu_keyword;
+--#################### END OF DATABASE VIEWS ####################--
+
+	

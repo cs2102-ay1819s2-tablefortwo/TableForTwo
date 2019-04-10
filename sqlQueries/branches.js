@@ -11,7 +11,8 @@ let sqlQueries = {
                             '\tfrom mostPopularBranches mpb left join ratings rt on mpb.branch_id = rt.branch_id\n'+
                             '\tgroup by mpb.branch_id)\n'+
                         '\tselect b.* from weightedScores ws inner join branches b on b.id = ws.branch_id\n'+
-                        '\torder by weightedScore desc limit 5;'
+                        '\torder by weightedScore desc limit 5;',
+    recommendedBranches: 'SELECT * FROM getRecommendations($1) r INNER JOIN Branches b on r.bid = b.id;'
 };
 
 module.exports = sqlQueries;
