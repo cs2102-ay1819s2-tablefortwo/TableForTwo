@@ -1,22 +1,27 @@
 'use strict';
 const passport = require('passport');
 const db = require('../../server/helpers/database').db;
-const sqlQuery = require('../../sqlQueries/promotions');
+const promoQuery = require('../../sqlQueries/promotions');
+const trendingBranchesQuery = require('../../sqlQueries/branches');
 
 
 let index = (req, res) => {
     let promotionsApiCall;
 
     if (req.user && req.user.role === 'ADMIN') {
-        promotionsApiCall = db.query(sqlQuery.allPromotions);
+        promotionsApiCall = db.query(promoQuery.allPromotions);
     } else {
-        promotionsApiCall = db.query(sqlQuery.nonExclusivePromotions)
+        promotionsApiCall = db.query(promoQuery.nonExclusivePromotions);
     }
 
-    Promise.all([promotionsApiCall])
+    let getTrendingBranches = db.query(trendingBranchesQuery.trendingBranches);
+
+    Promise.all([promotionsApiCall, getTrendingBranches])
         .then(response => {
             const promotions = parsePromotions(response[0]);
-            return res.render('home', { layout: 'index', title: 'Home', promotions: promotions });
+            const trendingBranches = parseTrendingBranches(response[1]);
+
+            return res.render('home', { layout: 'index', title: 'Home', promotions: promotions, trendingBranches: trendingBranches });
         }).catch(error => {
             console.log(error);
         });
@@ -51,5 +56,15 @@ let parsePromotions = (promoResponse) => {
     }
     return promotions;
 };
+
+let parseTrendingBranches = (response) => {
+    let branches = [];
+    for (let i = 0; i < response.rowCount; i++) {
+        let row = response.rows[i];
+        branches.push(row);
+    }
+
+    return branches;
+}
 
 module.exports = { index: index, handleLoginValidation: handleLoginValidation };
