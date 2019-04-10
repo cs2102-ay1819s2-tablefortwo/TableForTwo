@@ -572,12 +572,6 @@ create view CustomerAreaPreference as
 	from reservations r inner join branches b on r.branch_id = b.id 
 	group by r.customer_id, b.barea;
 
--- Obtain the customer's rating for the reservations that they made.
-create view CustomerRatings as 
-	select res.customer_id, res.branch_id, rate.rating
-	from reservations res inner join ratings rate on res.branch_id = rate.branch_id 
-		and res.customer_id = rate.customer_id;
-	
 -- Count the number of times the customer visited a branch of the main cuisine type 
 -- that the branch serve.
 create view CustomerCuisinePreference as 
