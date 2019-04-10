@@ -1,0 +1,66 @@
+<div class="container">
+    <img class="img-fluid" src={{rimage}} alt={{rimage}}>
+</div>
+<div class="container">
+    <div class="card">
+        {{#each restaurantObject}}
+        <button type="button" class="btn btn-dark btn-lg" data-toggle="collapse" data-target="#table{{this.id}}"
+            aria-expanded="false" aria-controls={{this.id}}>{{this.name}}</button>
+        <div class="collapse" id="table{{this.id}}">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Time</th>
+                        <th scope="col">Available Seats</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each this.allSlots}}
+                    <tr>
+                        <td>{{toDate this.dateslot}}</td>
+                        <td>{{toTime this.timeslot}}</td>
+                        <td>{{this.numslots}}</td>
+                        <td>
+                            <form style="display: inline;" action="manage/deleteslot" method="post">
+                                <input type="hidden" name="slotdate" value='{{toDate this.dateslot}}'>
+                                <input type="hidden" name="slottime" value={{this.timeslot}}>
+                                <input type="hidden" name="branchid" value="{{this.id}}">
+                                <button id="deleteButton" type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+        {{/each}}
+    </div>
+</div>
+
+<!--
+<div class="container menu_collapse">
+    <button class="btn btn-info" data-toggle="collapse" data-target=#collapse aria-expanded="true"
+        aria-controls=collapse style="margin-bottom:50px">
+        View Menu
+    </button>
+    <div id=collapse class="collapse " data-parent=".card" aria-labelledby="menuitems">
+        <div class="list-group">
+            {{#each sells }}
+            <div class="card-header">
+                <h5 class="card-title">{{ @name }}{{ this.name }}</h5>
+            </div>
+            <div class="card-body">
+                <div class=card-text>{{ @price }}{{ this.price }}</div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+</div>-->
+
+
+
+<script>
+
+</script>
