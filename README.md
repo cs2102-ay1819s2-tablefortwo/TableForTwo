@@ -2,22 +2,22 @@
 
 ## Dependencies
 
-Ensure that the following applications are installed in your computer:
+Ensure that the following applications are installed:
 
-1. PostgreSQL (https://www.postgresql.org/download/)
-2. `node.js` and `npm` (https://nodejs.org/en/)
+1. PostgreSQL (https://www.postgresql.org/download/)  
+2. `node.js` (https://nodejs.org/en/)
 
-## How to run
-
-### Database Initialisation
+## Database Initialisation
 Follow this section if you are installing for the first time
 1. Clone this repository locally.
-2. Install dependencies with npm:
+2. Create and populate PostgreSQL database with `schema.sql` and `dummydata.sql` in the `db` folder
+3. Install npm
 ```bash
 npm install
 ```
-3. Start the local server.
+## How to run
+1. Start the local server.
 ```bash
 npm start
 ```
-4. Go to http://localhost:3000/
+2. Go to http://localhost:3000/
