@@ -20,4 +20,4 @@ npm install
 ```bash
 npm start
 ```
-2. Go to http://localhost:3000/
+2. Go to http://localhost:3000/home
