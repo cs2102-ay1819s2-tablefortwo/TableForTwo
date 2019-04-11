@@ -47,7 +47,9 @@ let viewReservations = (req, res) => {
                     console.error(err);
                 })
         }
-    })
+    }).catch(err => {
+        console.error(err);
+    });
 };
 
 let confirmReservation = (req, res) => {

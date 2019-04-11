@@ -1,0 +1,62 @@
+<div class="container">
+    <img class="img-fluid" src={{rimage}} alt={{rimage}}>
+</div>
+<div class="container text-center" style>
+    <a class="badge badge-info" href="viewReservations">Manage Reservations</a>
+</div>
+<div class="container">
+    <div class="card">
+        {{#each restaurantObject}}
+        <button type="button" class="btn btn-dark btn-lg" data-toggle="collapse" data-target="#table{{this.id}}"
+            aria-expanded="false" aria-controls="#table{{this.id}}">{{this.name}}</button>
+        <div class="collapse" id="table{{this.id}}">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Time</th>
+                        <th scope="col">Available Seats</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each this.allSlots}}
+                    <tr>
+                        <td>{{toDate this.dateslot}}</td>
+                        <td>{{toTime this.timeslot}}</td>
+                        <td>{{this.numslots}}</td>
+                        <td>
+                            <form style="display: inline;" action="manage/deleteslot" method="post">
+                                <input type="hidden" name="slotdate" value='{{toDate this.dateslot}}'>
+                                <input type="hidden" name="slottime" value={{this.timeslot}}>
+                                <input type="hidden" name="branchid" value="{{this.id}}">
+                                <button id="deleteButton" type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+        {{/each}}
+    </div>
+</div>
+<div class="container">
+    <br />
+    <h3>Add new timeslot</h3>
+    <form action="manage/addslot" method="post">
+        <label for="date">Date:</label>
+        <input id="date" type="date" name="dateslot" min="2019-01-01" max="2019-12-31" value="2019-04-20" required>
+        <label for="timeslot">Time:</label>
+        <input id="timeslot" type="time" name="timeslot" min="6:00" max="22:00" step="3600" value="12:00" required>
+        <label for="pax">Available Seats:</label>
+        <input id="pax" type="number" name="numslot" min="1" max="50" value="10" required>
+        <label for="branch">Branch:</label>
+        <select name="branch" id="branch">
+            {{#each restaurantObject}}
+            <option value="{{this.id}}">{{this.name}}</option>
+            {{/each}}
+        </select>
+        <button id="addButton" type="submit" class="btn btn-success">Add timeslot</button>
+    </form>
+</div>
