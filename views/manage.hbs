@@ -1,11 +1,14 @@
 <div class="container">
     <img class="img-fluid" src={{rimage}} alt={{rimage}}>
 </div>
+<div class="container text-center" style>
+    <a class="badge badge-info" href="viewReservations">Manage Reservations</a>
+</div>
 <div class="container">
     <div class="card">
         {{#each restaurantObject}}
         <button type="button" class="btn btn-dark btn-lg" data-toggle="collapse" data-target="#table{{this.id}}"
-            aria-expanded="false" aria-controls={{this.id}}>{{this.name}}</button>
+            aria-expanded="false" aria-controls="#table{{this.id}}">{{this.name}}</button>
         <div class="collapse" id="table{{this.id}}">
             <table class="table table-striped">
                 <thead>
@@ -38,29 +41,22 @@
         {{/each}}
     </div>
 </div>
-
-<!--
-<div class="container menu_collapse">
-    <button class="btn btn-info" data-toggle="collapse" data-target=#collapse aria-expanded="true"
-        aria-controls=collapse style="margin-bottom:50px">
-        View Menu
-    </button>
-    <div id=collapse class="collapse " data-parent=".card" aria-labelledby="menuitems">
-        <div class="list-group">
-            {{#each sells }}
-            <div class="card-header">
-                <h5 class="card-title">{{ @name }}{{ this.name }}</h5>
-            </div>
-            <div class="card-body">
-                <div class=card-text>{{ @price }}{{ this.price }}</div>
-            </div>
+<div class="container">
+    <br />
+    <h3>Add new timeslot</h3>
+    <form action="manage/addslot" method="post">
+        <label for="date">Date:</label>
+        <input id="date" type="date" name="dateslot" min="2019-01-01" max="2019-12-31" value="2019-04-20" required>
+        <label for="timeslot">Time:</label>
+        <input id="timeslot" type="time" name="timeslot" min="6:00" max="22:00" step="3600" value="12:00" required>
+        <label for="pax">Available Seats:</label>
+        <input id="pax" type="number" name="numslot" min="1" max="50" value="10" required>
+        <label for="branch">Branch:</label>
+        <select name="branch" id="branch">
+            {{#each restaurantObject}}
+            <option value="{{this.id}}">{{this.name}}</option>
             {{/each}}
-        </div>
-    </div>
-</div>-->
-
-
-
-<script>
-
-</script>
+        </select>
+        <button id="addButton" type="submit" class="btn btn-success">Add timeslot</button>
+    </form>
+</div>

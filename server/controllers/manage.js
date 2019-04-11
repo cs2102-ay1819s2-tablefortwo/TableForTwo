@@ -1,6 +1,7 @@
 'use strict';
 const db = require('../helpers/database').db;
 const manageQueries = require('../../sqlQueries/manage');
+const moment = require('moment');
 
 let getOverview = (req, res) => {
     if (!req.user || req.user.role !== 'BRANCH_OWNER') {
@@ -51,10 +52,11 @@ let deleteSlot = (req, res) => {
     slotToDelete.push(req.body.branchid);
     slotToDelete.push(req.body.slotdate);
     slotToDelete.push(req.body.slottime);
+    var time = moment(req.body.slottime, ["h:mm A", "H:mm"]).format('LT');
     
     db.query(manageQueries.deleteTimeslot, slotToDelete)
         .then(() => {
-            req.flash('success', `Timeslot on '${req.body.slotdate}' at '${req.body.slottime}' has been removed!`);
+            req.flash('success', `Timeslot on '${req.body.slotdate}' at '${time}' has been removed!`);
             res.redirect('back');
         }).catch(error => {
             req.flash('error', `Unable to delete timeslot on '${req.body.slotdate}' at '${req.body.slottime}`);
@@ -63,5 +65,30 @@ let deleteSlot = (req, res) => {
         });
 };
 
+let addSlot = (req, res) => {
+    if (!req.user || req.user.role !== 'BRANCH_OWNER') {
+        req.flash('error', 'You are not allowed to do this');
+        res.redirect('/home');
+    }
 
-module.exports = { getOverview: getOverview, deleteSlot: deleteSlot };
+    console.log("Adding slot: " + JSON.stringify(req.body));
+    let slotToAdd = [];
+    slotToAdd.push(req.body.branch);
+    slotToAdd.push(req.body.dateslot);
+    slotToAdd.push(req.body.timeslot);
+    slotToAdd.push(req.body.numslot);
+    var time = moment(req.body.timeslot, ["h:mm A", "H:mm"]).format('LT');
+    
+    db.query(manageQueries.addTimeslot, slotToAdd)
+        .then(() => {
+            req.flash('success', `Timeslot on '${req.body.dateslot}' at '${time}' has been added!`);
+            res.redirect('back');
+        }).catch(error => {
+            req.flash('error', `Unable to add timeslot on '${req.body.dateslot}' at '${req.body.timeslot}`);
+            req.flash('error', `${error.message}`);
+            res.redirect('back');
+        });
+};
+
+
+module.exports = { getOverview: getOverview, deleteSlot: deleteSlot, addSlot: addSlot };
