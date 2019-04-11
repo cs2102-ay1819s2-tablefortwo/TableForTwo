@@ -305,11 +305,19 @@ returns table (
 	final_score		numeric
 ) as
 $$
+declare 
+	final_score numeric;
 begin
 	if exists (select 1 from reservations r where r.customer_id = cid) then
 		return query
 		select *, q.area_score + q.cuisine_score + q.food_score + q.rating final_score
 		from getCustomerBranchScores(cid) q
+		where q.area_score + q.cuisine_score + q.food_score + q.rating <> 0 
+		and q.bid not in (
+			select r2.branch_id 
+			from reservations r2 
+			where r2.reserveddate > now() - interval '1 week' 
+		)
 		order by final_score desc
 		limit 5;
 	end if;
@@ -529,11 +537,11 @@ create trigger rating_check
 --#################### END OF DATABASE TRIGGERS ####################--
 
  
- --#################### DATABASE VIEWS ####################--
- -- Obtain the information of what the branch sells. 
- create view BranchSells as
+--#################### DATABASE VIEWS ####################--
+-- Obtain the information of what the branch sells. 
+create view BranchSells as
 	select b.id, b.bname, m.name, m.cuisine
-	from (branches b inner join sells s on b.id = s.bid) 
+	from (branches b inner join sells s on b.id = s.bid)
 		inner join menuitems m on m.id = s.mid;
 
 -- Obtain the branch keywords that they have in their menu.
