@@ -13,7 +13,7 @@
                 <th scope="col">Date</th>
                 <th scope="col">Promo Code</th>
                 <th scope="col">Confirmed?</th>
-                <th scope="col">Actions</th>                
+                <th scope="col">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -31,7 +31,14 @@
                 {{#unless this.promo_code}}
                 <td>-</td>
                 {{/unless}}
-                <td>{{this.confirmed}}</td>
+                <td>
+                    {{#if this.confirmed}}
+                        <span>Yes</span>
+                    {{else}}
+                        <span>No</span>
+                    {{/if}}
+
+                </td>
                 <td>
                     <button id="{{this.id}}" type="button" class="edit btn btn-info" data-toggle="collapse"
                         data-target="#editReservation{{this.id}}" aria-expanded="false"
