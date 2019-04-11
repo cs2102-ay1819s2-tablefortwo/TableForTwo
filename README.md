@@ -25,3 +25,14 @@ npm install
 npm start
 ```
 2. Go to http://localhost:3000/home
+
+## Default Accounts
+Note that `name` is the same as `username` in the log in form.
+
+The password for the below mentioned accounts is `pw`
+### Admin Account
+username: admin
+### Branch Owner Accounts
+username: pizza_owner / kfc_owner / gongcha_owner / ameens_owner / subway_owner
+### Customer Accounts
+username: customer1 / customer2 / customer3
