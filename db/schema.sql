@@ -305,8 +305,6 @@ returns table (
 	final_score		numeric
 ) as
 $$
-declare 
-	final_score numeric;
 begin
 	if exists (select 1 from reservations r where r.customer_id = cid) then
 		return query
