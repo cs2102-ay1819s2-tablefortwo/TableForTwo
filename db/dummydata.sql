@@ -21,13 +21,13 @@ alter sequence branches_id_seq restart with 1;
 insert into BRANCHES (bName, restaurant_id, branch_owner_id, bPhone, bAddress, barea, openingHour) values ('Pizza Hut @ Clementi', 1, 5, '6063075864', '80 Loeprich Lane', 'West', '10:00 AM');
 insert into BRANCHES (bName, restaurant_id, branch_owner_id, bPhone, bAddress, barea, openingHour) values ('KFC @ Kent Ridge', 2, 6, '5197751577', '5 Oxford Terrace', 'West', '12:00 PM');
 insert into BRANCHES (bName, restaurant_id, branch_owner_id, bPhone, bAddress, barea, openingHour) values ('Gongcha @ uTown', 3, 7, '6931442672', '9 Hollow Ridge Trail', 'West', '11:00 AM');
-insert into BRANCHES (bName, restaurant_id, branch_owner_id, bPhone, bAddress, barea, openingHour) values ('Ameens @ Jurong', 4, 8, '3003793180', '24 Goodland Street', 'North', '12:30 PM');
-insert into BRANCHES (bName, restaurant_id, branch_owner_id, bPhone, bAddress, barea, openingHour) values ('Subway @ YIH', 5, 9, '8326702434', '7 Commercial Circle', 'North', '11:00 PM');
+insert into BRANCHES (bName, restaurant_id, branch_owner_id, bPhone, bAddress, barea, openingHour) values ('Ameens @ Jurong', 4, 8, '3003793180', '24 Goodland Street', 'West', '12:30 PM');
+insert into BRANCHES (bName, restaurant_id, branch_owner_id, bPhone, bAddress, barea, openingHour) values ('Subway @ YIH', 5, 9, '8326702434', '7 Commercial Circle', 'West', '11:00 PM');
 insert into BRANCHES (bName, restaurant_id, branch_owner_id, bPhone, bAddress, barea, openingHour) values ('Pizza Hut @ Tampines', 1, 5, '2687690580', '06 Northfield Parkway', 'East', '8:00 PM');
 insert into BRANCHES (bName, restaurant_id, branch_owner_id, bPhone, bAddress, barea, openingHour) values ('KFC @ NUH', 2, 6, '6644211151', '8279 West Junction', 'West', '6:30 AM');
-insert into BRANCHES (bName, restaurant_id, branch_owner_id, bPhone, bAddress, barea, openingHour) values ('Gongcha @ City Hall', 3, 7, '4729430682', '333 Myrtle Lane', 'South', '6:00 AM');
-insert into BRANCHES (bName, restaurant_id, branch_owner_id, bPhone, bAddress, barea, openingHour) values ('Ameens @ Woodlands', 4, 8, '8518661312', '25 Hansons Junction', 'West', '8:15 AM');
-insert into BRANCHES (bName, restaurant_id, branch_owner_id, bPhone, bAddress, barea, openingHour) values ('Subway @ Seng Kang', 5, 9, '7666749085', '93798 Gale Junction', 'Central', '10:00 AM');
+insert into BRANCHES (bName, restaurant_id, branch_owner_id, bPhone, bAddress, barea, openingHour) values ('Gongcha @ City Hall', 3, 7, '4729430682', '333 Myrtle Lane', 'Central', '6:00 AM');
+insert into BRANCHES (bName, restaurant_id, branch_owner_id, bPhone, bAddress, barea, openingHour) values ('Ameens @ Woodlands', 4, 8, '8518661312', '25 Hansons Junction', 'North', '8:15 AM');
+insert into BRANCHES (bName, restaurant_id, branch_owner_id, bPhone, bAddress, barea, openingHour) values ('Subway @ Seng Kang', 5, 9, '7666749085', '93798 Gale Junction', 'North', '10:00 AM');
 
 alter sequence menuitems_id_seq restart with 1;
 insert into MENUITEMS (restaurant_id, name, type, cuisine, allergens) values (4, 'Chicken Rice', 'food', 'eastern', '');
