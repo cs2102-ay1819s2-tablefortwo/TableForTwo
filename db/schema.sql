@@ -192,6 +192,19 @@ end
 $$ language plpgsql;
 ----- END -----
 
+-- Ensure that the promotion cannot be deleted if it is used by customers.
+create or replace function preventDeletionIfPromoUsed()
+returns trigger as
+$$
+begin
+	if exists (select 1 from reservations r where old.promo_code = r.promo_used) then
+		raise exception 'Unable to delete %. Customers are already using it.', old.promo_code;
+	else
+		return old;
+	end if;
+end
+$$ language plpgsql;
+
 ----- Customer who have already did reservation for this branch cannot make another reservation of the same branch. -----
 create or replace function customerReserveOnceInBranch()
   returns trigger as
@@ -522,6 +535,11 @@ create trigger ensureSufficientPointsBeforeRedeem
 	before insert or update on redemption
 	for each row
 	execute procedure ensureSufficientPointsBeforeRedeem();
+
+create trigger preventDeletionIfPromoUsed
+	before delete on promotions
+	for each row
+	execute procedure preventDeletionIfPromoUsed();
 
 create trigger reservation_check
  	before insert or update on Reservations
